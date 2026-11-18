@@ -1,26 +1,41 @@
 {
   "expo": {
-    "name": "OilFlow CRM",
-    "slug": "oilflow-crm",
+    "name": "KisanConnect",
+    "slug": "kisanconnect",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "oilflowcrm",
+    "splash": {
+      "image": "./assets/images/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0F172A"
+    },
+    "scheme": "kisanconnect",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/images/icon.png"
+      "icon": "./assets/images/icon.png",
+      "splash": {
+        "image": "./assets/images/splash-icon.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#0F172A"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#0F172A",
-        "foregroundImage": "./assets/images/android-icon-foreground.png"
+        "foregroundImage": "./assets/images/icon.png"
+      },
+      "splash": {
+        "image": "./assets/images/splash-icon.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#0F172A"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.easylearn.oilflowcrm"
+      "package": "com.easylearn.kisanconnect"
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/icon.png"
     },
     "plugins": [
       "expo-router",
@@ -28,24 +43,32 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#0F172A",
-          "android": {
-            "image": "./assets/images/splash-icon.png",
-            "imageWidth": 76
-          }
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 200
         }
       ],
       "expo-font",
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-image",
+      "expo-sharing",
+      "expo-status-bar"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
     },
+    "updates": {
+      "url": "https://u.expo.dev/a59ae5de-5e4a-467f-8319-84c244806aa7"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "90ed396f-1ca9-494a-af77-7ffa87e55f0e"
+        "projectId": "a59ae5de-5e4a-467f-8319-84c244806aa7"
       }
-    }
+    },
+    "owner": "saifuddinansari"
   }
 }

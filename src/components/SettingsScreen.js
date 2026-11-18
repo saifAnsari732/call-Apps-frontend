@@ -4,6 +4,7 @@ import { useAuthStore } from '../store/authStore';
 import { useThemeStore } from '../store/themeStore';
 import api from '../services/api';
 import { User, LogOut, Moon, Sun, Lock, Bell, Shield, Phone, BadgeCheck } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function SettingsScreen() {
   const { user, logout } = useAuthStore();
@@ -56,14 +57,14 @@ export default function SettingsScreen() {
 
   const handleLogout = () => {
     if (Platform.OS === 'web') {
-      const confirmLogout = window.confirm('Are you sure you want to log out of OilFlow CRM?');
+      const confirmLogout = window.confirm('Are you sure you want to log out of KisanConnect?');
       if (confirmLogout) {
         logout();
       }
     } else {
       Alert.alert(
         'Sign Out',
-        'Are you sure you want to log out of OilFlow CRM?',
+        'Are you sure you want to log out of KisanConnect?',
         [
           { text: 'Cancel', style: 'cancel' },
           { text: 'Logout', style: 'destructive', onPress: () => logout() }
@@ -73,7 +74,22 @@ export default function SettingsScreen() {
   };
 
   return (
-    <ScrollView className={isDark ? 'bg-slate-950' : 'bg-slate-50'} contentContainerStyle={{ padding: 16 }}>
+    <View className={`flex-1 ${isDark ? 'bg-slate-950' : 'bg-slate-50'}`}>
+      {/* Fixed Curved Header */}
+      <View className={`pt-16 pb-4 px-5 rounded-b-[32px] shadow-sm z-10 overflow-hidden ${isDark ? 'bg-slate-900 border-b border-slate-800' : 'bg-white border-b border-indigo-50'}`}>
+        <LinearGradient
+          colors={isDark ? ['#1E293B', '#0F172A'] : ['#EEF2FF', '#F8FAFC']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+        />
+        <View className="mb-2 relative">
+          <Text className={`text-[34px] font-black tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>Settings</Text>
+          <Text className={`text-[11px] font-extrabold uppercase tracking-[0.2em] mt-1 ${isDark ? 'text-indigo-400' : 'text-slate-500'}`}>Account & Preferences</Text>
+        </View>
+      </View>
+
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: 16, paddingBottom: 100 }}>
       
       {/* Profile Details Card */}
       <View className={`p-5 rounded-3xl border shadow-sm mb-6 mt-2 ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
@@ -208,6 +224,7 @@ export default function SettingsScreen() {
         <LogOut size={16} color="#EF4444" />
         <Text className="text-red-500 text-xs font-black uppercase tracking-wider ml-2.5">Sign Out Account</Text>
       </TouchableOpacity>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }

@@ -5,7 +5,11 @@ import { useAuthStore } from '../store/authStore';
 import Constants from 'expo-constants';
 
 const getBaseUrl = () => {
-  return 'https://caller-app-4brj.onrender.com/api';
+  // Production Backend URL
+  // return 'https://caller-app-1.onrender.com/api';
+
+  // Development Backend URL (uncomment for local development)
+   return Platform.OS === 'web' ? 'http://localhost:3001/api' : 'http://192.168.0.107:3001/api';
 };
 
 const api = axios.create({
@@ -121,6 +125,12 @@ api.interceptors.response.use(
     return response;
   },
   async (error) => {
+    if (error.response && error.response.status === 401) {
+      console.log('401 Unauthorized detected - logging out automatically.');
+      useAuthStore.getState().logout();
+      return Promise.reject(error);
+    }
+
     const originalRequest = error.config;
     const isNetworkError = !error.response && (error.message === 'Network Error' || error.code === 'ECONNABORTED');
 

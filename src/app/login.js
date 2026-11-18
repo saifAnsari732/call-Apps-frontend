@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, Dimensions } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, Image } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { useAuthStore } from '../store/authStore';
 import api from '../services/api';
-import { Phone, Lock, Eye, EyeOff, CheckSquare, Square } from 'lucide-react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-
-const { width } = Dimensions.get('window');
+import { Smartphone, Lock, Eye, EyeOff, CheckSquare, Square, LogIn, Factory, Settings } from 'lucide-react-native';
 
 export default function LoginScreen() {
   const { login } = useAuthStore();
@@ -42,155 +39,194 @@ export default function LoginScreen() {
   };
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} className="flex-1 bg-slate-50">
-      {/* Decorative Top Gradient Background */}
-      <LinearGradient
-        colors={['#EEF2FF', '#FFFFFF']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 1 }}
-        style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 400 }}
-      />
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} className="flex-1 bg-[#FFF1F2]">
+      
+      {/* Top Watermark Graphic */}
+      <View className="absolute top-0 right-0 left-0 h-64 items-center justify-end pb-8 opacity-5">
+        <Factory size={160} color="#E11D48" strokeWidth={1} />
+      </View>
       
       <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
         <View className="flex-1 justify-center px-6 py-12">
           
           {/* Header Branding */}
-          <View className="items-center mb-10">
-            <View className="w-24 h-24 bg-white rounded-3xl justify-center items-center mb-6 shadow-xl shadow-indigo-200/50 border border-white">
-              <LinearGradient
-                colors={['#4F46E5', '#2563EB']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={{ width: '100%', height: '100%', borderRadius: 24, justifyContent: 'center', alignItems: 'center' }}
-              >
-                <Text className="text-white text-6xl font-black">O</Text>
-              </LinearGradient>
-            </View>
-            <Text className="text-[34px] font-black text-slate-900 tracking-tight">OilFlow CRM</Text>
-            <View className="bg-indigo-50 px-4 py-1.5 rounded-full mt-3 border border-indigo-100">
-              <Text className="text-indigo-600 text-[11px] uppercase tracking-[0.2em] font-extrabold">
-                Premium Lead Management
-              </Text>
-            </View>
+          <View className="items-center mb-8 pt-10">
+            <Image 
+              source={require('../../assets/images/logo-glow.png')} 
+              style={{ width: 100, height: 100, borderRadius: 50, marginBottom: 24, borderWidth: 3, borderColor: '#E11D48' }}
+              resizeMode="cover"
+            />
+            <Text className="text-[28px] font-black text-[#881337] tracking-tight">KISAN<Text style={{ color: '#E11D48' }}>CONNECT</Text></Text>
+            <Text className="text-rose-500 text-[13px] mt-1 tracking-widest font-bold">PREMIUM LEAD MANAGER</Text>
           </View>
 
           {/* Form Container */}
-          <View className="p-8 rounded-[36px] bg-white border border-slate-100/60 shadow-2xl shadow-indigo-100/40">
-            <Text className="text-[22px] font-black mb-8 text-slate-800 tracking-tight">
-              Sign in to account
+          <View className="p-6 rounded-2xl bg-white border border-rose-100 shadow-xl shadow-rose-200/50">
+            <Text className="text-[28px] font-black text-[#881337] mb-1 tracking-tight">
+              Welcome back
+            </Text>
+            <Text className="text-slate-600 text-sm mb-6">
+              Sign in to your account to continue
             </Text>
 
             {errorMsg && (
-              <View className="bg-red-50/80 border border-red-100 p-4 rounded-2xl mb-6 flex-row items-center">
-                <Text className="text-red-600 text-sm font-bold flex-1">{errorMsg}</Text>
+              <View className="bg-red-50 border border-red-200 p-3 rounded-xl mb-6">
+                <Text className="text-red-600 text-sm font-semibold">{errorMsg}</Text>
               </View>
             )}
 
             {/* Mobile Number Field */}
-            <View className="mb-6">
-              <Text className="text-[11px] font-extrabold uppercase tracking-widest mb-2.5 text-slate-400">
-                Mobile Number
-              </Text>
+            <View className="mb-5">
+              <Text className="text-xs font-bold mb-2 text-slate-700">Mobile Number</Text>
               <Controller
                 control={control}
+                name="mobile"
                 rules={{ 
                   required: 'Mobile number is required',
                   pattern: { value: /^[0-9]{10}$/, message: 'Must be a 10-digit number' }
                 }}
                 render={({ field: { onChange, onBlur, value } }) => (
-                  <View className={`flex-row items-center border-[1.5px] rounded-[20px] px-4 py-4 bg-slate-50/50 ${errors.mobile ? 'border-red-300 bg-red-50/30' : 'border-slate-200'}`}>
-                    <View className="bg-indigo-100/50 p-2 rounded-xl">
-                      <Phone size={18} color="#4F46E5" strokeWidth={2.5} />
-                    </View>
+                  <View className={`flex-row items-center border ${errors.mobile ? 'border-red-400 bg-red-50' : 'border-rose-100 bg-rose-50/30'} rounded-xl px-4 h-12`}>
+                    <Smartphone size={18} color={errors.mobile ? '#EF4444' : '#E11D48'} className="mr-3" />
                     <TextInput
-                      className="flex-1 ml-3 text-[15px] text-slate-800 font-bold tracking-wider"
-                      placeholder="Enter 10-digit number"
+                      className="flex-1 text-sm text-slate-800 font-medium h-full"
+                      placeholder="Enter mobile number"
                       placeholderTextColor="#94A3B8"
-                      keyboardType="phone-pad"
+                      keyboardType="numeric"
+                      maxLength={10}
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
-                      maxLength={10}
+                      editable={!isSubmitting}
                     />
                   </View>
                 )}
-                name="mobile"
               />
+              {errors.mobile && <Text className="text-red-500 text-xs mt-1.5 font-medium ml-1">{errors.mobile.message}</Text>}
             </View>
 
             {/* Password Field */}
-            <View className="mb-6">
-              <Text className="text-[11px] font-extrabold uppercase tracking-widest mb-2.5 text-slate-400">
-                Password
-              </Text>
+            <View className="mb-5">
+              <Text className="text-xs font-bold mb-2 text-slate-700">Password</Text>
               <Controller
                 control={control}
+                name="password"
                 rules={{ required: 'Password is required' }}
                 render={({ field: { onChange, onBlur, value } }) => (
-                  <View className={`flex-row items-center border-[1.5px] rounded-[20px] px-4 py-4 bg-slate-50/50 ${errors.password ? 'border-red-300 bg-red-50/30' : 'border-slate-200'}`}>
-                    <View className="bg-indigo-100/50 p-2 rounded-xl">
-                      <Lock size={18} color="#4F46E5" strokeWidth={2.5} />
-                    </View>
+                  <View className={`flex-row items-center border ${errors.password ? 'border-red-400 bg-red-50' : 'border-rose-100 bg-rose-50/30'} rounded-xl px-4 h-12`}>
+                    <Lock size={18} color={errors.password ? '#EF4444' : '#E11D48'} className="mr-3" />
                     <TextInput
-                      className="flex-1 ml-3 text-[15px] text-slate-800 font-bold tracking-wider"
-                      placeholder="Enter password"
+                      className="flex-1 text-sm text-slate-800 font-medium h-full"
+                      placeholder="••••••••"
                       placeholderTextColor="#94A3B8"
                       secureTextEntry={!showPassword}
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
+                      editable={!isSubmitting}
                     />
-                    <TouchableOpacity onPress={() => setShowPassword(!showPassword)} className="p-2">
-                      {showPassword ? <EyeOff size={20} color="#94A3B8" /> : <Eye size={20} color="#94A3B8" />}
+                    <TouchableOpacity onPress={() => setShowPassword(!showPassword)} className="p-2 -mr-2">
+                      {showPassword ? (
+                        <EyeOff size={18} color="#E11D48" />
+                      ) : (
+                        <Eye size={18} color="#E11D48" />
+                      )}
                     </TouchableOpacity>
                   </View>
                 )}
-                name="password"
               />
+              {errors.password && <Text className="text-red-500 text-xs mt-1.5 font-medium ml-1">{errors.password.message}</Text>}
             </View>
 
-            {/* Remember Me */}
-            <TouchableOpacity 
-              className="flex-row items-center mt-2 mb-8" 
-              activeOpacity={0.8}
-              onPress={() => setRememberMe(!rememberMe)}
-            >
-              {rememberMe ? (
-                <View className="bg-indigo-500 rounded-lg p-0.5 shadow-sm shadow-indigo-300">
-                  <CheckSquare size={18} color="#FFFFFF" />
-                </View>
-              ) : (
-                <Square size={20} color="#CBD5E1" />
-              )}
-              <Text className="text-[13px] font-bold ml-3 text-slate-500">
-                Keep me logged in
-              </Text>
-            </TouchableOpacity>
+            {/* Remember Me & Forgot Password */}
+            <View className="flex-row justify-between items-center mb-8">
+              <TouchableOpacity 
+                className="flex-row items-center" 
+                onPress={() => setRememberMe(!rememberMe)}
+                disabled={isSubmitting}
+              >
+                {rememberMe ? (
+                  <CheckSquare size={18} color="#E11D48" />
+                ) : (
+                  <Square size={18} color="#94A3B8" />
+                )}
+                <Text className="ml-2 text-sm text-slate-700 font-medium">Remember Login</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity>
+                <Text className="text-sm font-bold text-[#BE123C]">Forgot Password?</Text>
+              </TouchableOpacity>
+            </View>
 
-            {/* Submit Button */}
-            <TouchableOpacity
+            {/* Login Button */}
+            <TouchableOpacity 
               onPress={handleSubmit(onSubmit)}
               disabled={isSubmitting}
-              className="rounded-[20px] shadow-lg shadow-indigo-500/40 overflow-hidden"
-              activeOpacity={0.9}
+              className={`h-14 rounded-xl justify-center items-center flex-row ${isSubmitting ? 'bg-rose-300' : 'bg-[#E11D48]'}`}
             >
-              <LinearGradient
-                colors={['#4F46E5', '#3B82F6']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={{ paddingVertical: 20, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
-              >
-                {isSubmitting ? (
-                  <ActivityIndicator size="small" color="#FFFFFF" />
-                ) : (
-                  <Text className="text-white text-[15px] font-black tracking-widest uppercase">
-                    Access Dashboard
-                  </Text>
-                )}
-              </LinearGradient>
+              {isSubmitting ? (
+                <ActivityIndicator color="#FFFFFF" />
+              ) : (
+                <>
+                  <Text className="text-white text-base font-bold mr-2">Login</Text>
+                  <LogIn size={18} color="#FFFFFF" />
+                </>
+              )}
             </TouchableOpacity>
+
+            {/* Demo Credentials */}
+            <View className="mt-6 border border-slate-200 bg-slate-50 p-4 rounded-xl">
+              <Text className="text-xs font-bold text-slate-700 mb-2">Demo Accounts (Tap to fill):</Text>
+              
+              <TouchableOpacity 
+                className="flex-row justify-between items-center bg-white p-2 border border-slate-200 rounded-lg mb-2"
+                onPress={() => {
+                  control._defaultValues.mobile = '9999999999';
+                  control._defaultValues.password = 'admin123';
+                  // In a real app we might use setValue from useForm, but for a quick demo this is fine, or just type it
+                }}
+              >
+                <View>
+                  <Text className="text-xs font-bold text-slate-800">Admin Account</Text>
+                  <Text className="text-[10px] text-slate-500">ID: 9999999999 | Pass: admin123</Text>
+                </View>
+                <View className="bg-indigo-100 px-2 py-1 rounded">
+                  <Text className="text-[10px] text-indigo-700 font-bold">Admin</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                className="flex-row justify-between items-center bg-white p-2 border border-slate-200 rounded-lg"
+              >
+                <View>
+                  <Text className="text-xs font-bold text-slate-800">Telecaller Account</Text>
+                  <Text className="text-[10px] text-slate-500">ID: 8888888888 | Pass: caller123</Text>
+                </View>
+                <View className="bg-emerald-100 px-2 py-1 rounded">
+                  <Text className="text-[10px] text-emerald-700 font-bold">Caller</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+
           </View>
           
+        </View>
+        
+        {/* Footer */}
+        <View className="items-center pb-8 z-10 relative">
+          <Text className="text-slate-500 text-xs mb-1">Need help accessing the panel?</Text>
+          <Text className="text-[#0B192C] text-xs font-bold">Contact System Administrator</Text>
+          
+          <View className="flex-row items-center mt-4 opacity-30">
+            <View className="h-px w-12 bg-slate-400" />
+            <Text className="text-slate-500 text-[10px] uppercase font-bold tracking-widest mx-2">Global Ops</Text>
+            <View className="h-px w-12 bg-slate-400" />
+          </View>
+        </View>
+
+        {/* Bottom Left Gear Watermark */}
+        <View className="absolute -bottom-10 -left-10 opacity-5 pointer-events-none">
+          <Settings size={200} color="#0B192C" strokeWidth={1} />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

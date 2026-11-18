@@ -50,9 +50,9 @@ export default function OfflineBanner() {
         className="bg-slate-900/20 hover:bg-slate-900/30 px-3 py-1.5 rounded-lg flex-row items-center"
       >
         {syncing ? (
-          <ActivityIndicator size="small" color="#FFFFFF" className="mr-1" />
+          <ActivityIndicator size="small" color="#FFFFFF" style={{ marginRight: 4 }} />
         ) : (
-          <RotateCw size={12} color="#FFFFFF" className="mr-1.5" />
+          <RotateCw size={12} color="#FFFFFF" style={{ marginRight: 6 }} />
         )}
         <Text className="text-white text-xxs font-extrabold uppercase tracking-wider">Sync</Text>
       </TouchableOpacity>

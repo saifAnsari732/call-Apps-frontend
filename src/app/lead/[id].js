@@ -1,46 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Alert, TextInput, Linking, RefreshControl, Platform } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, Alert, Linking, Image, Modal, AppState } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../../services/api';
-import { resolveRecordingUrl } from '../../services/imagekit';
-import { useThemeStore } from '../../store/themeStore';
-import { useAuthStore } from '../../store/authStore';
-import LeadTimeline from '../../components/Timeline';
-import CallModal from '../../components/CallModal';
+import { ChevronLeft, RefreshCcw, MapPin, Edit2, Briefcase, PhoneCall, Clock, CheckSquare, MessageCircle, X, Send } from 'lucide-react-native';
 import OfflineBanner from '../../components/OfflineBanner';
-import { Audio } from 'expo-av';
-import * as DocumentPicker from 'expo-document-picker';
-import { Phone, Calendar, Clipboard, History, ArrowLeft, Play, Pause, Square, Upload, Trash2, CalendarPlus, BadgeAlert } from 'lucide-react-native';
+import CallModal from '../../components/CallModal';
+import { useAuthStore } from '../../store/authStore';
 
 export default function LeadDetails() {
-  const { id } = useLocalSearchParams();
-  const { theme } = useThemeStore();
-  const { user: currentUser } = useAuthStore();
-  const isDark = theme === 'dark';
+  const { id, powerQueue } = useLocalSearchParams();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { user } = useAuthStore();
 
-  const [activeTab, setActiveTab] = useState('timeline'); // 'timeline', 'calls', 'followups'
-  const [refreshing, setRefreshing] = useState(false);
-
-  // Calling & Modal states
+  const [activeTab, setActiveTab] = useState('LEAD INFO');
   const [callModalVisible, setCallModalVisible] = useState(false);
-  const [callStartTime, setCallStartTime] = useState(null);
+  const [whatsappModalVisible, setWhatsappModalVisible] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [trackedDuration, setTrackedDuration] = useState(0);
 
-  // Audio state
-  const [sound, setSound] = useState(null);
-  const [playingCallId, setPlayingCallId] = useState(null);
-  const [uploadingCallId, setUploadingCallId] = useState(null);
+  // Edit Lead Form State
+  const [editForm, setEditForm] = useState({
+    name: '',
+    mobile: '',
+    email: '',
+    city: '',
+    state: '',
+    business_type: '',
+    product_interest: ''
+  });
 
-  // New Follow-up form state
-  const [newDate, setNewDate] = useState('');
-  const [newTime, setNewTime] = useState('');
-  const [newNotes, setNewNotes] = useState('');
-  const [creatingFollowup, setCreatingFollowup] = useState(false);
+  // Track when user leaves app for phone call
+  const callStartedAtRef = useRef(null);
+  const appStateRef = useRef(AppState.currentState);
 
-  // Fetch details
-  const { data, isLoading, error, refetch } = useQuery({
+  const { data: leadData, isLoading, refetch } = useQuery({
     queryKey: ['leadDetails', id],
     queryFn: async () => {
       const response = await api.get(`/leads/${id}`);
@@ -48,535 +43,511 @@ export default function LeadDetails() {
     }
   });
 
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await refetch();
-    setRefreshing(false);
-  };
-
-  // Cleanup sound player on unmount
+  // Listen for return from Phone Dialer to auto-pop CallModal with tracked duration
   useEffect(() => {
-    return sound
-      ? () => {
-          sound.unloadAsync();
-        }
-      : undefined;
-  }, [sound]);
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      if (
+        appStateRef.current.match(/inactive|background/) &&
+        nextAppState === 'active' &&
+        callStartedAtRef.current
+      ) {
+        const elapsedSec = Math.max(5, Math.round((Date.now() - callStartedAtRef.current) / 1000));
+        callStartedAtRef.current = null;
+        setTrackedDuration(elapsedSec);
+        setCallModalVisible(true);
+      }
+      appStateRef.current = nextAppState;
+    });
 
-  // Mutations
-  const logCallMutation = useMutation({
-    mutationFn: (callDetails) => api.post('/calls', callDetails),
-    onSuccess: () => {
+    return () => subscription.remove();
+  }, []);
+
+  const disposeMutation = useMutation({
+    mutationFn: (details) => api.post('/calls', details),
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ['leadDetails', id] });
       queryClient.invalidateQueries({ queryKey: ['telecallerDashboardStats'] });
-      Alert.alert('Logged', 'Call details updated successfully.');
-    }
-  });
+      queryClient.invalidateQueries({ queryKey: ['telecallerLeadsList'] });
+      queryClient.invalidateQueries({ queryKey: ['powerQueue'] });
 
-  const createFollowupMutation = useMutation({
-    mutationFn: (details) => api.post('/followups', details),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['leadDetails', id] });
-      setNewDate('');
-      setNewTime('');
-      setNewNotes('');
-      Alert.alert('Scheduled', 'Followup scheduled.');
-    },
-    onError: (err) => {
-      Alert.alert('Error', err.response?.data?.error || 'Failed scheduling.');
-    }
-  });
-
-  const uploadRecordingMutation = useMutation({
-    mutationFn: (formData) => api.post('/calls/upload-recording', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
+      if (powerQueue === '1') {
+        try {
+          const qRes = await api.get('/leads/power-queue');
+          const nextLead = qRes.data?.queue?.find(item => String(item.id) !== String(id));
+          if (nextLead) {
+            Alert.alert('Saved! Power Dialer Active', `Next in queue: ${nextLead.name} (${nextLead.queueReason})`, [
+              { text: 'Stop Queue', style: 'cancel', onPress: () => router.back() },
+              { text: 'Open Next Lead →', onPress: () => router.replace(`/lead/${nextLead.id}?powerQueue=1`) }
+            ]);
+            return;
+          }
+        } catch {}
       }
-    }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['leadDetails', id] });
-      Alert.alert('Uploaded', 'Call recording linked successfully.');
-    },
-    onError: (err) => {
-      Alert.alert('Upload Failed', err.response?.data?.error || 'Failed to upload audio.');
+
+      Alert.alert('Success', 'Call outcome & disposition saved!', [
+        { text: 'Stay Here' },
+        { text: 'Back to List', onPress: () => router.back() }
+      ]);
     }
   });
 
-  const deleteRecordingMutation = useMutation({
-    mutationFn: (callId) => api.delete(`/calls/recording/${callId}`),
+  const editLeadMutation = useMutation({
+    mutationFn: (payload) => api.put(`/leads/${id}`, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['leadDetails', id] });
-      Alert.alert('Deleted', 'Recording deleted.');
+      queryClient.invalidateQueries({ queryKey: ['telecallerLeadsList'] });
+      setEditModalVisible(false);
+      Alert.alert('Updated', 'Lead details updated successfully.');
     }
   });
 
-  // Call Dialer trigger
-  const handleMakeCall = () => {
-    if (!data?.lead?.mobile) return;
-    setCallStartTime(new Date().toISOString());
-    const telUrl = `tel:${data.lead.mobile}`;
-    Linking.openURL(telUrl)
-      .then(() => {
-        setCallModalVisible(true);
-      })
-      .catch((err) => {
-        console.log('Link error:', err);
-        Alert.alert('Unavailable', 'SIM Calling is not supported or permission denied on this device.');
-      });
+  const handleCallSubmit = async (details) => {
+    await disposeMutation.mutateAsync(details);
   };
 
-  const handleCallModalSubmit = async (loggedDetails) => {
-    const end_time = new Date().toISOString();
-    const duration = Math.round((new Date(end_time) - new Date(callStartTime)) / 1000);
-
-    const payload = {
-      lead_id: id,
-      status: loggedDetails.status,
-      notes: loggedDetails.notes,
-      start_time: callStartTime,
-      end_time,
-      duration,
-      followupDate: loggedDetails.followupDate,
-      followupTime: loggedDetails.followupTime,
-      followupNotes: loggedDetails.followupNotes
-    };
-
-    await logCallMutation.mutateAsync(payload);
-  };
-
-  // Follow-up handler
-  const handleScheduleFollowup = () => {
-    if (!newDate || !newTime) {
-      Alert.alert('Error', 'Please fill in scheduled Date and Time.');
+  const handleStartPhoneCall = (mobileNumber) => {
+    if (!mobileNumber) {
+      Alert.alert('Error', 'Mobile number not available');
       return;
     }
-    createFollowupMutation.mutate({
-      lead_id: id,
-      date: newDate,
-      time: newTime,
-      notes: newNotes
+    callStartedAtRef.current = Date.now();
+    Linking.openURL(`tel:${mobileNumber}`).catch(() => {
+      // Fallback if running on web/simulator where tel: doesn't background app
+      setTrackedDuration(45);
+      setCallModalVisible(true);
     });
   };
 
-  // Play Audio Streaming
-  const playSound = async (callId, pathUrl) => {
-    try {
-      // If already playing this file, stop it
-      if (playingCallId === callId && sound) {
-        await sound.stopAsync();
-        setPlayingCallId(null);
-        return;
-      }
-
-      // Stop previous sounds
-      if (sound) {
-        await sound.unloadAsync();
-      }
-
-      setPlayingCallId(callId);
-      
-      // Resolve URL — handles both ImageKit CDN and local server paths
-      const backendBase = api.defaults.baseURL.replace('/api', '');
-      const soundSource = resolveRecordingUrl(pathUrl, backendBase);
-
-      const { sound: newSound } = await Audio.Sound.createAsync(
-        { uri: soundSource },
-        { shouldPlay: true }
-      );
-      
-      setSound(newSound);
-
-      newSound.setOnPlaybackStatusUpdate((status) => {
-        if (status.didJustFinish) {
-          setPlayingCallId(null);
-        }
-      });
-
-    } catch (err) {
-      console.log('Playback error:', err.message);
-      Alert.alert('Playback Error', 'Cannot play recording file.');
-      setPlayingCallId(null);
+  const openWhatsAppWithTemplate = (templateText) => {
+    const lead = leadData?.lead || {};
+    const cleanPhone = String(lead.mobile || '').replace(/\D/g, '').slice(-10);
+    if (!cleanPhone) {
+      Alert.alert('Invalid Phone', 'Lead does not have a valid phone number.');
+      return;
     }
-  };
-
-  // Select and Upload Call Recording Audio
-  const handleUploadRecording = async (callId) => {
-    setUploadingCallId(callId);
-    try {
-      const result = await DocumentPicker.getDocumentAsync({
-        type: 'audio/*',
-        copyToCacheDirectory: true
-      });
-
-      if (result.canceled) return;
-
-      const file = result.assets[0];
-      const formData = new FormData();
-      formData.append('call_id', callId);
-      
-      // Prepare multipart file object
-      formData.append('recording', {
-        uri: file.uri,
-        name: file.name,
-        type: file.mimeType || 'audio/mpeg'
-      });
-
-      await uploadRecordingMutation.mutateAsync(formData);
-    } catch (err) {
-      console.log('Doc Picker Error:', err);
-    } finally {
-      setUploadingCallId(null);
-    }
-  };
-
-  const handleDeleteRecording = (callId) => {
-    Alert.alert(
-      'Delete Recording',
-      'Are you sure you want to delete this audio recording from the server?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Delete', style: 'destructive', onPress: () => deleteRecordingMutation.mutate(callId) }
-      ]
-    );
+    const msg = encodeURIComponent(templateText);
+    setWhatsappModalVisible(false);
+    Linking.openURL(`https://wa.me/91${cleanPhone}?text=${msg}`).catch(() => {
+      Alert.alert('Error', 'Could not open WhatsApp.');
+    });
   };
 
   if (isLoading) {
     return (
-      <View className={`flex-1 justify-center items-center ${isDark ? 'bg-slate-950' : 'bg-slate-50'}`}>
-        <ActivityIndicator size="large" color="#F59E0B" />
-        <Text className={`text-xs mt-3 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Loading Lead Profile...</Text>
+      <View className="flex-1 justify-center items-center bg-[#F8FAFC]">
+        <ActivityIndicator size="large" color="#0B192C" />
       </View>
     );
   }
 
-  const handleGoBack = () => {
-    if (router.canGoBack()) {
-      router.back();
-    } else {
-      router.replace('/'); // Fallback to Dashboard/Root
-    }
+  const getInitials = (name) => {
+    if (!name) return 'L';
+    const parts = name.trim().split(' ');
+    if (parts.length > 1) return (parts[0][0] + parts[1][0]).toUpperCase();
+    return parts[0][0].toUpperCase();
   };
 
-  if (error) {
-    return (
-      <View className={`flex-1 justify-center items-center p-6 ${isDark ? 'bg-slate-950' : 'bg-slate-50'}`}>
-        <Text className="text-red-500 text-sm font-semibold mb-2">Error Loading Profile</Text>
-        <Text className="text-xs text-slate-500 mb-6">{error.message}</Text>
-        <TouchableOpacity onPress={handleGoBack} className="bg-amber-500 px-6 py-3 rounded-xl">
-          <Text className="text-white text-xs font-bold">Go Back</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
+  const lead = leadData?.lead || {};
+  const agentName = user?.name || 'Sales Executive';
 
-  const { lead, calls, followups, timeline } = data;
-  const isPresenterAdmin = currentUser?.role === 'admin';
+  const quickTemplates = [
+    {
+      title: '1. Initial Welcome & Rate List',
+      tag: 'Welcome',
+      text: `Namaste ${lead.name || 'Sir/Madam'} ji! KisanConnect me inquiry karne ke liye dhanyawad (${lead.product_interest || 'Bulk Oil'}). Main ${agentName} bol raha hoon. Aapko product details aur rate list bhej raha hoon.`
+    },
+    {
+      title: '2. Call Not Connected / Busy',
+      tag: 'Missed Call',
+      text: `Namaste ${lead.name || 'Sir/Madam'} ji, humne aapko KisanConnect inquiry ke silsile me call kiya tha par sampark nahi ho paya. Kripya free hokar is message ka reply karein ya call back karein. - ${agentName}`
+    },
+    {
+      title: '3. Follow-up & Order Confirmation',
+      tag: 'Follow-up',
+      text: `Hello ${lead.name || 'Sir/Madam'} ji, jaisa humari call par baat hui, aapki ${lead.product_interest || 'order'} requirement note kar li gayi hai. Kisi bhi sahayata ke liye batayein. - ${agentName}`
+    },
+    {
+      title: '4. Distributor / Dealer Proposal',
+      tag: 'B2B Offer',
+      text: `Namaste ${lead.name || 'Sir/Madam'} ji! ${lead.city || 'Aapke shehar'} ke liye KisanConnect Dealership / Distributorship margin sheet aur brochure yahan share kar raha hoon. - ${agentName}`
+    }
+  ];
+
+  const openEditModal = () => {
+    setEditForm({
+      name: lead.name || '',
+      mobile: lead.mobile || '',
+      email: lead.email || '',
+      city: lead.city || '',
+      state: lead.state || '',
+      business_type: lead.business_type || '',
+      product_interest: lead.product_interest || ''
+    });
+    setEditModalVisible(true);
+  };
+
+  const formatDuration = (sec) => {
+    const mins = Math.floor((sec || 0) / 60);
+    const rem = (sec || 0) % 60;
+    return `${String(mins).padStart(2, '0')}:${String(rem).padStart(2, '0')}`;
+  };
 
   return (
-    <View className={`flex-1 ${isDark ? 'bg-slate-950' : 'bg-slate-50'}`}>
+    <View className="flex-1 bg-[#F8FAFC]">
       <OfflineBanner />
-      
-      {/* Detail Header bar */}
-      <View className={`px-4 py-3 flex-row items-center border-b ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
-        <TouchableOpacity onPress={handleGoBack} className="p-2 rounded-lg bg-slate-500/10">
-          <ArrowLeft size={16} color={isDark ? '#FFFFFF' : '#334155'} />
-        </TouchableOpacity>
-        <View className="ml-4 flex-1">
-          <Text className={`text-base font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{lead.name}</Text>
-          <Text className="text-amber-500 text-xxs font-extrabold uppercase tracking-wide">ID: {lead.id}</Text>
+
+      {/* HEADER */}
+      <View className="bg-[#0B192C] pt-14 pb-4 z-10">
+        <View className="px-4 flex-row items-center justify-between">
+          <View className="flex-row items-center">
+            <TouchableOpacity onPress={() => router.back()} className="mr-3 p-1">
+              <ChevronLeft color="#ffffff" size={26} />
+            </TouchableOpacity>
+            <Image 
+              source={require('../../../assets/brand-logo.jpg')}
+              style={{ width: 28, height: 28, borderRadius: 14, marginRight: 8, borderWidth: 1, borderColor: '#ffffff' }}
+              resizeMode="cover"
+            />
+            <View>
+              <Text className="text-white text-[18px] font-bold tracking-wide">
+                Lead Details {lead.lead_id ? `(${lead.lead_id})` : ''}
+              </Text>
+              {powerQueue === '1' && (
+                <Text className="text-[#FFB703] text-[10px] font-black uppercase tracking-widest">
+                  ⚡ Power Dialer Active
+                </Text>
+              )}
+            </View>
+          </View>
+          <View className="flex-row items-center gap-3">
+            <TouchableOpacity onPress={() => refetch()} className="p-1.5 bg-white/10 rounded-full">
+              <RefreshCcw color="#ffffff" size={18} />
+            </TouchableOpacity>
+            <View className="w-8 h-8 rounded-full bg-[#FFB703] justify-center items-center">
+              <Text className="text-[#0B192C] font-black text-[12px]">{getInitials(agentName)}</Text>
+            </View>
+          </View>
         </View>
       </View>
 
-      <ScrollView 
-        contentContainerStyle={{ paddingBottom: 100 }}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#F59E0B']} />}
-      >
-        <View className="p-4 space-y-6">
-          
-          {/* Profile Overview */}
-          <View className={`p-5 rounded-3xl border shadow-sm ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
-            <View className="flex-row justify-between items-center mb-4 pb-3.5 border-b border-slate-500/5">
-              <Text className={`text-xs font-bold uppercase ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Contact & Profile</Text>
-              <View className="bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-full">
-                <Text className="text-amber-500 text-[10px] font-black uppercase">{lead.status}</Text>
-              </View>
-            </View>
-
-            <View className="space-y-3">
-              <View className="flex-row justify-between">
-                <Text className="text-slate-400 text-xs">Mobile:</Text>
-                <Text className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-700'}`}>{lead.mobile}</Text>
-              </View>
-              <View className="flex-row justify-between">
-                <Text className="text-slate-400 text-xs">Email:</Text>
-                <Text className={`text-xs font-semibold ${isDark ? 'text-white' : 'text-slate-700'}`}>{lead.email || 'N/A'}</Text>
-              </View>
-              <View className="flex-row justify-between">
-                <Text className="text-slate-400 text-xs">City/State:</Text>
-                <Text className={`text-xs font-semibold ${isDark ? 'text-white' : 'text-slate-700'}`}>
-                  {lead.city || 'N/A'}, {lead.state || 'N/A'}
-                </Text>
-              </View>
-              <View className="flex-row justify-between">
-                <Text className="text-slate-400 text-xs">Business Type:</Text>
-                <Text className={`text-xs font-semibold ${isDark ? 'text-white' : 'text-slate-700'}`}>{lead.business_type || 'N/A'}</Text>
-              </View>
-              <View className="flex-row justify-between">
-                <Text className="text-slate-400 text-xs">Product Interest:</Text>
-                <Text className={`text-xs font-bold text-amber-500`}>{lead.product_interest || 'N/A'}</Text>
-              </View>
-              <View className="flex-row justify-between">
-                <Text className="text-slate-400 text-xs">Lead Source:</Text>
-                <Text className={`text-xs font-semibold ${isDark ? 'text-white' : 'text-slate-700'}`}>{lead.lead_source}</Text>
-              </View>
-              <View className="flex-row justify-between">
-                <Text className="text-slate-400 text-xs">Assigned To:</Text>
-                <Text className={`text-xs font-semibold ${isDark ? 'text-white' : 'text-slate-700'}`}>{lead.assigned_to_name || 'Unassigned'}</Text>
-              </View>
-            </View>
-          </View>
-
-          {/* Sub Content Tabs */}
-          <View className={`border-b flex-row ${isDark ? 'border-slate-800' : 'border-slate-200'}`}>
-            {[
-              { key: 'timeline', label: 'Timeline', icon: <Clipboard size={12} /> },
-              { key: 'calls', label: 'Call Audits', icon: <History size={12} /> },
-              { key: 'followups', label: 'Follow Ups', icon: <Calendar size={12} /> }
-            ].map(tab => (
-              <TouchableOpacity
-                key={tab.key}
-                onPress={() => setActiveTab(tab.key)}
-                className={`flex-1 py-3 items-center border-b-2 justify-center flex-row ${
-                  activeTab === tab.key ? 'border-amber-500' : 'border-transparent'
-                }`}
-              >
-                <Text className={`text-xs font-bold ${
-                  activeTab === tab.key ? 'text-amber-500' : isDark ? 'text-slate-400' : 'text-slate-600'
-                }`}>
-                  {tab.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-
-          {/* Tab content panel */}
-          <View>
-            {activeTab === 'timeline' && (
-              <LeadTimeline timeline={timeline} isDark={isDark} />
-            )}
-
-            {activeTab === 'calls' && (
-              <View className="space-y-4">
-                {calls.length === 0 ? (
-                  <Text className={`text-xs text-center py-8 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                    No call logs recorded.
-                  </Text>
-                ) : (
-                  calls.map((call) => {
-                    const isAudioPlaying = playingCallId === call.id;
-                    const isUploadingThis = uploadingCallId === call.id;
-                    const isCallerOwner = currentUser?.id === call.caller_id;
-
-                    return (
-                      <View 
-                        key={call.id}
-                        className={`p-4 rounded-3xl border shadow-sm ${
-                          isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'
-                        }`}
-                      >
-                        <View className="flex-row justify-between items-center mb-1.5">
-                          <Text className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>
-                            Log Status: {call.status}
-                          </Text>
-                          <Text className="text-xxs text-slate-400">
-                            {new Date(call.start_time).toLocaleDateString('en-IN', { hour: '2-digit', minute: '2-digit' })}
-                          </Text>
-                        </View>
-                        <Text className="text-[10px] text-amber-500 font-extrabold uppercase tracking-wide">
-                          Talk Time: {call.duration}s • Caller ID: {call.caller_id}
-                        </Text>
-                        <Text className={`text-xs mt-2 ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
-                          Notes: {call.notes}
-                        </Text>
-
-                        {/* Audio Call Recordings Panel */}
-                        <View className="mt-4 pt-3 border-t border-slate-500/5 flex-row justify-between items-center">
-                          {call.recording_url ? (
-                            <View className="flex-row items-center space-x-2">
-                              {/* Play stream */}
-                              <TouchableOpacity
-                                onPress={() => playSound(call.id, call.recording_url)}
-                                className={`px-4 py-2.5 rounded-xl flex-row items-center ${
-                                  isAudioPlaying ? 'bg-amber-500' : 'bg-emerald-500'
-                                }`}
-                              >
-                                {isAudioPlaying ? (
-                                  <>
-                                    <Square size={12} color="#FFFFFF" />
-                                    <Text className="text-white text-xxs font-bold ml-1.5">Pause</Text>
-                                  </>
-                                ) : (
-                                  <>
-                                    <Play size={12} color="#FFFFFF" />
-                                    <Text className="text-white text-xxs font-bold ml-1.5">Play Audio</Text>
-                                  </>
-                                )}
-                              </TouchableOpacity>
-
-                              {/* Admin deletion option */}
-                              {isPresenterAdmin && (
-                                <TouchableOpacity
-                                  onPress={() => handleDeleteRecording(call.id)}
-                                  className="bg-red-500/10 p-2.5 rounded-xl border border-red-500/20"
-                                >
-                                  <Trash2 size={12} color="#EF4444" />
-                                </TouchableOpacity>
-                              )}
-                            </View>
-                          ) : (
-                            // Upload option (Visible to Admin, or the Telecaller who owned the call)
-                            (isPresenterAdmin || isCallerOwner) && (
-                              <TouchableOpacity
-                                onPress={() => handleUploadRecording(call.id)}
-                                disabled={isUploadingThis}
-                                className={`px-4 py-2.5 rounded-xl border flex-row items-center ${
-                                  isDark ? 'border-slate-800 bg-slate-950' : 'border-slate-200 bg-slate-50'
-                                }`}
-                              >
-                                {isUploadingThis ? (
-                                  <ActivityIndicator size="small" color="#F59E0B" />
-                                ) : (
-                                  <>
-                                    <Upload size={12} color="#64748B" />
-                                    <Text className={`text-xxs font-bold ml-1.5 ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
-                                      Upload Recording File
-                                    </Text>
-                                  </>
-                                )}
-                              </TouchableOpacity>
-                            )
-                          )}
-                        </View>
-                      </View>
-                    );
-                  })
-                )}
-              </View>
-            )}
-
-            {activeTab === 'followups' && (
-              <View className="space-y-6">
-                
-                {/* Book Follow Up Form Widget */}
-                <View className={`p-4 rounded-3xl border ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
-                  <View className="flex-row items-center mb-4">
-                    <CalendarPlus size={16} color="#F59E0B" />
-                    <Text className={`text-xs font-bold ml-2 ${isDark ? 'text-white' : 'text-slate-800'}`}>
-                      Schedule New Follow Up
-                    </Text>
-                  </View>
-
-                  <View className="space-y-3.5 mb-4">
-                    <View className="flex-row justify-between">
-                      <View className="w-[48%]">
-                        <Text className={`text-[10px] font-bold uppercase mb-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Date (YYYY-MM-DD)</Text>
-                        <TextInput
-                          className={`border rounded-xl px-3 py-2 text-xs ${isDark ? 'border-slate-800 bg-slate-950 text-white' : 'border-slate-200 bg-slate-50 text-slate-800'}`}
-                          placeholder="e.g. 2026-06-01"
-                          placeholderTextColor="#475569"
-                          value={newDate}
-                          onChangeText={setNewDate}
-                        />
-                      </View>
-                      <View className="w-[48%]">
-                        <Text className={`text-[10px] font-bold uppercase mb-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Time (HH:MM)</Text>
-                        <TextInput
-                          className={`border rounded-xl px-3 py-2 text-xs ${isDark ? 'border-slate-800 bg-slate-950 text-white' : 'border-slate-200 bg-slate-50 text-slate-800'}`}
-                          placeholder="e.g. 15:30"
-                          placeholderTextColor="#475569"
-                          value={newTime}
-                          onChangeText={setNewTime}
-                        />
-                      </View>
-                    </View>
-                    <View>
-                      <Text className={`text-[10px] font-bold uppercase mb-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Notes</Text>
-                      <TextInput
-                        className={`border rounded-xl px-3 py-2 text-xs ${isDark ? 'border-slate-800 bg-slate-950 text-white' : 'border-slate-200 bg-slate-50 text-slate-800'}`}
-                        placeholder="e.g. Confirm volume order details..."
-                        placeholderTextColor="#475569"
-                        value={newNotes}
-                        onChangeText={setNewNotes}
-                      />
-                    </View>
-                  </View>
-
-                  <TouchableOpacity
-                    onPress={handleScheduleFollowup}
-                    className="bg-amber-500 py-3.5 rounded-xl flex-row justify-center items-center shadow-md shadow-amber-500/10"
-                  >
-                    <Text className="text-white text-xs font-bold">Schedule Meet</Text>
-                  </TouchableOpacity>
-                </View>
-
-                {/* Scheduled list */}
-                <View className="space-y-4">
-                  <Text className={`text-xs font-bold uppercase ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Scheduled Follow Ups</Text>
-                  {followups.length === 0 ? (
-                    <Text className={`text-xs text-center py-6 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                      No schedules booked yet.
-                    </Text>
-                  ) : (
-                    followups.map(item => (
-                      <View 
-                        key={item.id}
-                        className={`p-3.5 rounded-2xl border ${
-                          isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'
-                        } ${item.completed ? 'opacity-65' : ''}`}
-                      >
-                        <View className="flex-row justify-between items-center mb-1">
-                          <Text className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>
-                            Schedule: {item.date} @ {item.time}
-                          </Text>
-                          {item.completed === 1 && (
-                            <View className="bg-emerald-500/15 border border-emerald-500/20 px-2 py-0.5 rounded-md">
-                              <Text className="text-emerald-500 text-[8px] font-black uppercase">Completed</Text>
-                            </View>
-                          )}
-                        </View>
-                        <Text className={`text-xs ${isDark ? 'text-slate-300' : 'text-slate-650'}`}>Notes: {item.notes}</Text>
-                      </View>
-                    ))
-                  )}
-                </View>
-
-              </View>
-            )}
-          </View>
+      {/* SUB-HEADER (Call Time & Badge) */}
+      <View className="bg-white px-4 py-3 flex-row items-center justify-between border-b border-slate-100 z-10">
+        <View className="flex-row items-center">
+          <Clock size={16} color="#64748B" />
+          <Text className="text-[13px] font-bold text-slate-600 ml-1.5">
+            Last Talk: {formatDuration(trackedDuration)} • Attempts: {lead.call_attempts || (leadData?.calls?.length || 0)}
+          </Text>
         </View>
-      </ScrollView>
+        <View className="bg-[#FFF8E1] px-3 py-1 rounded-full border border-[#FFE082]">
+          <Text className="text-[#F59E0B] font-bold text-[11px] uppercase tracking-wider">{lead.status || 'Fresh Lead'}</Text>
+        </View>
+      </View>
 
-      {/* Floating Call Button */}
-      {lead.assigned_to_id === currentUser?.id && (
-        <View className="absolute bottom-6 right-6">
+      {/* TABS */}
+      <View className="bg-white flex-row justify-between px-2 pt-1 border-b border-slate-100 shadow-sm z-10">
+        {['LEAD INFO', 'TIMELINE', 'HISTORY'].map((tab) => (
           <TouchableOpacity
-            onPress={handleMakeCall}
-            className="w-14 h-14 bg-emerald-500 rounded-full justify-center items-center shadow-lg shadow-emerald-500/30 border border-emerald-400/20"
-            activeOpacity={0.9}
+            key={tab}
+            onPress={() => setActiveTab(tab)}
+            className={`pb-3 px-2 border-b-[3px] ${activeTab === tab ? 'border-[#FFB703]' : 'border-transparent'}`}
           >
-            <Phone size={24} color="#FFFFFF" />
+            <Text className={`text-[12px] font-bold tracking-widest ${activeTab === tab ? 'text-[#0B192C]' : 'text-slate-400'}`}>
+              {tab}
+            </Text>
           </TouchableOpacity>
+        ))}
+      </View>
+
+      {/* CONTENT AREA */}
+      {activeTab === 'TIMELINE' ? (
+        <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 120 }} showsVerticalScrollIndicator={false}>
+          <Text className="text-[20px] font-black text-[#0B192C] mb-4 tracking-tight">Lead Timeline</Text>
+          <View className="bg-white p-5 rounded-3xl shadow-sm border border-slate-100">
+            {leadData?.timeline && leadData.timeline.length > 0 ? (
+              leadData.timeline.map((event, index) => (
+                <View key={index} className="flex-row mb-6 relative">
+                  {index !== leadData.timeline.length - 1 && (
+                    <View className="absolute left-[11px] top-8 bottom-[-24px] w-[2px] bg-slate-100" />
+                  )}
+                  <View className="w-6 h-6 rounded-full items-center justify-center bg-blue-50 mt-1 mr-4 border-2 border-white shadow-sm z-10">
+                    <View className="w-2.5 h-2.5 bg-[#0B192C] rounded-full" />
+                  </View>
+                  <View className="flex-1">
+                    <Text className="text-[15px] font-bold text-slate-800">{event.title}</Text>
+                    <Text className="text-[13px] font-medium text-slate-500 mt-1">
+                      {new Date(event.date).toLocaleString('en-IN', {
+                        day: 'numeric', month: 'short', year: 'numeric',
+                        hour: '2-digit', minute: '2-digit', hour12: true
+                      })}
+                    </Text>
+                    {event.description ? (
+                      <Text className="text-[14px] text-slate-600 mt-2 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        {event.description}
+                      </Text>
+                    ) : null}
+                  </View>
+                </View>
+              ))
+            ) : (
+              <View className="items-center py-6">
+                <Text className="text-slate-400 font-bold">No timeline available.</Text>
+              </View>
+            )}
+          </View>
+        </ScrollView>
+      ) : activeTab === 'HISTORY' ? (
+        <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 120 }} showsVerticalScrollIndicator={false}>
+          <Text className="text-[20px] font-black text-[#0B192C] mb-4 tracking-tight">Call History</Text>
+          <View className="bg-white p-5 rounded-3xl shadow-sm border border-slate-100">
+            {leadData?.calls && leadData.calls.length > 0 ? (
+              leadData.calls.map((call, index) => (
+                <View key={index} className="mb-5 pb-5 border-b border-slate-100">
+                  <View className="flex-row justify-between items-start mb-2">
+                    <View>
+                      <Text className="text-[15px] font-bold text-[#0B192C]">Status: {call.status}</Text>
+                      <Text className="text-[12px] text-slate-500 mt-0.5">
+                        {new Date(call.start_time).toLocaleString('en-IN', {
+                          day: 'numeric', month: 'short', year: 'numeric',
+                          hour: '2-digit', minute: '2-digit', hour12: true
+                        })}
+                      </Text>
+                    </View>
+                    <View className="bg-slate-100 px-2 py-1 rounded-md">
+                      <Text className="text-[11px] font-bold text-slate-600">Dur: {call.duration}s</Text>
+                    </View>
+                  </View>
+                  {call.notes ? (
+                    <Text className="text-[14px] text-slate-600 mt-2 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                      {call.notes}
+                    </Text>
+                  ) : null}
+                </View>
+              ))
+            ) : (
+              <View className="items-center py-6">
+                <Text className="text-slate-400 font-bold">No calls logged yet.</Text>
+              </View>
+            )}
+          </View>
+        </ScrollView>
+      ) : (
+        <View className="flex-1">
+          <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 120 }} showsVerticalScrollIndicator={false}>
+            {/* Card 1: Basic Info */}
+            <View className="bg-white rounded-[24px] p-5 mb-4 shadow-sm border border-slate-100 relative">
+              <TouchableOpacity onPress={openEditModal} className="absolute top-4 right-4 p-2 z-10 bg-slate-50 rounded-full">
+                <Edit2 size={16} color="#0B192C" />
+              </TouchableOpacity>
+              <View className="flex-row items-center">
+                <View className="w-[64px] h-[64px] bg-[#EEF2FF] rounded-full justify-center items-center mr-4">
+                  <Text className="text-[#0B192C] font-black text-[22px]">{getInitials(lead.name)}</Text>
+                </View>
+                <View className="flex-1 pr-6">
+                  <Text className="text-[18px] font-black text-[#0B192C] leading-tight mb-1">{lead.name}</Text>
+                  <View className="flex-row items-center mt-0.5 mb-2">
+                    <MapPin size={12} color="#64748B" />
+                    <Text className="text-[13px] font-medium text-slate-500 ml-1 leading-tight">
+                      {lead.city ? `${lead.city}${lead.state ? `, ${lead.state}` : ''}` : 'Location N/A'}
+                    </Text>
+                  </View>
+                  <View className="flex-row flex-wrap gap-2">
+                    <View className="bg-slate-100 px-2.5 py-1 rounded-md mb-1">
+                      <Text className="text-[10px] font-bold text-slate-600 uppercase">{lead.business_type || 'Retail'}</Text>
+                    </View>
+                    {lead.tags && lead.tags.map((t, idx) => (
+                      <View key={idx} className="bg-rose-100 px-2.5 py-1 rounded-md border border-rose-200 mb-1">
+                        <Text className="text-[10px] font-bold text-rose-700 uppercase">{t}</Text>
+                      </View>
+                    ))}
+                  </View>
+                </View>
+              </View>
+            </View>
+
+            {/* Card 2: Contact Details */}
+            <View className="bg-white rounded-[24px] mb-4 shadow-sm border border-slate-100 overflow-hidden">
+              <View className="bg-slate-50 px-5 py-3.5 border-b border-slate-100">
+                <Text className="text-[12px] font-bold text-slate-700 uppercase tracking-widest">Contact Details</Text>
+              </View>
+              <View className="p-5">
+                <View className="flex-row justify-between items-center mb-5">
+                  <Text className="text-[14px] text-slate-500 font-medium">Mobile Number</Text>
+                  <Text className="text-[15px] text-[#0B192C] font-black">+91 {lead.mobile}</Text>
+                </View>
+                <View className="flex-row justify-between items-center mb-5">
+                  <Text className="text-[14px] text-slate-500 font-medium">Email Address</Text>
+                  <Text className="text-[14px] text-[#0B192C] font-bold">{lead.email || 'N/A'}</Text>
+                </View>
+                <View className="flex-row justify-between items-center">
+                  <Text className="text-[14px] text-slate-500 font-medium">Lead Source</Text>
+                  <Text className="text-[14px] text-[#0B192C] font-bold">{lead.lead_source || 'Meta Lead Ads'}</Text>
+                </View>
+              </View>
+            </View>
+
+            {/* Card 3: Product Interests */}
+            <View className="bg-white rounded-[24px] mb-6 shadow-sm border border-slate-100 overflow-hidden">
+              <View className="bg-slate-50 px-5 py-3.5 border-b border-slate-100">
+                <Text className="text-[12px] font-bold text-slate-700 uppercase tracking-widest">Product Interest & Notes</Text>
+              </View>
+              <View className="p-5 space-y-3">
+                <View className="flex-row items-center bg-[#F8FAFC] p-3 rounded-2xl border border-slate-100">
+                  <View className="w-11 h-11 bg-[#F5E6D3] rounded-xl justify-center items-center mr-4">
+                    <CheckSquare size={20} color="#78350F" />
+                  </View>
+                  <View className="flex-1">
+                    <Text className="text-[14px] font-bold text-[#0B192C]">{lead.product_interest || 'General Inquiry'}</Text>
+                    <Text className="text-[12px] text-slate-500 mt-0.5 font-medium">Business Type: {lead.business_type || 'Trader / Distributor'}</Text>
+                  </View>
+                </View>
+                {lead.notes ? (
+                  <View className="bg-amber-50/70 p-3.5 rounded-2xl border border-amber-200/60 mt-3">
+                    <Text className="text-[11px] font-bold text-amber-800 uppercase mb-1">Lead Metadata & Notes</Text>
+                    <Text className="text-[12px] text-slate-700 font-medium">{lead.notes}</Text>
+                  </View>
+                ) : null}
+              </View>
+            </View>
+          </ScrollView>
+
+          {/* FIXED BOTTOM BAR: CALL NOW + WHATSAPP + DISPOSITION */}
+          <View className="absolute bottom-6 left-0 right-0 p-4 bg-white border-t border-slate-100 flex-row items-center justify-between shadow-lg">
+            <TouchableOpacity 
+              onPress={() => handleStartPhoneCall(lead.mobile)}
+              className="flex-1 bg-[#FFB703] py-4 rounded-full flex-row justify-center items-center mr-2.5 shadow-sm"
+            >
+              <PhoneCall size={20} color="#0B192C" fill="#0B192C" />
+              <Text className="text-[#0B192C] text-[15px] font-black tracking-wide ml-2">CALL NOW</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              onPress={() => setWhatsappModalVisible(true)}
+              className="w-[52px] h-[52px] bg-[#25D366] rounded-full justify-center items-center mr-2.5 shadow-sm"
+            >
+              <MessageCircle size={22} color="#ffffff" />
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              onPress={() => setCallModalVisible(true)}
+              className="w-[52px] h-[52px] bg-[#0B192C] rounded-full justify-center items-center shadow-sm"
+            >
+              <Briefcase size={22} color="#ffffff" />
+            </TouchableOpacity>
+          </View>
         </View>
       )}
 
-      {/* Logger Popup modal */}
-      <CallModal
-        visible={callModalVisible}
-        onClose={() => setCallModalVisible(false)}
-        lead={lead}
-        onSubmit={handleCallModalSubmit}
-        isDark={isDark}
-      />
+      {/* WHATSAPP QUICK TEMPLATES MODAL */}
+      <Modal
+        visible={whatsappModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setWhatsappModalVisible(false)}
+      >
+        <View className="flex-1 justify-end bg-black/60">
+          <View className="bg-white rounded-t-3xl p-6 max-h-[80%]">
+            <View className="flex-row justify-between items-center mb-4">
+              <View>
+                <Text className="text-lg font-black text-slate-900">1-Tap WhatsApp Message</Text>
+                <Text className="text-xs text-slate-500">Send instant template to {lead.name} (+91 {lead.mobile})</Text>
+              </View>
+              <TouchableOpacity onPress={() => setWhatsappModalVisible(false)} className="p-2 bg-slate-100 rounded-full">
+                <X size={18} color="#475569" />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView showsVerticalScrollIndicator={false}>
+              {quickTemplates.map((tpl, idx) => (
+                <TouchableOpacity
+                  key={idx}
+                  onPress={() => openWhatsAppWithTemplate(tpl.text)}
+                  className="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-200 mb-3"
+                >
+                  <View className="flex-row justify-between items-center mb-1.5">
+                    <Text className="text-sm font-black text-slate-900">{tpl.title}</Text>
+                    <View className="bg-emerald-600 px-2.5 py-0.5 rounded-full flex-row items-center">
+                      <Send size={10} color="#fff" />
+                      <Text className="text-[10px] font-bold text-white ml-1">Send</Text>
+                    </View>
+                  </View>
+                  <Text className="text-xs text-slate-600 leading-5">{tpl.text}</Text>
+                </TouchableOpacity>
+              ))}
+
+              <TouchableOpacity
+                onPress={() => openWhatsAppWithTemplate(`Namaste ${lead.name || ''} ji, `)}
+                className="p-4 rounded-2xl bg-slate-900 items-center justify-center mt-2 mb-4"
+              >
+                <Text className="text-white font-bold text-sm">Open Direct Blank WhatsApp Chat</Text>
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
+      {/* EDIT LEAD DETAILS MODAL */}
+      <Modal
+        visible={editModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setEditModalVisible(false)}
+      >
+        <View className="flex-1 justify-end bg-black/60">
+          <View className="bg-white rounded-t-3xl p-6 max-h-[85%]">
+            <View className="flex-row justify-between items-center mb-4">
+              <Text className="text-lg font-black text-slate-900">Edit Lead Information</Text>
+              <TouchableOpacity onPress={() => setEditModalVisible(false)} className="p-2 bg-slate-100 rounded-full">
+                <X size={18} color="#475569" />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView showsVerticalScrollIndicator={false}>
+              {[
+                { key: 'name', label: 'Customer / Firm Name' },
+                { key: 'mobile', label: 'Mobile Number' },
+                { key: 'email', label: 'Email Address' },
+                { key: 'city', label: 'City' },
+                { key: 'state', label: 'State' },
+                { key: 'business_type', label: 'Business Type (Distributor / Trader / Retail)' },
+                { key: 'product_interest', label: 'Product Interest' }
+              ].map((field) => (
+                <View key={field.key} className="mb-3.5">
+                  <Text className="text-xs font-bold text-slate-600 mb-1">{field.label}</Text>
+                  <TextInput
+                    value={editForm[field.key]}
+                    onChangeText={(val) => setEditForm({ ...editForm, [field.key]: val })}
+                    className="border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 bg-slate-50"
+                  />
+                </View>
+              ))}
+
+              <TouchableOpacity
+                onPress={() => editLeadMutation.mutate(editForm)}
+                disabled={editLeadMutation.isPending}
+                className="bg-[#E11D48] py-4 rounded-xl items-center justify-center mt-2 mb-6"
+              >
+                {editLeadMutation.isPending ? (
+                  <ActivityIndicator size="small" color="#fff" />
+                ) : (
+                  <Text className="text-white font-bold text-sm">Save Lead Changes</Text>
+                )}
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
+      {/* CALL MODAL FOR DISPOSITION */}
+      {lead && (lead.id || lead._id) && (
+        <CallModal
+          visible={callModalVisible}
+          onClose={() => setCallModalVisible(false)}
+          lead={lead}
+          onSubmit={handleCallSubmit}
+          isDark={false}
+          initialDuration={trackedDuration}
+        />
+      )}
     </View>
   );
 }

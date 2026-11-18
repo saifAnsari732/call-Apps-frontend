@@ -1,14 +1,5 @@
 import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
-import { Platform } from 'react-native';
-
-const getBaseUrl = () => {
-  if (__DEV__) {
-    return Platform.OS === 'android' ? 'http://10.0.2.2:3001/api' : 'http://localhost:3001/api';
-  }
-  return 'https://api.oilflowcrm.com/api'; 
-};
 
 export const useAuthStore = create((set, get) => ({
   user: null,
@@ -42,10 +33,9 @@ export const useAuthStore = create((set, get) => ({
         
         set({ token, user, isAuthenticated: true, isLoading: false });
 
-        // Verify token with backend to refresh user info in background (don't await blocking UI)
-        axios.get(`${getBaseUrl()}/auth/me`, {
-          headers: { Authorization: `Bearer ${token}` }
-        }).then(async (response) => {
+        // Verify token with backend to refresh user info in background
+        const api = require('../services/api').default;
+        api.get('/auth/me').then(async (response) => {
           const freshUser = response.data.user;
           await AsyncStorage.setItem('user', JSON.stringify(freshUser));
           set({ user: freshUser });

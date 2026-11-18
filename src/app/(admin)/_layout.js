@@ -1,8 +1,23 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
-import { LayoutDashboard, Users, UserSquare2, FileSpreadsheet, Settings } from 'lucide-react-native';
+import { LayoutDashboard, Users, UserSquare2, FileSpreadsheet, Settings, Headset, BarChart2 } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Platform, View } from 'react-native';
+import { Platform, View, Text } from 'react-native';
+
+const TabIcon = ({ name, icon: Icon, focused }) => {
+  if (focused) {
+      <View className="items-center justify-center pt-2">
+        <Icon size={22} color="#F59E0B" strokeWidth={2.5} />
+        <Text className="text-[#F59E0B] font-bold text-[11px] mt-1">{name}</Text>
+      </View>
+  }
+  return (
+    <View className="items-center justify-center pt-2">
+      <Icon size={20} color="#64748B" strokeWidth={2} />
+      <Text className="text-slate-500 font-medium text-[10px] mt-1">{name}</Text>
+    </View>
+  );
+};
 
 export default function AdminLayout() {
   const insets = useSafeAreaInsets();
@@ -14,54 +29,49 @@ export default function AdminLayout() {
         tabBarStyle: {
           backgroundColor: '#FFFFFF',
           borderTopWidth: 1,
-          borderTopColor: 'rgba(0,0,0,0.03)',
-          elevation: 20,
-          shadowColor: '#4F46E5',
-          shadowOffset: { width: 0, height: -10 },
-          shadowOpacity: 0.08,
-          shadowRadius: 20,
-          height: Platform.OS === 'ios' ? 85 : 80,
-          paddingBottom: Platform.OS === 'ios' ? insets.bottom : 10,
+          borderTopColor: '#F1F5F9',
+          height: Platform.OS === 'ios' ? 100 : 90,
+          paddingBottom: Platform.OS === 'ios' ? Math.max(insets.bottom, 30) : 30,
           paddingTop: 10,
+          paddingHorizontal: 10,
+          elevation: 10,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.05,
+          shadowRadius: 5,
         },
-        tabBarActiveTintColor: '#4F46E5',
-        tabBarInactiveTintColor: '#94A3B8',
         tabBarShowLabel: false,
       }}
     >
       <Tabs.Screen
         name="dashboard"
         options={{
-          title: 'Dashboard',
-          tabBarIcon: ({ color }) => <LayoutDashboard size={24} color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="users"
-        options={{
-          title: 'Users',
-          tabBarIcon: ({ color }) => <Users size={24} color={color} />,
+          tabBarIcon: ({ focused }) => <TabIcon name="Dashboard" icon={LayoutDashboard} focused={focused} />
         }}
       />
       <Tabs.Screen
         name="leads"
         options={{
-          title: 'Leads',
-          tabBarIcon: ({ color }) => <UserSquare2 size={24} color={color} />,
+          tabBarIcon: ({ focused }) => <TabIcon name="Leads" icon={Users} focused={focused} />
+        }}
+      />
+      <Tabs.Screen
+        name="users"
+        options={{
+          title: 'Callers',
+          tabBarIcon: ({ focused }) => <TabIcon name="Callers" icon={Headset} focused={focused} />
         }}
       />
       <Tabs.Screen
         name="reports"
         options={{
-          title: 'Reports',
-          tabBarIcon: ({ color }) => <FileSpreadsheet size={24} color={color} />,
+          tabBarIcon: ({ focused }) => <TabIcon name="Reports" icon={BarChart2} focused={focused} />
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
-          title: 'Settings',
-          tabBarIcon: ({ color }) => <Settings size={24} color={color} />,
+          tabBarIcon: ({ focused }) => <TabIcon name="Settings" icon={Settings} focused={focused} />
         }}
       />
     </Tabs>

@@ -4,9 +4,6 @@
 export const IMAGEKIT_URL_ENDPOINT = 'https://ik.imagekit.io/4eqyb4rwe';
 
 /**
- * Resolves a recording URL — if the URL is an ImageKit URL it is returned
- * as-is; if it is a relative server path it is prefixed with the backend host.
- *
  * @param {string} recordingUrl  - URL stored in the database (can be IK URL or relative /recordings/...)
  * @param {string} backendBase   - Base URL of your backend (e.g. http://10.0.2.2:3000)
  * @returns {string}             - Fully qualified playback URL

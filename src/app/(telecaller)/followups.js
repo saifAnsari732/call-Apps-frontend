@@ -1,59 +1,49 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, RefreshControl, ActivityIndicator, Alert, Linking } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, RefreshControl, ActivityIndicator, Alert, Linking, Image } from 'react-native';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../../services/api';
-import { useThemeStore } from '../../store/themeStore';
-import { PhoneCall, Check, AlertCircle, CalendarRange } from 'lucide-react-native';
+import { PhoneCall, Check, Clock, Bell, MessageCircle, ExternalLink } from 'lucide-react-native';
 import OfflineBanner from '../../components/OfflineBanner';
 import CallModal from '../../components/CallModal';
+import { useRouter } from 'expo-router';
 
 export default function TelecallerFollowups() {
-  const { theme } = useThemeStore();
-  const isDark = theme === 'dark';
   const queryClient = useQueryClient();
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState('today'); // 'today', 'upcoming', 'overdue'
   const [refreshing, setRefreshing] = useState(false);
 
-  // Call logger state
   const [selectedLeadForCall, setSelectedLeadForCall] = useState(null);
   const [callModalVisible, setCallModalVisible] = useState(false);
-  const [callStartTime, setCallStartTime] = useState(null);
 
-  // Query followups
   const todayDate = new Date().toISOString().split('T')[0];
-  const { data, isLoading, error, refetch } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['telecallerFollowupsList', todayDate],
     queryFn: async () => {
       const response = await api.get('/followups', {
         params: { todayDate }
       });
       return response.data;
-    }
+    },
+    staleTime: 2 * 60 * 1000
   });
 
-  // Mutations
   const completeMutation = useMutation({
-    mutationFn: (id) => api.patch(`/followups/${id}/complete`),
+    mutationFn: (followupId) => api.patch(`/followups/${followupId}/complete`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['telecallerFollowupsList'] });
       queryClient.invalidateQueries({ queryKey: ['telecallerDashboardStats'] });
-      Alert.alert('Completed', 'Follow-up marked as completed.');
-    },
-    onError: (err) => {
-      Alert.alert('Error', err.response?.data?.error || 'Failed to complete.');
+      Alert.alert('Done', 'Follow-up marked as completed.');
     }
   });
 
-  const logCallMutation = useMutation({
-    mutationFn: (callDetails) => api.post('/calls', callDetails),
+  const disposeMutation = useMutation({
+    mutationFn: (details) => api.post('/calls', details),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['telecallerFollowupsList'] });
       queryClient.invalidateQueries({ queryKey: ['telecallerDashboardStats'] });
       queryClient.invalidateQueries({ queryKey: ['telecallerLeadsList'] });
-      queryClient.invalidateQueries({ queryKey: ['telecallerFollowupsList'] });
-      Alert.alert('Success', 'Call logged successfully.');
-    },
-    onError: (err) => {
-      Alert.alert('Failed to log call', err.message);
+      Alert.alert('Success', 'Call outcome saved & follow-up updated!');
     }
   });
 
@@ -63,199 +53,182 @@ export default function TelecallerFollowups() {
     setRefreshing(false);
   };
 
-  const handleComplete = (followupId) => {
-    completeMutation.mutate(followupId);
-  };
+  const list = data?.[activeTab] || [];
 
-  // Dialer flow
-  const triggerSimCall = (lead) => {
-    if (!lead || !lead.mobile) return;
-    
-    setCallStartTime(new Date().toISOString());
-    setSelectedLeadForCall(lead);
-
-    const telUrl = `tel:${lead.mobile}`;
-    Linking.openURL(telUrl)
-      .then(() => {
-        setCallModalVisible(true);
-      })
-      .catch((err) => {
-        console.log('Link error:', err);
-        Alert.alert('Unavailable', 'SIM Calling is not supported or permission denied on this device.');
-      });
-  };
-
-  const handleCallModalSubmit = async (loggedDetails) => {
-    const end_time = new Date().toISOString();
-    const duration = Math.round((new Date(end_time) - new Date(callStartTime)) / 1000);
-
-    const payload = {
-      lead_id: loggedDetails.lead_id,
-      status: loggedDetails.status,
-      notes: loggedDetails.notes,
-      start_time: callStartTime,
-      end_time,
-      duration,
-      followupDate: loggedDetails.followupDate,
-      followupTime: loggedDetails.followupTime,
-      followupNotes: loggedDetails.followupNotes
+  const handleCall = (item) => {
+    const mobile = item.lead_mobile || item.lead?.mobile;
+    const leadId = item.lead?._id || item.lead;
+    const leadObj = {
+      id: leadId,
+      name: item.lead_name || item.lead?.name || 'Lead',
+      mobile
     };
+    setSelectedLeadForCall(leadObj);
 
-    await logCallMutation.mutateAsync(payload);
+    if (mobile) {
+      Linking.openURL(`tel:${mobile}`).catch(() => {});
+    }
+    setTimeout(() => {
+      setCallModalVisible(true);
+    }, 600);
   };
 
-  if (isLoading) {
-    return (
-      <View className={`flex-1 justify-center items-center ${isDark ? 'bg-slate-950' : 'bg-slate-50'}`}>
-        <ActivityIndicator size="large" color="#F59E0B" />
-        <Text className={`text-sm mt-3 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Loading schedules...</Text>
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View className={`flex-1 justify-center items-center px-6 ${isDark ? 'bg-slate-950' : 'bg-slate-50'}`}>
-        <Text className="text-red-500 text-sm font-semibold mb-2">Error Loading Followups</Text>
-        <Text className="text-xs text-slate-500 text-center mb-6">{error.message}</Text>
-        <TouchableOpacity onPress={() => refetch()} className="bg-amber-500 px-6 py-3 rounded-xl">
-          <Text className="text-white text-xs font-bold">Retry</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
-
-  // Get active list from tab
-  const getActiveList = () => {
-    if (activeTab === 'today') return data.today || [];
-    if (activeTab === 'upcoming') return data.upcoming || [];
-    return data.overdue || [];
+  const handleWhatsApp = (item) => {
+    const mobile = String(item.lead_mobile || item.lead?.mobile || '').replace(/\D/g, '').slice(-10);
+    if (!mobile) {
+      Alert.alert('No Mobile', 'Valid mobile number not found for this lead.');
+      return;
+    }
+    const name = item.lead_name || item.lead?.name || 'Sir';
+    const text = encodeURIComponent(`Namaste ${name} ji, KisanConnect se aapke scheduled follow-up ke liye sampark kar rahe hain.`);
+    Linking.openURL(`https://wa.me/91${mobile}?text=${text}`).catch(() => {});
   };
-
-  const activeList = getActiveList();
 
   return (
-    <View className={`flex-1 ${isDark ? 'bg-slate-950' : 'bg-slate-50'}`}>
+    <View className="flex-1 bg-[#F8FAFC]">
       <OfflineBanner />
+      
+      {/* Top Header */}
+      <View className="pt-14 pb-4 px-6 flex-row items-center justify-between bg-[#F8FAFC]">
+        <View className="flex-row items-center">
+          <Image 
+            source={require('../../../assets/brand-logo.jpg')}
+            style={{ width: 40, height: 40, borderRadius: 20, marginRight: 12, borderWidth: 1, borderColor: '#0B192C' }}
+            resizeMode="cover"
+          />
+          <View>
+            <Text className="text-2xl font-black text-[#0B192C] tracking-tight">Follow-ups & Tasks</Text>
+            <Text className="text-xs text-slate-500 font-medium">Scheduled callbacks & reminders</Text>
+          </View>
+        </View>
+        <TouchableOpacity onPress={onRefresh} className="p-2">
+          <Bell size={22} color="#0B192C" />
+        </TouchableOpacity>
+      </View>
 
-      {/* Tab controls */}
-      <View className={`flex-row border-b p-2 ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
-        {[
-          { key: 'today', label: 'Today', count: data.today?.length || 0, badgeColor: 'bg-amber-500' },
-          { key: 'upcoming', label: 'Upcoming', count: data.upcoming?.length || 0, badgeColor: 'bg-blue-500' },
-          { key: 'overdue', label: 'Overdue', count: data.overdue?.length || 0, badgeColor: 'bg-red-500' }
-        ].map((tab) => {
-          const isSelected = activeTab === tab.key;
-          return (
+      {/* Segmented Control */}
+      <View className="px-5 mb-5">
+        <View className="flex-row bg-[#F1F5F9] rounded-xl p-1">
+          {[
+            { key: 'today', label: `Today (${data?.today?.length || 0})` },
+            { key: 'overdue', label: `Overdue (${data?.overdue?.length || 0})` },
+            { key: 'upcoming', label: `Upcoming (${data?.upcoming?.length || 0})` }
+          ].map((tab) => (
             <TouchableOpacity
               key={tab.key}
               onPress={() => setActiveTab(tab.key)}
-              className={`flex-1 py-3 items-center border-b-2 justify-center flex-row ${
-                isSelected ? 'border-amber-500' : 'border-transparent'
-              }`}
+              className="flex-1 py-2.5 rounded-lg items-center justify-center shadow-sm"
+              style={{ backgroundColor: activeTab === tab.key ? '#0B192C' : 'transparent' }}
             >
-              <Text className={`text-xs font-bold ${
-                isSelected ? 'text-amber-500' : isDark ? 'text-slate-400' : 'text-slate-600'
-              }`}>
+              <Text className="text-xs font-bold" style={{ color: activeTab === tab.key ? '#FFFFFF' : '#64748B' }}>
                 {tab.label}
               </Text>
-              {tab.count > 0 && (
-                <View className={`ml-1.5 px-2 py-0.5 rounded-full ${tab.badgeColor}`}>
-                  <Text className="text-white text-[9px] font-black">{tab.count}</Text>
-                </View>
-              )}
             </TouchableOpacity>
-          );
-        })}
+          ))}
+        </View>
       </View>
 
-      {/* Followups scroll view */}
-      <ScrollView
-        contentContainerStyle={{ padding: 12 }}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#F59E0B']} />
-        }
-      >
-        {activeList.length === 0 ? (
-          <View className="items-center py-20 px-6">
-            <CalendarRange size={36} color={isDark ? '#475569' : '#CBD5E1'} className="mb-4" />
-            <Text className={`text-xs text-center font-semibold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-              No scheduled follow-ups here. Clean sheet!
-            </Text>
-          </View>
-        ) : (
-          <View className="space-y-4">
-            {activeList.map((item) => (
-              <View
-                key={item.id}
-                className={`p-4 rounded-3xl border shadow-sm ${
-                  isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'
-                }`}
-              >
-                {/* Header info */}
-                <View className="flex-row justify-between items-start mb-2">
-                  <View className="flex-1 mr-2">
-                    <Text className={`text-sm font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>
-                      {item.lead_name}
+      {/* List */}
+      {isLoading ? (
+        <View className="py-20 items-center justify-center">
+          <ActivityIndicator size="large" color="#0B192C" />
+        </View>
+      ) : (
+        <ScrollView
+          contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 120 }}
+          showsVerticalScrollIndicator={false}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#0B192C" />}
+        >
+          {list.map((item, index) => {
+            const isOverdue = activeTab === 'overdue';
+            const isToday = activeTab === 'today';
+            const borderColorHex = isOverdue ? '#DC2626' : isToday ? '#F59E0B' : '#CBD5E1';
+            const leadId = item.lead?._id || item.lead;
+            
+            return (
+              <View key={item.id || index} className="bg-white rounded-2xl p-5 mb-4 border-l-4 shadow-sm shadow-slate-200" style={{ borderLeftColor: borderColorHex }}>
+                <TouchableOpacity
+                  onPress={() => leadId && router.push(`/lead/${leadId}`)}
+                  className="flex-row justify-between items-start mb-1"
+                >
+                  <View className="flex-row items-center flex-wrap flex-1">
+                    <Text className="text-lg font-bold mr-2 text-[#0B192C]">
+                      {item.lead_name || item.lead?.name || 'Unknown Lead'}
                     </Text>
-                    <Text className={`text-xxs font-semibold uppercase tracking-wider ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                      Mobile: {item.lead_mobile} • {item.lead_city || 'No Location'}
-                    </Text>
+                    {isOverdue && (
+                      <View className="bg-red-100 px-2 py-0.5 rounded mr-2">
+                        <Text className="text-[9px] font-bold text-red-600 uppercase">OVERDUE</Text>
+                      </View>
+                    )}
+                    {isToday && (
+                      <View className="bg-amber-100 px-2 py-0.5 rounded mr-2">
+                        <Text className="text-[9px] font-bold text-amber-700 uppercase">DUE TODAY</Text>
+                      </View>
+                    )}
                   </View>
-                  
-                  {activeTab === 'overdue' && (
-                    <View className="flex-row items-center bg-red-500/10 border border-red-500/20 px-2 py-1.5 rounded-xl">
-                      <AlertCircle size={10} color="#EF4444" />
-                      <Text className="text-red-500 text-xxs font-black uppercase tracking-wider ml-1">Overdue</Text>
-                    </View>
-                  )}
-                </View>
+                  <ExternalLink size={15} color="#94A3B8" />
+                </TouchableOpacity>
 
-                {/* Sub details */}
-                <View className="bg-slate-500/5 p-3 rounded-2xl border border-slate-500/10 mb-4 space-y-1">
-                  <Text className={`text-[10px] font-extrabold uppercase ${isDark ? 'text-amber-400' : 'text-amber-600'}`}>
-                    Scheduled Time: {item.date} @ {item.time}
-                  </Text>
-                  <Text className={`text-xs ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
-                    Notes: {item.notes || 'No scheduled notes.'}
+                <View className="flex-row items-center mb-3">
+                  <Clock size={12} color="#0B192C" />
+                  <Text className="text-xs font-bold text-[#0B192C] ml-1.5">
+                    {item.date} at {item.time} • +91 {item.lead_mobile || item.lead?.mobile || 'N/A'}
                   </Text>
                 </View>
 
-                {/* Actions row */}
-                <View className="flex-row justify-between pt-1">
-                  <TouchableOpacity
-                    onPress={() => triggerSimCall({ id: item.lead_id, name: item.lead_name, mobile: item.lead_mobile })}
-                    className="bg-emerald-500 py-3 rounded-xl flex-row justify-center items-center w-[48%] shadow-sm"
+                <View className="bg-slate-50 rounded-xl p-3.5 mb-4 border border-slate-100">
+                  <Text className="text-[13px] text-slate-600 italic leading-5 font-medium">
+                    "{item.notes || 'Scheduled follow-up call.'}"
+                  </Text>
+                </View>
+
+                <View className="flex-row justify-between items-center">
+                  <TouchableOpacity 
+                    className="flex-1 bg-amber-400 h-11 rounded-xl flex-row justify-center items-center shadow-sm mr-2.5"
+                    onPress={() => handleCall(item)}
                   >
-                    <PhoneCall size={12} color="#FFFFFF" />
-                    <Text className="text-white text-xs font-bold ml-1.5">Call Customer</Text>
+                    <PhoneCall size={15} color="#0B192C" />
+                    <Text className="text-[#0B192C] font-bold ml-2 text-xs">Call & Log</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                    onPress={() => handleComplete(item.id)}
-                    disabled={completeMutation.isPending}
-                    className={`py-3 rounded-xl border flex-row justify-center items-center w-[48%] ${
-                      isDark ? 'border-slate-800 bg-slate-950' : 'border-slate-350 bg-slate-50'
-                    }`}
+                    onPress={() => handleWhatsApp(item)}
+                    className="w-11 h-11 rounded-xl bg-[#25D366] justify-center items-center mr-2.5"
                   >
-                    <Check size={12} color="#10B981" />
-                    <Text className={`text-xs font-bold ml-1.5 text-emerald-500`}>Mark Complete</Text>
+                    <MessageCircle size={18} color="#FFFFFF" />
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    onPress={() => completeMutation.mutate(item.id)}
+                    className="w-11 h-11 rounded-xl border border-emerald-300 bg-emerald-50 justify-center items-center"
+                  >
+                    <Check size={18} color="#059669" />
                   </TouchableOpacity>
                 </View>
               </View>
-            ))}
-          </View>
-        )}
-      </ScrollView>
+            );
+          })}
+          {list.length === 0 && (
+            <View className="py-16 items-center justify-center">
+              <Text className="text-slate-400 font-bold text-sm">No follow-ups in {activeTab} category.</Text>
+            </View>
+          )}
+        </ScrollView>
+      )}
 
-      {/* Call Logger modal */}
+      {/* Call Modal Instance */}
       {selectedLeadForCall && (
         <CallModal
           visible={callModalVisible}
-          onClose={() => setCallModalVisible(false)}
+          onClose={() => {
+            setCallModalVisible(false);
+            setSelectedLeadForCall(null);
+          }}
           lead={selectedLeadForCall}
-          onSubmit={handleCallModalSubmit}
-          isDark={isDark}
+          onSubmit={async (payload) => {
+            await disposeMutation.mutateAsync(payload);
+          }}
+          initialDuration={45}
         />
       )}
     </View>

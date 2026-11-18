@@ -48,6 +48,29 @@ To learn more about developing your project with Expo, look at the following res
 - [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
 - [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
 
+## 🚀 CI/CD Pipeline (Build APK & AAB)
+
+This repository includes automated GitHub Actions CI/CD workflows for building Android APK and AAB binaries.
+
+### 1. Free GitHub Actions Native Build (`.github/workflows/build-android.yml`)
+- **Automated on Push**: Every push to `main` automatically builds both APK and AAB binaries using free GitHub Actions runners.
+- **Manual Trigger**:
+  1. Go to the **Actions** tab on your GitHub repository (`https://github.com/saifAnsari732/call-Apps-frontend/actions`).
+  2. Select **"Build Android (APK & AAB)"** on the left.
+  3. Click **"Run workflow"**.
+  4. Choose:
+     - **Build Target**: `both` (APK + AAB), `apk` (only APK), or `aab` (only AAB).
+     - **Build Variant**: `release` (optimized production build) or `debug`.
+  5. Once the run finishes, scroll down to **Artifacts** to download `KisanConnect-Android-...zip` containing:
+     - Ready-to-install `.apk` file for Android devices.
+     - `.aab` (Android App Bundle) file for Google Play Console submission.
+
+### 2. EAS Cloud Build (`.github/workflows/eas-build.yml` / `eas.json`)
+If you use Expo Application Services (EAS):
+- `eas build -p android --profile preview`: Builds standalone APK for testing.
+- `eas build -p android --profile production`: Builds release AAB for Google Play Store.
+- Add `EXPO_TOKEN` to your repository Secrets to trigger EAS builds directly from GitHub Actions.
+
 ## Join the community
 
 Join our community of developers creating universal apps.
