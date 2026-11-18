@@ -7,6 +7,7 @@ import { useAuthStore } from '../store/authStore';
 import { useThemeStore } from '../store/themeStore';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
+import VoiceReminderService from '../components/VoiceReminderService';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -50,8 +51,13 @@ function RootLayoutNav() {
         if (!inLogin) router.replace('/login');
       } else {
         if (inLogin || segments.length === 0 || segments[0] === undefined) {
-          if (user?.role === 'admin') router.replace('/(admin)/dashboard');
-          else router.replace('/(telecaller)/dashboard');
+          if (user?.role === 'admin' || user?.role === 'team_leader' || user?.role === 'manager') {
+            router.replace('/(admin)/dashboard');
+          } else {
+            router.replace('/(telecaller)/dashboard');
+          }
+        } else if (user?.role === 'telecaller' && segments[0] === '(admin)') {
+          router.replace('/(telecaller)/dashboard');
         }
       }
     };
@@ -67,6 +73,7 @@ function RootLayoutNav() {
     <View className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
       <StatusBar style={isDark ? 'light' : 'dark'} />
       <Slot />
+      {isAuthenticated && user?.role === 'telecaller' && <VoiceReminderService />}
     </View>
   );
 }

@@ -4,7 +4,6 @@ import { LayoutDashboard, Users, CalendarCheck, History, User, Home } from 'luci
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Platform, View, Text } from 'react-native';
 import GlobalReminderFAB from '../../components/GlobalReminderFAB';
-import VoiceReminderService from '../../components/VoiceReminderService';
 
 const TabIcon = ({ name, icon: Icon, focused }) => {
   if (focused) {
@@ -93,7 +92,6 @@ export default function TelecallerLayout() {
       />
     </Tabs>
       <GlobalReminderFAB />
-      <VoiceReminderService />
     </View>
   );
 }

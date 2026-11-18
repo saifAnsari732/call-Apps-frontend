@@ -42,12 +42,19 @@ export default function VoiceReminderService() {
           // It's due! Check if already spoken
           if (!spokenReminders.has(followup.id || followup._id)) {
             // Speak it
-            const leadName = followup.lead_name || 'unknown lead';
-            Speech.speak(`Aapko ek follow up karna hai. Lead ka naam hai ${leadName}.`, {
-              language: 'hi-IN',
-              rate: 0.9,
-              pitch: 1.0,
-            });
+            const leadName = followup.lead_name || 'Customer';
+            try {
+              Speech.speak(`Aapko follow up call karna hai. Lead ka naam hai ${leadName}.`, {
+                language: 'hi-IN',
+                rate: 0.95,
+                pitch: 1.0,
+                onError: () => {
+                  Speech.speak(`Follow-up reminder for ${leadName}`, { language: 'en-IN' });
+                }
+              });
+            } catch (speechErr) {
+              console.log('Speech reminder warning:', speechErr.message);
+            }
             
             setSpokenReminders(prev => {
               const newSet = new Set(prev);

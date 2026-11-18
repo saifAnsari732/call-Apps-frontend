@@ -5,11 +5,16 @@ import { useAuthStore } from '../store/authStore';
 import Constants from 'expo-constants';
 
 const getBaseUrl = () => {
-  // Production Backend URL
-  // return 'https://caller-app-1.onrender.com/api';
-
-  // Development Backend URL (uncomment for local development)
-   return Platform.OS === 'web' ? 'http://localhost:3001/api' : 'http://192.168.0.107:3001/api';
+  if (Platform.OS === 'web') {
+    return 'http://localhost:3001/api';
+  }
+  // Dynamically resolve local host IP when running via Expo on physical device or emulator
+  const hostUri = Constants.expoConfig?.hostUri || Constants.manifest2?.extra?.expoGo?.debuggerHost || '';
+  if (hostUri) {
+    const host = hostUri.split(':')[0];
+    if (host) return `http://${host}:3001/api`;
+  }
+  return 'http://192.168.0.107:3001/api';
 };
 
 const api = axios.create({
