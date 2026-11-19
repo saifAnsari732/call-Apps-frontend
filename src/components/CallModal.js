@@ -223,12 +223,12 @@ export default function CallModal({ visible, onClose, lead, onSubmit, isDark, in
       transparent={true}
       onRequestClose={onClose}
     >
-      <View className="flex-1 justify-end bg-black/60">
-        <View className={`rounded-t-3xl p-5 h-[90%] ${isDark ? 'bg-slate-900 border-t border-slate-800' : 'bg-white'}`}>
+      <View className="flex-1 justify-end bg-indigo-950/50">
+        <View className={`rounded-t-3xl p-5 h-[90%] ${isDark ? 'bg-indigo-950 border-t border-indigo-800' : 'bg-white'}`}>
           {/* Header */}
           <View className="flex-row justify-between items-center mb-3 pb-3 border-b border-slate-100">
             <View className="flex-1 pr-2">
-              <Text className={`text-lg font-bold tracking-tight ${isDark ? 'text-white' : 'text-[#0B192C]'}`}>
+              <Text className={`text-lg font-bold tracking-tight ${isDark ? 'text-white' : 'text-indigo-950'}`}>
                 Log Call Outcome & Disposition
               </Text>
               <Text className={`text-xs mt-0.5 font-bold ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
@@ -252,14 +252,14 @@ export default function CallModal({ visible, onClose, lead, onSubmit, isDark, in
             <View className="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 mb-4 flex-row items-center justify-between">
               <View className="flex-row items-center">
                 <PhoneCall size={16} color="#475569" />
-                <Text className="text-xs font-semibold text-slate-900 ml-2">Call Duration (Sec)</Text>
+                <Text className="text-xs font-semibold text-indigo-950 ml-2">Call Duration (Sec)</Text>
               </View>
               <View className="flex-row items-center gap-1.5">
                 {[0, 30, 60, 120].map((sec) => (
                   <TouchableOpacity
                     key={sec}
                     onPress={() => setDurationSec(String(sec))}
-                    className={`px-2.5 py-1 rounded-lg border ${Number(durationSec) === sec ? 'bg-[#0F172A] border-[#0F172A]' : 'bg-white border-slate-200'}`}
+                    className={`px-2.5 py-1 rounded-lg border ${Number(durationSec) === sec ? 'bg-[#4F46E5] border-[#4F46E5]' : 'bg-white border-slate-200'}`}
                   >
                     <Text className={`text-[11px] font-semibold ${Number(durationSec) === sec ? 'text-white' : 'text-slate-700'}`}>
                       {sec === 0 ? '0s' : sec < 60 ? `${sec}s` : `${sec / 60}m`}
@@ -270,7 +270,7 @@ export default function CallModal({ visible, onClose, lead, onSubmit, isDark, in
                   value={durationSec}
                   onChangeText={setDurationSec}
                   keyboardType="numeric"
-                  className="bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-semibold text-slate-900 w-14 text-center"
+                  className="bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-semibold text-indigo-950 w-14 text-center"
                 />
               </View>
             </View>
@@ -331,7 +331,7 @@ export default function CallModal({ visible, onClose, lead, onSubmit, isDark, in
                       onPress={() => handleDispositionSelect(disp)}
                       className={`px-3 py-2 rounded-xl border ${
                         isSelected 
-                          ? 'bg-[#0B192C] border-[#0B192C]' 
+                          ? 'bg-indigo-600 border-indigo-600' 
                           : 'border-slate-200 bg-white'
                       }`}
                     >
@@ -372,7 +372,7 @@ export default function CallModal({ visible, onClose, lead, onSubmit, isDark, in
                 onChangeText={setRemarks}
                 placeholder="Enter client discussion summary (e.g. Rate high, requested bulk rate on WhatsApp)..."
                 placeholderTextColor="#94A3B8"
-                className={`border rounded-2xl p-3.5 text-[13px] h-20 text-slate-900 bg-slate-50 ${
+                className={`border rounded-2xl p-3.5 text-[13px] h-20 text-indigo-950 bg-slate-50 ${
                   !remarks.trim() && errorMsg ? 'border-red-400 bg-red-50/30' : 'border-slate-200'
                 }`}
                 textAlignVertical="top"
@@ -497,7 +497,7 @@ export default function CallModal({ visible, onClose, lead, onSubmit, isDark, in
                           onPress={() => setFollowupPriority(p)}
                           className={`px-2.5 py-1 rounded-lg border ${
                             followupPriority === p 
-                              ? p === 'High' ? 'bg-red-600 border-red-600' : 'bg-slate-800 border-slate-800'
+                              ? p === 'High' ? 'bg-red-600 border-red-600' : 'bg-indigo-600 border-indigo-600'
                               : 'bg-white border-slate-200'
                           }`}
                         >
@@ -582,7 +582,7 @@ export default function CallModal({ visible, onClose, lead, onSubmit, isDark, in
             <TouchableOpacity
               onPress={handleFormSubmit}
               disabled={submitting}
-              className="w-[68%] bg-[#0B192C] py-3.5 rounded-2xl flex-row justify-center items-center shadow-md active:bg-slate-800"
+              className="w-[68%] bg-indigo-600 py-3.5 rounded-2xl flex-row justify-center items-center shadow-md active:bg-indigo-700"
             >
               {submitting ? (
                 <ActivityIndicator size="small" color="#FFFFFF" />

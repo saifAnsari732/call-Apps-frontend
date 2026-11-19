@@ -70,7 +70,7 @@ function RootLayoutNav() {
   const isDark = theme === 'dark';
 
   return (
-    <View className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
+    <View className={`flex-1 ${isDark ? 'bg-indigo-950' : 'bg-slate-50'}`}>
       <StatusBar style={isDark ? 'light' : 'dark'} />
       <Slot />
       {isAuthenticated && user?.role === 'telecaller' && <VoiceReminderService />}

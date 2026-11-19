@@ -198,7 +198,7 @@ export default function TelecallerManagement() {
       
       {/* Header */}
       <View className="pt-14 pb-2 px-6">
-        <Text className="text-[28px] font-bold text-[#0B192C] tracking-tight">Manage Telecallers</Text>
+        <Text className="text-[28px] font-bold text-indigo-950 tracking-tight">Manage Telecallers</Text>
         <Text className="text-slate-500 text-sm mt-1 pr-6 leading-5">Monitor and assign roles to your sales team.</Text>
       </View>
 
@@ -213,10 +213,10 @@ export default function TelecallerManagement() {
           />
         </View>
         <TouchableOpacity className="w-12 h-12 bg-white border border-slate-200 rounded-xl justify-center items-center shadow-sm shadow-slate-200/50 mr-3">
-          <Filter size={18} color="#0B192C" />
+          <Filter size={18} color="#4F46E5" />
         </TouchableOpacity>
         <TouchableOpacity className="w-12 h-12 bg-white border border-slate-200 rounded-xl justify-center items-center shadow-sm shadow-slate-200/50">
-          <Download size={18} color="#0B192C" />
+          <Download size={18} color="#4F46E5" />
         </TouchableOpacity>
       </View>
 
@@ -246,7 +246,7 @@ export default function TelecallerManagement() {
                     resizeMode="cover"
                   />
                   <View className="flex-1">
-                    <Text className="text-base font-bold text-[#0B192C]">{caller.name}</Text>
+                    <Text className="text-base font-bold text-indigo-950">{caller.name}</Text>
                     <Text className="text-xs text-slate-500 mt-0.5">Telecaller ID: {caller.employee_id} {caller.role ? `• ${caller.role.toUpperCase()}` : ''}</Text>
                   </View>
                 </View>
@@ -270,11 +270,11 @@ export default function TelecallerManagement() {
               <View className="mb-5">
                 <View className="flex-row justify-between items-center mb-2">
                   <Text className="text-xs font-bold text-slate-500">Mobile Number:</Text>
-                  <Text className="text-sm font-bold text-[#0B192C]">{caller.mobile}</Text>
+                  <Text className="text-sm font-bold text-indigo-950">{caller.mobile}</Text>
                 </View>
                 <View className="flex-row justify-between items-center">
                   <Text className="text-xs font-bold text-slate-500">Joined Date:</Text>
-                  <Text className="text-sm font-bold text-[#0B192C]">{dateStr}</Text>
+                  <Text className="text-sm font-bold text-indigo-950">{dateStr}</Text>
                 </View>
               </View>
 
@@ -283,22 +283,22 @@ export default function TelecallerManagement() {
                   onPress={() => openEditModal(caller)}
                   className="flex-1 flex-row justify-center items-center py-2 rounded-xl border border-slate-200 mr-2 mb-2 min-w-[70px]"
                 >
-                  <Edit2 size={14} color="#0B192C" />
-                  <Text className="text-[#0B192C] font-bold text-xs ml-2">Edit</Text>
+                  <Edit2 size={14} color="#4F46E5" />
+                  <Text className="text-indigo-950 font-bold text-xs ml-2">Edit</Text>
                 </TouchableOpacity>
                 <TouchableOpacity 
                   onPress={() => handleToggleLeave(caller)}
                   className="flex-1 flex-row justify-center items-center py-2 rounded-xl border border-slate-200 mr-2 mb-2 min-w-[70px]"
                 >
-                  {isOnLeave ? <CheckCircle2 size={14} color="#0B192C" /> : <LogOut size={14} color="#0B192C" />}
-                  <Text className="text-[#0B192C] font-bold text-xs ml-2">{isOnLeave ? 'Resume' : 'Leave'}</Text>
+                  {isOnLeave ? <CheckCircle2 size={14} color="#4F46E5" /> : <LogOut size={14} color="#4F46E5" />}
+                  <Text className="text-indigo-950 font-bold text-xs ml-2">{isOnLeave ? 'Resume' : 'Leave'}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity 
                   onPress={() => handleToggleStatus(caller)}
                   className="flex-1 flex-row justify-center items-center py-2 rounded-xl border border-slate-200 mr-2 mb-2 min-w-[70px]"
                 >
-                  <ShieldOff size={14} color="#0B192C" />
-                  <Text className="text-[#0B192C] font-bold text-xs ml-2">{isActive ? 'Disable' : 'Enable'}</Text>
+                  <ShieldOff size={14} color="#4F46E5" />
+                  <Text className="text-indigo-950 font-bold text-xs ml-2">{isActive ? 'Disable' : 'Enable'}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity 
                   onPress={() => handleDelete(caller)}
@@ -318,15 +318,15 @@ export default function TelecallerManagement() {
         onPress={openAddModal}
         className="absolute bottom-24 right-6 w-16 h-16 bg-[#FFB703] rounded-full justify-center items-center shadow-lg shadow-[#FFB703]/50 z-50"
       >
-        <Plus size={32} color="#0B192C" />
+        <Plus size={32} color="#4F46E5" />
       </TouchableOpacity>
 
       {/* Add / Edit Modal */}
       <Modal visible={modalVisible} transparent={true} animationType="slide">
-        <View className="flex-1 justify-end bg-slate-900/60">
+        <View className="flex-1 justify-end bg-indigo-950/50">
           <View className="bg-white rounded-t-3xl p-6 h-[85%]">
             <View className="flex-row justify-between items-center mb-6">
-              <Text className="text-xl font-bold text-[#0B192C]">
+              <Text className="text-xl font-bold text-indigo-950">
                 {editingCaller ? 'Edit Telecaller' : 'Add Telecaller'}
               </Text>
               <TouchableOpacity onPress={closeModal} className="w-8 h-8 rounded-full bg-slate-100 justify-center items-center">
@@ -344,7 +344,7 @@ export default function TelecallerManagement() {
                 <Text className="text-xs font-bold text-slate-700 mb-2">Full Name</Text>
                 <View className="flex-row items-center border border-slate-300 rounded-xl px-3 bg-white h-12">
                   <User size={16} color="#64748B" />
-                  <TextInput className="flex-1 ml-2 text-sm text-[#0B192C]" placeholder="e.g. Rahul Singh" value={name} onChangeText={setName} />
+                  <TextInput className="flex-1 ml-2 text-sm text-indigo-950" placeholder="e.g. Rahul Singh" value={name} onChangeText={setName} />
                 </View>
               </View>
               
@@ -352,7 +352,7 @@ export default function TelecallerManagement() {
                 <Text className="text-xs font-bold text-slate-700 mb-2">Mobile Number</Text>
                 <View className="flex-row items-center border border-slate-300 rounded-xl px-3 bg-white h-12">
                   <Phone size={16} color="#64748B" />
-                  <TextInput className="flex-1 ml-2 text-sm text-[#0B192C]" placeholder="e.g. 9876543210" keyboardType="numeric" value={mobile} onChangeText={setMobile} />
+                  <TextInput className="flex-1 ml-2 text-sm text-indigo-950" placeholder="e.g. 9876543210" keyboardType="numeric" value={mobile} onChangeText={setMobile} />
                 </View>
               </View>
 
@@ -360,7 +360,7 @@ export default function TelecallerManagement() {
                 <Text className="text-xs font-bold text-slate-700 mb-2">Email Address</Text>
                 <View className="flex-row items-center border border-slate-300 rounded-xl px-3 bg-white h-12">
                   <Mail size={16} color="#64748B" />
-                  <TextInput className="flex-1 ml-2 text-sm text-[#0B192C]" placeholder="e.g. rahul@kisanconnect.com" keyboardType="email-address" value={email} onChangeText={setEmail} autoCapitalize="none" />
+                  <TextInput className="flex-1 ml-2 text-sm text-indigo-950" placeholder="e.g. rahul@kisanconnect.com" keyboardType="email-address" value={email} onChangeText={setEmail} autoCapitalize="none" />
                 </View>
               </View>
 
@@ -368,7 +368,7 @@ export default function TelecallerManagement() {
                 <Text className="text-xs font-bold text-slate-700 mb-2">Employee ID</Text>
                 <View className="flex-row items-center border border-slate-300 rounded-xl px-3 bg-white h-12">
                   <CreditCard size={16} color="#64748B" />
-                  <TextInput className="flex-1 ml-2 text-sm text-[#0B192C]" placeholder="e.g. OF-TC-2024-001" value={employeeId} onChangeText={setEmployeeId} autoCapitalize="characters" />
+                  <TextInput className="flex-1 ml-2 text-sm text-indigo-950" placeholder="e.g. OF-TC-2024-001" value={employeeId} onChangeText={setEmployeeId} autoCapitalize="characters" />
                 </View>
               </View>
 
@@ -378,13 +378,13 @@ export default function TelecallerManagement() {
                 </Text>
                 <View className="flex-row items-center border border-slate-300 rounded-xl px-3 bg-white h-12">
                   <Key size={16} color="#64748B" />
-                  <TextInput className="flex-1 ml-2 text-sm text-[#0B192C]" placeholder="••••••••" secureTextEntry value={password} onChangeText={setPassword} />
+                  <TextInput className="flex-1 ml-2 text-sm text-indigo-950" placeholder="••••••••" secureTextEntry value={password} onChangeText={setPassword} />
                 </View>
               </View>
 
               <TouchableOpacity 
                 onPress={handleFormSubmit}
-                className="bg-[#0B192C] h-14 rounded-xl justify-center items-center shadow-lg shadow-slate-900/20 mb-10"
+                className="bg-indigo-600 h-14 rounded-xl justify-center items-center shadow-lg shadow-indigo-900/20 mb-10"
               >
                 <Text className="text-white text-base font-bold">
                   {editingCaller ? 'Save Changes' : 'Create Telecaller'}

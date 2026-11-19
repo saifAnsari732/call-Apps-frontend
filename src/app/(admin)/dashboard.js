@@ -83,10 +83,10 @@ export default function AdminDashboard() {
 
   if (error) {
     return (
-      <View className={`flex-1 justify-center items-center px-6 ${isDark ? 'bg-slate-950' : 'bg-slate-50'}`}>
+      <View className={`flex-1 justify-center items-center px-6 ${isDark ? 'bg-indigo-950' : 'bg-[#F5F7FF]'}`}>
         <Text className="text-red-500 text-sm font-semibold mb-2">Failed to load analytics</Text>
-        <Text className={`text-xs text-center mb-6 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{error.message}</Text>
-        <TouchableOpacity onPress={() => refetch()} className="bg-amber-500 px-6 py-3 rounded-xl shadow-lg shadow-amber-500/30">
+        <Text className={`text-xs text-center mb-6 ${isDark ? 'text-indigo-200' : 'text-slate-500'}`}>{error.message}</Text>
+        <TouchableOpacity onPress={() => refetch()} className="bg-indigo-600 px-6 py-3 rounded-xl shadow-md shadow-indigo-500/30">
           <Text className="text-white text-xs font-bold uppercase tracking-wider">Retry Load</Text>
         </TouchableOpacity>
       </View>
@@ -128,11 +128,11 @@ export default function AdminDashboard() {
   };
 
   return (
-    <View className={`flex-1 ${isDark ? 'bg-slate-950' : 'bg-[#F8FAFC]'}`}>
+    <View className={`flex-1 ${isDark ? 'bg-indigo-950' : 'bg-[#F5F7FF]'}`}>
       {/* Fixed Curved Header */}
-      <View className="pt-20 pb-12 px-6 rounded-b-[40px] shadow-md z-10 overflow-hidden border-b border-slate-800">
+      <View className="pt-20 pb-12 px-6 rounded-b-[40px] shadow-md z-10 overflow-hidden border-b border-indigo-400/30">
         <LinearGradient
-          colors={['#0F172A', '#1E293B']}
+          colors={['#4F46E5', '#2563EB', '#1D4ED8']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
@@ -142,14 +142,14 @@ export default function AdminDashboard() {
             <View className="flex-row items-center mb-2">
               <Image 
                 source={isTeamLeader ? require('../../../assets/images/avatar-teamleader.png') : require('../../../assets/images/avatar-admin.png')}
-                style={{ width: 42, height: 42, borderRadius: 21, marginRight: 12, borderWidth: 1.5, borderColor: '#334155' }}
+                style={{ width: 42, height: 42, borderRadius: 21, marginRight: 12, borderWidth: 1.5, borderColor: '#A5B4FC' }}
                 resizeMode="cover"
               />
               <View>
-                <Text className="text-[11px] uppercase font-semibold tracking-widest text-slate-300">
+                <Text className="text-[11px] uppercase font-semibold tracking-widest text-indigo-100">
                   Welcome Back, {isTeamLeader ? 'Team Leader ' + (user?.name?.split(' ')[0] || '') : (user?.name?.split(' ')[0] || 'Admin')}
                 </Text>
-                <Text className="text-[10px] text-slate-400 font-medium tracking-wider">
+                <Text className="text-[10px] text-amber-300 font-semibold tracking-wider">
                   {user?.team ? `${user.team} • ` : ''}{user?.role ? user.role.toUpperCase() : 'MANAGEMENT'}
                 </Text>
               </View>
@@ -158,7 +158,7 @@ export default function AdminDashboard() {
               {isTeamLeader ? 'Team Matrix' : 'Overview Matrix'}
             </Text>
           </View>
-          <TouchableOpacity onPress={() => refetch()} className="p-3 rounded-full bg-white/15 border border-white/20">
+          <TouchableOpacity onPress={() => refetch()} className="p-3 rounded-full bg-white/20 border border-white/25">
             <RefreshCw size={18} color="#FFF" />
           </TouchableOpacity>
         </View>
@@ -168,13 +168,13 @@ export default function AdminDashboard() {
         contentContainerStyle={{ paddingBottom: 120, paddingTop: 20 }}
         showsVerticalScrollIndicator={false}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#0F172A" colors={['#0F172A']} />
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#4F46E5" colors={['#4F46E5']} />
         }
       >
         {isLoading && !data ? (
           <View className="py-20 justify-center items-center">
-            <ActivityIndicator size="large" color="#0F172A" />
-            <Text className={`text-sm mt-3 font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Loading Analytics...</Text>
+            <ActivityIndicator size="large" color="#4F46E5" />
+            <Text className={`text-sm mt-3 font-medium ${isDark ? 'text-indigo-200' : 'text-indigo-600'}`}>Loading Analytics...</Text>
           </View>
         ) : (
           <View className="p-5 space-y-6">
@@ -183,34 +183,34 @@ export default function AdminDashboard() {
           <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row mb-1">
             <TouchableOpacity 
               onPress={() => setDateFilter(dateFilter === 'today' ? '' : 'today')}
-              className={`px-4 py-2 rounded-xl border mr-2.5 shadow-xs ${dateFilter === 'today' ? 'bg-slate-900 border-slate-900' : isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}
+              className={`px-4 py-2 rounded-xl border mr-2.5 shadow-xs ${dateFilter === 'today' ? 'bg-indigo-600 border-indigo-600' : isDark ? 'bg-indigo-900 border-indigo-800' : 'bg-white border-indigo-200'}`}
             >
-              <Text className={`text-[11px] font-semibold uppercase tracking-wider ${dateFilter === 'today' ? 'text-white' : isDark ? 'text-slate-400' : 'text-slate-600'}`}>Today</Text>
+              <Text className={`text-[11px] font-semibold uppercase tracking-wider ${dateFilter === 'today' ? 'text-white' : isDark ? 'text-indigo-200' : 'text-indigo-950'}`}>Today</Text>
             </TouchableOpacity>
             <TouchableOpacity 
               onPress={() => setDateFilter(dateFilter === 'yesterday' ? '' : 'yesterday')}
-              className={`px-4 py-2 rounded-xl border mr-2.5 shadow-xs ${dateFilter === 'yesterday' ? 'bg-slate-900 border-slate-900' : isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}
+              className={`px-4 py-2 rounded-xl border mr-2.5 shadow-xs ${dateFilter === 'yesterday' ? 'bg-indigo-600 border-indigo-600' : isDark ? 'bg-indigo-900 border-indigo-800' : 'bg-white border-indigo-200'}`}
             >
-              <Text className={`text-[11px] font-semibold uppercase tracking-wider ${dateFilter === 'yesterday' ? 'text-white' : isDark ? 'text-slate-400' : 'text-slate-600'}`}>Yesterday</Text>
+              <Text className={`text-[11px] font-semibold uppercase tracking-wider ${dateFilter === 'yesterday' ? 'text-white' : isDark ? 'text-indigo-200' : 'text-indigo-950'}`}>Yesterday</Text>
             </TouchableOpacity>
             <TouchableOpacity 
               onPress={() => setDateFilter(dateFilter === 'last7' ? '' : 'last7')}
-              className={`px-4 py-2 rounded-xl border mr-2.5 shadow-xs ${dateFilter === 'last7' ? 'bg-slate-900 border-slate-900' : isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}
+              className={`px-4 py-2 rounded-xl border mr-2.5 shadow-xs ${dateFilter === 'last7' ? 'bg-indigo-600 border-indigo-600' : isDark ? 'bg-indigo-900 border-indigo-800' : 'bg-white border-indigo-200'}`}
             >
-              <Text className={`text-[11px] font-semibold uppercase tracking-wider ${dateFilter === 'last7' ? 'text-white' : isDark ? 'text-slate-400' : 'text-slate-600'}`}>Last 7 Days</Text>
+              <Text className={`text-[11px] font-semibold uppercase tracking-wider ${dateFilter === 'last7' ? 'text-white' : isDark ? 'text-indigo-200' : 'text-indigo-950'}`}>Last 7 Days</Text>
             </TouchableOpacity>
             <TouchableOpacity 
               onPress={() => setDateFilter(dateFilter === 'thisMonth' ? '' : 'thisMonth')}
-              className={`px-4 py-2 rounded-xl border shadow-xs mr-2.5 ${dateFilter === 'thisMonth' ? 'bg-slate-900 border-slate-900' : isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}
+              className={`px-4 py-2 rounded-xl border shadow-xs mr-2.5 ${dateFilter === 'thisMonth' ? 'bg-indigo-600 border-indigo-600' : isDark ? 'bg-indigo-900 border-indigo-800' : 'bg-white border-indigo-200'}`}
             >
-              <Text className={`text-[11px] font-semibold uppercase tracking-wider ${dateFilter === 'thisMonth' ? 'text-white' : isDark ? 'text-slate-400' : 'text-slate-600'}`}>This Month</Text>
+              <Text className={`text-[11px] font-semibold uppercase tracking-wider ${dateFilter === 'thisMonth' ? 'text-white' : isDark ? 'text-indigo-200' : 'text-indigo-950'}`}>This Month</Text>
             </TouchableOpacity>
             <TouchableOpacity 
               onPress={() => setCalendarVisible(true)}
-              className={`px-4 py-2 rounded-xl border shadow-xs flex-row items-center mr-4 ${dateFilter === 'custom' ? 'bg-slate-900 border-slate-900' : isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}
+              className={`px-4 py-2 rounded-xl border shadow-xs flex-row items-center mr-4 ${dateFilter === 'custom' ? 'bg-indigo-600 border-indigo-600' : isDark ? 'bg-indigo-900 border-indigo-800' : 'bg-white border-indigo-200'}`}
             >
-              <CalendarIcon size={12} color={dateFilter === 'custom' ? '#FFFFFF' : isDark ? '#94A3B8' : '#475569'} style={{ marginRight: 4 }} />
-              <Text className={`text-[11px] font-semibold uppercase tracking-wider ${dateFilter === 'custom' ? 'text-white' : isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+              <CalendarIcon size={12} color={dateFilter === 'custom' ? '#FFFFFF' : isDark ? '#A5B4FC' : '#4F46E5'} style={{ marginRight: 4 }} />
+              <Text className={`text-[11px] font-semibold uppercase tracking-wider ${dateFilter === 'custom' ? 'text-white' : isDark ? 'text-indigo-200' : 'text-indigo-950'}`}>
                 {dateFilter === 'custom' && customDate ? customDate : 'Custom Date'}
               </Text>
             </TouchableOpacity>
@@ -238,20 +238,23 @@ export default function AdminDashboard() {
                   key={idx}
                   activeOpacity={0.7}
                   onPress={() => handleNavigation(kpi.label)}
-                  className={`w-[48%] mb-4 p-4 rounded-2xl border shadow-xs ${isDark ? 'bg-slate-900 border-slate-800 shadow-black' : 'bg-white border-slate-200/80'}`}
+                  className={`w-[48%] mb-4 p-4 rounded-2xl border shadow-xs ${isDark ? 'bg-indigo-900/90 border-indigo-800 shadow-indigo-950' : 'bg-white border-indigo-100'}`}
                 >
                   <View className="flex-row justify-between items-start mb-4">
                     <View 
                       className="w-11 h-11 rounded-full items-center justify-center"
-                      style={{ backgroundColor: `${colorTheme}12` }}
+                      style={{ backgroundColor: `${colorTheme}18` }}
                     >
-                      <Icon size={20} color="#0F172A" strokeWidth={2} />
+                      <Icon size={20} color={colorTheme} strokeWidth={2} />
                     </View>
                   </View>
-                  <Text className={`text-2xl font-bold tracking-tight mb-1 ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                  <Text
+                    className="text-2xl font-bold tracking-tight mb-1"
+                    style={{ color: isDark ? '#FFFFFF' : colorTheme }}
+                  >
                     {kpi.value}
                   </Text>
-                  <Text className={`text-[11px] font-semibold tracking-wider ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                  <Text className={`text-[11px] font-semibold tracking-wider ${isDark ? 'text-indigo-200' : 'text-slate-600'}`}>
                     {kpi.label}
                   </Text>
                 </TouchableOpacity>
@@ -260,12 +263,12 @@ export default function AdminDashboard() {
           </View>
 
           {/* Conversion Analytics Card */}
-          <View className={`p-5 rounded-3xl shadow-xs border ${isDark ? 'bg-slate-900/90 border-slate-800' : 'bg-white border-slate-200/80'}`}>
+          <View className={`p-5 rounded-3xl shadow-xs border ${isDark ? 'bg-indigo-900/90 border-indigo-800' : 'bg-white border-indigo-100'}`}>
             <View className="flex-row items-center mb-5">
-              <View className="p-2 bg-slate-100 rounded-xl mr-3">
-                <TrendingUp size={18} color="#0F172A" />
+              <View className="p-2 bg-amber-50 rounded-xl mr-3">
+                <TrendingUp size={18} color="#F59E0B" />
               </View>
-              <Text className={`text-base font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
+              <Text className={`text-base font-bold ${isDark ? 'text-white' : 'text-indigo-950'}`}>
                 Conversion Analytics
               </Text>
             </View>
@@ -278,22 +281,22 @@ export default function AdminDashboard() {
             />
 
             {/* Sub-KPI Row */}
-            <View className={`flex-row justify-between border-t pt-4 mt-4 ${isDark ? 'border-slate-800' : 'border-slate-100'}`}>
+            <View className={`flex-row justify-between border-t pt-4 mt-4 ${isDark ? 'border-indigo-800' : 'border-indigo-50'}`}>
               <View className="items-center w-[30%]">
-                <Text className={`text-[9px] uppercase tracking-wider font-semibold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Avg Duration</Text>
-                <Text className={`text-sm font-bold mt-1.5 ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                <Text className={`text-[9px] uppercase tracking-wider font-semibold ${isDark ? 'text-indigo-200' : 'text-slate-500'}`}>Avg Duration</Text>
+                <Text className="text-sm font-bold mt-1.5 text-indigo-600">
                   {formatTalkTime(conversionAnalytics.avgTalkTime)}
                 </Text>
               </View>
-              <View className={`items-center w-[30%] border-x ${isDark ? 'border-slate-800' : 'border-slate-100'}`}>
-                <Text className={`text-[9px] uppercase tracking-wider font-semibold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Connected</Text>
-                <Text className={`text-sm font-bold mt-1.5 ${isDark ? 'text-white' : 'text-slate-900'}`}>
+              <View className={`items-center w-[30%] border-x ${isDark ? 'border-indigo-800' : 'border-indigo-50'}`}>
+                <Text className={`text-[9px] uppercase tracking-wider font-semibold ${isDark ? 'text-indigo-200' : 'text-slate-500'}`}>Connected</Text>
+                <Text className="text-sm font-bold mt-1.5 text-emerald-600">
                   {conversionAnalytics.connectedCalls}
                 </Text>
               </View>
               <View className="items-center w-[30%]">
-                <Text className={`text-[9px] uppercase tracking-wider font-semibold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Unanswered</Text>
-                <Text className={`text-sm font-bold mt-1.5 ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                <Text className={`text-[9px] uppercase tracking-wider font-semibold ${isDark ? 'text-indigo-200' : 'text-slate-500'}`}>Unanswered</Text>
+                <Text className="text-sm font-bold mt-1.5 text-amber-600">
                   {conversionAnalytics.notConnectedCalls}
                 </Text>
               </View>
@@ -301,12 +304,12 @@ export default function AdminDashboard() {
           </View>
 
           {/* Telecaller Performance Chart Card */}
-          <View className={`p-5 rounded-3xl shadow-xs border ${isDark ? 'bg-slate-900/90 border-slate-800' : 'bg-white border-slate-200/80'}`}>
+          <View className={`p-5 rounded-3xl shadow-xs border ${isDark ? 'bg-indigo-900/90 border-indigo-800' : 'bg-white border-indigo-100'}`}>
             <View className="flex-row items-center mb-5">
-              <View className="p-2 bg-slate-100 rounded-xl mr-3">
-                <Users size={18} color="#0F172A" />
+              <View className="p-2 bg-indigo-50 rounded-xl mr-3">
+                <Users size={18} color="#4F46E5" />
               </View>
-              <Text className={`text-base font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
+              <Text className={`text-base font-bold ${isDark ? 'text-white' : 'text-indigo-950'}`}>
                 Team Output
               </Text>
             </View>
@@ -316,72 +319,72 @@ export default function AdminDashboard() {
           </View>
 
           {/* Rankings Widget */}
-          <View className={`p-5 rounded-3xl shadow-xs border ${isDark ? 'bg-slate-900/90 border-slate-800' : 'bg-white border-slate-200/80'}`}>
+          <View className={`p-5 rounded-3xl shadow-xs border ${isDark ? 'bg-indigo-900/90 border-indigo-800' : 'bg-white border-indigo-100'}`}>
             <View className="flex-row items-center mb-5">
-              <View className="p-2 bg-slate-100 rounded-xl mr-3">
-                <Award size={18} color="#0F172A" />
+              <View className="p-2 bg-emerald-50 rounded-xl mr-3">
+                <Award size={18} color="#10B981" />
               </View>
-              <Text className={`text-base font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
+              <Text className={`text-base font-bold ${isDark ? 'text-white' : 'text-indigo-950'}`}>
                 Leaderboard
               </Text>
             </View>
 
             <View className="space-y-3">
               {/* 1st Place */}
-              <View className={`flex-row justify-between items-center p-3.5 rounded-2xl border ${isDark ? 'bg-slate-800/60 border-slate-700' : 'bg-slate-50 border-slate-200/80'}`}>
+              <View className={`flex-row justify-between items-center p-3.5 rounded-2xl border ${isDark ? 'bg-amber-500/10 border-amber-500/30' : 'bg-amber-50 border-amber-200'}`}>
                 <View className="flex-row items-center flex-1">
-                  <View className={`w-8 h-8 rounded-full justify-center items-center ${isDark ? 'bg-slate-700' : 'bg-slate-200'} mr-2`}>
-                    <Text className={`font-bold text-xs ${isDark ? 'text-white' : 'text-slate-900'}`}>1st</Text>
+                  <View className={`w-8 h-8 rounded-full justify-center items-center ${isDark ? 'bg-amber-500/20' : 'bg-amber-100'} mr-2`}>
+                    <Text className="font-bold text-xs text-amber-700">1st</Text>
                   </View>
                   <Image 
                     source={require('../../../assets/images/avatar-telecaller.png')}
-                    style={{ width: 36, height: 36, borderRadius: 18, marginRight: 10, borderWidth: 1, borderColor: '#CBD5E1' }}
+                    style={{ width: 36, height: 36, borderRadius: 18, marginRight: 10, borderWidth: 1.5, borderColor: '#F59E0B' }}
                     resizeMode="cover"
                   />
                   <View className="flex-1 pr-2">
-                    <Text className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-900'}`} numberOfLines={1}>{rankings.topCloser}</Text>
-                    <Text className={`text-[10px] font-semibold uppercase tracking-wider mt-0.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Top Closer</Text>
+                    <Text className={`text-xs font-bold ${isDark ? 'text-white' : 'text-indigo-950'}`} numberOfLines={1}>{rankings.topCloser}</Text>
+                    <Text className={`text-[10px] font-semibold uppercase tracking-wider mt-0.5 ${isDark ? 'text-amber-300' : 'text-amber-700'}`}>Top Closer</Text>
                   </View>
                 </View>
-                <CheckCircle2 size={18} color="#475569" />
+                <CheckCircle2 size={18} color="#D97706" />
               </View>
 
               {/* 2nd Place */}
-              <View className={`flex-row justify-between items-center p-3.5 rounded-2xl border ${isDark ? 'bg-slate-800/60 border-slate-700' : 'bg-slate-50 border-slate-200/80'}`}>
+              <View className={`flex-row justify-between items-center p-3.5 rounded-2xl border ${isDark ? 'bg-indigo-500/10 border-indigo-500/30' : 'bg-indigo-50 border-indigo-200'}`}>
                 <View className="flex-row items-center flex-1">
-                  <View className={`w-8 h-8 rounded-full justify-center items-center ${isDark ? 'bg-slate-700' : 'bg-slate-200'} mr-2`}>
-                    <Text className={`font-bold text-xs ${isDark ? 'text-white' : 'text-slate-900'}`}>2nd</Text>
+                  <View className={`w-8 h-8 rounded-full justify-center items-center ${isDark ? 'bg-indigo-500/20' : 'bg-indigo-100'} mr-2`}>
+                    <Text className="font-bold text-xs text-indigo-700">2nd</Text>
                   </View>
                   <Image 
                     source={require('../../../assets/images/avatar-telecaller.png')}
-                    style={{ width: 36, height: 36, borderRadius: 18, marginRight: 10, borderWidth: 1, borderColor: '#CBD5E1' }}
+                    style={{ width: 36, height: 36, borderRadius: 18, marginRight: 10, borderWidth: 1.5, borderColor: '#4F46E5' }}
                     resizeMode="cover"
                   />
                   <View className="flex-1 pr-2">
-                    <Text className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-900'}`} numberOfLines={1}>{rankings.topTelecaller}</Text>
-                    <Text className={`text-[10px] font-semibold uppercase tracking-wider mt-0.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Most Interested</Text>
+                    <Text className={`text-xs font-bold ${isDark ? 'text-white' : 'text-indigo-950'}`} numberOfLines={1}>{rankings.topTelecaller}</Text>
+                    <Text className={`text-[10px] font-semibold uppercase tracking-wider mt-0.5 ${isDark ? 'text-indigo-300' : 'text-indigo-700'}`}>Most Interested</Text>
                   </View>
                 </View>
-                <ThumbsUp size={17} color="#475569" />
+                <ThumbsUp size={17} color="#4F46E5" />
               </View>
 
               {/* 3rd Place */}
-              <View className={`flex-row justify-between items-center p-3.5 rounded-2xl border ${isDark ? 'bg-slate-800/60 border-slate-700' : 'bg-slate-50 border-slate-200/80'}`}>
+              <View className={`flex-row justify-between items-center p-3.5 rounded-2xl border ${isDark ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-emerald-50 border-emerald-200'}`}>
                 <View className="flex-row items-center flex-1">
-                  <View className={`w-8 h-8 rounded-full justify-center items-center ${isDark ? 'bg-slate-700' : 'bg-slate-200'} mr-2`}>
-                    <Text className={`font-bold text-xs ${isDark ? 'text-white' : 'text-slate-900'}`}>3rd</Text>
+                  <View className={`w-8 h-8 rounded-full justify-center items-center ${isDark ? 'bg-emerald-500/20' : 'bg-emerald-100'} mr-2`}>
+                    <Text className="font-bold text-xs text-emerald-700">3rd</Text>
                   </View>
                   <Image 
                     source={require('../../../assets/images/avatar-telecaller.png')}
-                    style={{ width: 36, height: 36, borderRadius: 18, marginRight: 10, borderWidth: 1, borderColor: '#CBD5E1' }}
+                    style={{ width: 36, height: 36, borderRadius: 18, marginRight: 10, borderWidth: 1.5, borderColor: '#10B981' }}
                     resizeMode="cover"
                   />
                   <View className="flex-1 pr-2">
-                    <Text className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-900'}`} numberOfLines={1}>{rankings.topPerformer}</Text>
-                    <Text className={`text-[10px] font-semibold uppercase tracking-wider mt-0.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Most Calls</Text>
+                    <Text className={`text-xs font-bold ${isDark ? 'text-white' : 'text-indigo-950'}`} numberOfLines={1}>{rankings.topPerformer}</Text>
+                    <Text className={`text-[10px] font-semibold uppercase tracking-wider mt-0.5 ${isDark ? 'text-emerald-300' : 'text-emerald-700'}`}>Most Calls</Text>
                   </View>
                 </View>
-                <PhoneCall size={17} color="#475569" />
+                <PhoneCall size={17} color="#059669" />
               </View>
             </View>
           </View>

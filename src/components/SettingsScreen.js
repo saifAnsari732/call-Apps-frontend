@@ -74,17 +74,17 @@ export default function SettingsScreen() {
   };
 
   return (
-    <View className={`flex-1 ${isDark ? 'bg-slate-950' : 'bg-slate-50'}`}>
+    <View className={`flex-1 ${isDark ? 'bg-indigo-950' : 'bg-slate-50'}`}>
       {/* Fixed Curved Header */}
-      <View className={`pt-16 pb-4 px-5 rounded-b-[32px] shadow-sm z-10 overflow-hidden ${isDark ? 'bg-slate-900 border-b border-slate-800' : 'bg-white border-b border-indigo-50'}`}>
+      <View className={`pt-16 pb-4 px-5 rounded-b-[32px] shadow-sm z-10 overflow-hidden ${isDark ? 'bg-indigo-900 border-b border-slate-800' : 'bg-white border-b border-indigo-50'}`}>
         <LinearGradient
-          colors={isDark ? ['#1E293B', '#0F172A'] : ['#EEF2FF', '#F8FAFC']}
+          colors={isDark ? ['#312E81', '#4F46E5'] : ['#EEF2FF', '#F5F7FF']}
           start={{ x: 0, y: 0 }}
           end={{ x: 0, y: 1 }}
           style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
         />
         <View className="mb-2 relative">
-          <Text className={`text-[34px] font-bold tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>Settings</Text>
+          <Text className={`text-[34px] font-bold tracking-tight ${isDark ? 'text-white' : 'text-indigo-950'}`}>Settings</Text>
           <Text className={`text-[11px] font-extrabold uppercase tracking-[0.2em] mt-1 ${isDark ? 'text-indigo-400' : 'text-slate-500'}`}>Account & Preferences</Text>
         </View>
       </View>
@@ -92,7 +92,7 @@ export default function SettingsScreen() {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: 16, paddingBottom: 100 }}>
       
       {/* Profile Details Card */}
-      <View className={`p-5 rounded-3xl border shadow-sm mb-6 mt-2 ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+      <View className={`p-5 rounded-3xl border shadow-sm mb-6 mt-2 ${isDark ? 'bg-indigo-900 border-slate-800' : 'bg-white border-slate-100'}`}>
         <View className="flex-row items-center mb-4">
           <Image
             source={
@@ -106,7 +106,7 @@ export default function SettingsScreen() {
             resizeMode="cover"
           />
           <View className="ml-4 flex-1">
-            <Text className={`text-base font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>{user?.name}</Text>
+            <Text className={`text-base font-bold ${isDark ? 'text-white' : 'text-indigo-950'}`}>{user?.name}</Text>
             <Text className="text-slate-500 text-xxs font-semibold uppercase tracking-wider mt-0.5">{user?.role} ACCOUNT</Text>
           </View>
         </View>
@@ -128,7 +128,7 @@ export default function SettingsScreen() {
       </View>
 
       {/* Theme Settings Panel */}
-      <View className={`p-5 rounded-3xl border shadow-sm mb-6 ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+      <View className={`p-5 rounded-3xl border shadow-sm mb-6 ${isDark ? 'bg-indigo-900 border-slate-800' : 'bg-white border-slate-100'}`}>
         <View className="flex-row justify-between items-center">
           <View className="flex-row items-center">
             {isDark ? <Moon size={18} color="#F59E0B" /> : <Sun size={18} color="#F59E0B" />}
@@ -144,7 +144,7 @@ export default function SettingsScreen() {
       </View>
 
       {/* Notification Preferences */}
-      <View className={`p-5 rounded-3xl border shadow-sm mb-6 ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+      <View className={`p-5 rounded-3xl border shadow-sm mb-6 ${isDark ? 'bg-indigo-900 border-slate-800' : 'bg-white border-slate-100'}`}>
         <View className="flex-row items-center mb-4">
           <Bell size={18} color="#F59E0B" />
           <Text className={`text-sm font-bold ml-2.5 ${isDark ? 'text-white' : 'text-slate-800'}`}>Notifications</Text>
@@ -173,7 +173,7 @@ export default function SettingsScreen() {
       </View>
 
       {/* Change Password Panel */}
-      <View className={`p-5 rounded-3xl border shadow-sm mb-6 ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+      <View className={`p-5 rounded-3xl border shadow-sm mb-6 ${isDark ? 'bg-indigo-900 border-slate-800' : 'bg-white border-slate-100'}`}>
         <View className="flex-row items-center mb-4">
           <Lock size={18} color="#F59E0B" />
           <Text className={`text-sm font-bold ml-2.5 ${isDark ? 'text-white' : 'text-slate-800'}`}>Update Password</Text>
@@ -190,7 +190,7 @@ export default function SettingsScreen() {
           <View>
             <Text className={`text-[10px] uppercase font-bold mb-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Old Password</Text>
             <TextInput
-              className={`border rounded-xl px-3 py-2 text-xs ${isDark ? 'border-slate-800 bg-slate-950 text-white' : 'border-slate-200 bg-slate-50 text-slate-800'}`}
+              className={`border rounded-xl px-3 py-2 text-xs ${isDark ? 'border-slate-800 bg-indigo-950 text-white' : 'border-slate-200 bg-slate-50 text-slate-800'}`}
               secureTextEntry
               value={oldPassword}
               onChangeText={setOldPassword}
@@ -201,7 +201,7 @@ export default function SettingsScreen() {
           <View>
             <Text className={`text-[10px] uppercase font-bold mb-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>New Password</Text>
             <TextInput
-              className={`border rounded-xl px-3 py-2 text-xs ${isDark ? 'border-slate-800 bg-slate-950 text-white' : 'border-slate-200 bg-slate-50 text-slate-800'}`}
+              className={`border rounded-xl px-3 py-2 text-xs ${isDark ? 'border-slate-800 bg-indigo-950 text-white' : 'border-slate-200 bg-slate-50 text-slate-800'}`}
               secureTextEntry
               value={newPassword}
               onChangeText={setNewPassword}

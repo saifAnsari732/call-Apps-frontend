@@ -106,27 +106,27 @@ export default function TelecallerFollowups() {
   ];
 
   return (
-    <View className="flex-1 bg-[#F8FAFC]">
+    <View className="flex-1 bg-[#F5F7FF]">
       <OfflineBanner />
 
       {/* Top Header */}
-      <View className="bg-[#0F172A] pt-14 pb-5 px-5 shadow-sm">
+      <View className="bg-indigo-600 pt-14 pb-5 px-5 shadow-sm">
         <View className="flex-row items-center justify-between">
           <View>
             <Text className="text-white text-xl font-bold tracking-tight">Follow-ups &amp; Callbacks</Text>
-            <Text className="text-slate-300 text-xs font-medium mt-0.5">
+            <Text className="text-amber-300 text-xs font-medium mt-0.5">
               Scheduled tasks, reminders &amp; customer callback queue
             </Text>
           </View>
-          <TouchableOpacity onPress={onRefresh} className="p-2 bg-white/10 rounded-full">
-            <Bell size={18} color="#E2E8F0" />
+          <TouchableOpacity onPress={onRefresh} className="p-2 bg-white/15 rounded-full">
+            <Bell size={18} color="#FDE047" />
           </TouchableOpacity>
         </View>
       </View>
 
       {/* 4 Tabs Filter (Requirement 6: Today, tomorrow, this week, overdue) */}
-      <View className="px-4 py-3 bg-white border-b border-slate-200 shadow-xs">
-        <View className="flex-row bg-slate-100 rounded-xl p-1">
+      <View className="px-4 py-3 bg-white border-b border-indigo-100 shadow-xs">
+        <View className="flex-row bg-indigo-50 rounded-xl p-1">
           {tabOptions.map((tab) => {
             const isActive = activeTab === tab.key;
             return (
@@ -134,19 +134,19 @@ export default function TelecallerFollowups() {
                 key={tab.key}
                 onPress={() => setActiveTab(tab.key)}
                 className={`flex-1 py-2 rounded-lg items-center justify-center ${
-                  isActive ? 'bg-[#0F172A] shadow-xs' : 'bg-transparent'
+                  isActive ? 'bg-indigo-600 shadow-xs' : 'bg-transparent'
                 }`}
               >
                 <Text
                   className={`text-[11px] font-semibold ${
-                    isActive ? 'text-white' : 'text-slate-600'
+                    isActive ? 'text-white' : 'text-indigo-900'
                   }`}
                 >
                   {tab.label}
                 </Text>
                 <Text
                   className={`text-[10px] font-bold ${
-                    isActive ? 'text-slate-300' : 'text-slate-400'
+                    isActive ? 'text-amber-300' : 'text-indigo-400'
                   }`}
                 >
                   {tab.count}
@@ -160,14 +160,14 @@ export default function TelecallerFollowups() {
       {/* Follow-up Cards List */}
       {isLoading ? (
         <View className="py-20 items-center justify-center">
-          <ActivityIndicator size="large" color="#0F172A" />
-          <Text className="text-xs text-slate-500 font-medium mt-3">Loading follow-ups...</Text>
+          <ActivityIndicator size="large" color="#4F46E5" />
+          <Text className="text-xs text-indigo-600 font-medium mt-3">Loading follow-ups...</Text>
         </View>
       ) : (
         <ScrollView
           contentContainerStyle={{ padding: 16, paddingBottom: 130 }}
           showsVerticalScrollIndicator={false}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#0F172A" />}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#4F46E5" />}
         >
           {list.map((item, index) => {
             const isOverdue = activeTab === 'overdue' || item.isOverdue;
@@ -178,7 +178,7 @@ export default function TelecallerFollowups() {
             return (
               <View
                 key={item.id || index}
-                className="bg-white rounded-2xl p-4 mb-3 border border-slate-200/90 shadow-xs"
+                className="bg-white rounded-2xl p-4 mb-3 border border-indigo-100 shadow-xs"
               >
                 {/* Header Row */}
                 <TouchableOpacity
@@ -188,33 +188,33 @@ export default function TelecallerFollowups() {
                   <View className="flex-row items-center flex-1 pr-2">
                     <Image 
                       source={require('../../../assets/images/avatar-customer.png')}
-                      style={{ width: 40, height: 40, borderRadius: 20, marginRight: 10, borderWidth: 1, borderColor: '#E2E8F0' }}
+                      style={{ width: 40, height: 40, borderRadius: 20, marginRight: 10, borderWidth: 1.5, borderColor: '#C7D2FE' }}
                       resizeMode="cover"
                     />
                     <View className="flex-1">
                       <View className="flex-row items-center flex-wrap gap-1.5">
-                        <Text className="text-base font-bold text-slate-900">{leadName}</Text>
+                        <Text className="text-base font-bold text-indigo-950">{leadName}</Text>
                         {item.lead_code ? (
-                          <View className="bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded">
-                            <Text className="text-[10px] font-mono font-semibold text-slate-600">{item.lead_code}</Text>
+                          <View className="bg-indigo-50 border border-indigo-200 px-1.5 py-0.5 rounded">
+                            <Text className="text-[10px] font-mono font-semibold text-indigo-700">{item.lead_code}</Text>
                           </View>
                         ) : null}
                         {isOverdue && (
-                          <View className="bg-red-50 border border-red-200 px-2 py-0.5 rounded">
-                            <Text className="text-[9px] font-bold text-red-700 uppercase">OVERDUE</Text>
+                          <View className="bg-rose-50 border border-rose-200 px-2 py-0.5 rounded">
+                            <Text className="text-[9px] font-bold text-rose-600 uppercase">OVERDUE</Text>
                           </View>
                         )}
                       </View>
-                      <Text className="text-xs text-slate-500 font-medium mt-0.5">
+                      <Text className="text-xs text-indigo-600/80 font-medium mt-0.5">
                         +91 {leadPhone} {item.lead_city ? `• ${item.lead_city}` : ''}
                       </Text>
                     </View>
                   </View>
 
                   <View className="items-end">
-                    <View className="bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200 flex-row items-center">
-                      <Clock size={11} color="#475569" />
-                      <Text className="text-slate-800 font-bold text-xs ml-1">{item.time}</Text>
+                    <View className="bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200 flex-row items-center">
+                      <Clock size={11} color="#D97706" />
+                      <Text className="text-amber-700 font-bold text-xs ml-1">{item.time}</Text>
                     </View>
                     <Text className="text-[10px] text-slate-400 font-medium mt-1">{item.date}</Text>
                   </View>
@@ -222,38 +222,38 @@ export default function TelecallerFollowups() {
 
                 {/* Reason & Priority Badges */}
                 <View className="flex-row items-center gap-1.5 mb-2.5">
-                  <View className="bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-md flex-row items-center">
-                    <Tag size={10} color="#64748B" />
-                    <Text className="text-[10px] font-semibold text-slate-700 ml-1">
+                  <View className="bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-md flex-row items-center">
+                    <Tag size={10} color="#4F46E5" />
+                    <Text className="text-[10px] font-semibold text-indigo-700 ml-1">
                       {item.reason || 'Callback'}
                     </Text>
                   </View>
                   {item.priority === 'High' && (
-                    <View className="bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
-                      <Text className="text-[10px] font-semibold text-slate-700">High Priority</Text>
+                    <View className="bg-rose-50 px-2 py-0.5 rounded-md border border-rose-200">
+                      <Text className="text-[10px] font-semibold text-rose-700">High Priority</Text>
                     </View>
                   )}
                   {item.lead_product ? (
-                    <View className="bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
-                      <Text className="text-[10px] font-semibold text-slate-700">{item.lead_product}</Text>
+                    <View className="bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200">
+                      <Text className="text-[10px] font-semibold text-blue-700">{item.lead_product}</Text>
                     </View>
                   ) : null}
                 </View>
 
                 {/* Notes box */}
                 {item.notes ? (
-                  <View className="bg-slate-50 rounded-xl p-2.5 mb-3 border border-slate-100">
-                    <Text className="text-xs text-slate-700 italic">
+                  <View className="bg-indigo-50/40 rounded-xl p-2.5 mb-3 border border-indigo-100">
+                    <Text className="text-xs text-indigo-950 italic">
                       "{item.notes}"
                     </Text>
                   </View>
                 ) : null}
 
                 {/* Direct 1-Tap Action Row */}
-                <View className="flex-row items-center gap-2 pt-1 border-t border-slate-100">
+                <View className="flex-row items-center gap-2 pt-1 border-t border-indigo-50">
                   <TouchableOpacity
                     onPress={() => handleCall(item)}
-                    className="flex-1 bg-[#0F172A] active:bg-slate-800 py-2.5 rounded-xl flex-row items-center justify-center shadow-xs"
+                    className="flex-1 bg-indigo-600 active:bg-indigo-700 py-2.5 rounded-xl flex-row items-center justify-center shadow-xs"
                   >
                     <PhoneCall size={14} color="#ffffff" fill="#ffffff" />
                     <Text className="text-white text-xs font-semibold ml-1.5">Call &amp; Dispose</Text>
@@ -276,9 +276,9 @@ export default function TelecallerFollowups() {
 
                   <TouchableOpacity
                     onPress={() => leadId && router.push(`/lead/${leadId}`)}
-                    className="w-10 h-10 rounded-xl bg-slate-100 items-center justify-center"
+                    className="w-10 h-10 rounded-xl bg-indigo-50 items-center justify-center"
                   >
-                    <ArrowRight size={16} color="#475569" />
+                    <ArrowRight size={16} color="#4F46E5" />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -292,7 +292,7 @@ export default function TelecallerFollowups() {
                 style={{ width: 140, height: 140, marginBottom: 14 }}
                 resizeMode="contain"
               />
-              <Text className="text-slate-900 font-bold text-base mt-2">
+              <Text className="text-indigo-950 font-bold text-base mt-2">
                 All Caught Up in {activeTab.toUpperCase()}!
               </Text>
               <Text className="text-slate-500 text-xs mt-1 text-center">No pending callbacks or overdue tasks in this queue. Great job!</Text>

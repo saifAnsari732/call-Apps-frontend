@@ -46,7 +46,7 @@ export default function Index() {
       }}
     >
       <LinearGradient
-        colors={['#0F172A', '#1E293B']}
+        colors={['#4F46E5', '#2563EB', '#1D4ED8']}
         style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
       />
       <Animated.View style={{ 
@@ -56,31 +56,31 @@ export default function Index() {
       }}>
         
         <Animated.View style={{
-          shadowColor: '#000000',
+          shadowColor: '#312E81',
           shadowOffset: { width: 0, height: 10 },
-          shadowOpacity: 0.35,
+          shadowOpacity: 0.4,
           shadowRadius: 20,
-          elevation: 12,
+          elevation: 14,
           transform: [{ scale: pulseAnim }]
         }}>
           <Image 
             source={require('../../assets/images/logo-3d.png')} 
-            style={{ width: 112, height: 112, borderRadius: 28, borderWidth: 1.5, borderColor: 'rgba(255,255,255,0.15)', marginBottom: 24 }}
+            style={{ width: 112, height: 112, borderRadius: 28, borderWidth: 2, borderColor: 'rgba(255,255,255,0.35)', marginBottom: 24 }}
             resizeMode="cover"
           />
         </Animated.View>
 
         <Text style={{ fontSize: 30, fontWeight: '700', color: '#FFFFFF', marginBottom: 4, letterSpacing: 0.5 }}>
-          KisanConnect
+          Kisan<Text style={{ color: '#FDE047' }}>Connect</Text>
         </Text>
         
-        <View style={{ height: 2, width: 48, backgroundColor: '#334155', marginVertical: 12, borderRadius: 2 }} />
+        <View style={{ height: 2, width: 48, backgroundColor: '#60A5FA', marginVertical: 12, borderRadius: 2 }} />
 
-        <Text style={{ color: '#94A3B8', fontSize: 12, letterSpacing: 2, fontWeight: '600', textTransform: 'uppercase', marginBottom: 40 }}>
+        <Text style={{ color: '#E0E7FF', fontSize: 12, letterSpacing: 2, fontWeight: '600', textTransform: 'uppercase', marginBottom: 40 }}>
           Enterprise Lead Manager
         </Text>
         
-        <ActivityIndicator size="large" color="#FFFFFF" />
+        <ActivityIndicator size="large" color="#FDE047" />
       </Animated.View>
     </Animated.View>
   );

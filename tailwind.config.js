@@ -22,8 +22,8 @@ module.exports = {
           deep: '#78350F', // amber-900
         },
         brand: {
-          primary: '#0F172A',
-          dark: '#0F172A',
+          primary: '#4F46E5',
+          dark: '#1E3A8A',
           accent: '#10B981',
         }
       },

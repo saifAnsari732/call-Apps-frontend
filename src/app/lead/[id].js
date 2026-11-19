@@ -601,7 +601,7 @@ export default function LeadDetails() {
   if (isLoading) {
     return (
       <View className="flex-1 justify-center items-center bg-[#F8FAFC]">
-        <ActivityIndicator size="large" color="#0B192C" />
+        <ActivityIndicator size="large" color="#4F46E5" />
         <Text className="mt-3 text-slate-500 font-bold text-xs">Loading Lead Command Screen...</Text>
       </View>
     );
@@ -643,7 +643,7 @@ export default function LeadDetails() {
       <OfflineBanner />
 
       {/* TOP COMPACT HEADER */}
-      <View className="bg-[#0F172A] pt-14 pb-3 z-10 px-4">
+      <View className="bg-indigo-600 pt-14 pb-3 z-10 px-4">
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center flex-1 pr-2">
             <TouchableOpacity onPress={() => router.back()} className="mr-3 p-1">
@@ -678,7 +678,7 @@ export default function LeadDetails() {
               <RefreshCcw color="#ffffff" size={16} />
             </TouchableOpacity>
             <View className="w-8 h-8 rounded-full bg-[#FFB703] justify-center items-center">
-              <Text className="text-[#0B192C] font-bold text-[12px]">{getInitials(agentName)}</Text>
+              <Text className="text-indigo-950 font-bold text-[12px]">{getInitials(agentName)}</Text>
             </View>
           </View>
         </View>
@@ -703,7 +703,7 @@ export default function LeadDetails() {
                 resizeMode="cover"
               />
               <View className="flex-1">
-                <Text className="text-[18px] font-bold text-slate-900 leading-tight">{lead.name}</Text>
+                <Text className="text-[18px] font-bold text-indigo-950 leading-tight">{lead.name}</Text>
                 <View className="flex-row items-center mt-1 flex-wrap gap-1.5">
                   <View className="flex-row items-center">
                     <MapPin size={12} color="#64748B" />
@@ -722,7 +722,7 @@ export default function LeadDetails() {
             {/* Quick Priority Toggle, Score & Edit Button */}
             <View className="flex-row items-center gap-1.5">
               <View className="px-2 py-1 rounded-full bg-slate-100 border border-slate-200 flex-row items-center">
-                <Award size={11} color="#0B192C" />
+                <Award size={11} color="#4F46E5" />
                 <Text className="text-[10px] font-bold text-slate-800 ml-1">Score: {lead.quality_score || 50}</Text>
               </View>
 
@@ -744,7 +744,7 @@ export default function LeadDetails() {
                 onPress={openEditModal}
                 className="p-1.5 bg-slate-100 rounded-full"
               >
-                <Pencil size={13} color="#0B192C" />
+                <Pencil size={13} color="#4F46E5" />
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -769,8 +769,8 @@ export default function LeadDetails() {
           {/* Quick Phone & Alt Phone Bar */}
           <View className="bg-slate-50 rounded-2xl p-2.5 mb-3 border border-slate-100 flex-row justify-between items-center">
             <View className="flex-row items-center flex-1">
-              <PhoneCall size={13} color="#0B192C" />
-              <Text className="text-[13px] font-bold text-slate-900 ml-1.5">{displayMobile}</Text>
+              <PhoneCall size={13} color="#4F46E5" />
+              <Text className="text-[13px] font-bold text-indigo-950 ml-1.5">{displayMobile}</Text>
               <TouchableOpacity onPress={() => copyPhoneNumber(cleanMobile || lead.mobile, false)} className="ml-1.5 p-1">
                 {copiedNumber ? <Check size={14} color="#16A34A" /> : <Copy size={12} color="#64748B" />}
               </TouchableOpacity>
@@ -809,7 +809,7 @@ export default function LeadDetails() {
             {/* 1-Click Call Button */}
             <TouchableOpacity
               onPress={() => handleStartPhoneCall(cleanMobile || lead.mobile)}
-              className="flex-1 bg-[#0B192C] py-3.5 rounded-2xl flex-row justify-center items-center shadow-md active:bg-slate-800"
+              className="flex-1 bg-indigo-600 py-3.5 rounded-2xl flex-row justify-center items-center shadow-md active:bg-indigo-700"
             >
               <PhoneCall size={19} color="#FFB703" />
               <View className="ml-2">
@@ -942,7 +942,7 @@ export default function LeadDetails() {
         {/* ========================================================== */}
         <View className="bg-white rounded-3xl p-4 mb-3.5 shadow-sm border border-slate-100">
           <View className="flex-row items-center justify-between pb-3 mb-3 border-b border-slate-100">
-            <Text className="text-[14px] font-bold text-[#0B192C] uppercase tracking-wider">
+            <Text className="text-[14px] font-bold text-indigo-950 uppercase tracking-wider">
               Telecaller Interaction Form
             </Text>
             {/* Duration Display */}
@@ -971,7 +971,7 @@ export default function LeadDetails() {
                   key={sec}
                   onPress={() => setDurationSec(String(sec))}
                   className={`px-2 py-1 rounded-lg border ${
-                    Number(durationSec) === sec ? 'bg-[#0B192C] border-[#0B192C]' : 'bg-white border-amber-200'
+                    Number(durationSec) === sec ? 'bg-indigo-600 border-indigo-600' : 'bg-white border-amber-200'
                   }`}
                 >
                   <Text className={`text-[10px] font-bold ${Number(durationSec) === sec ? 'text-white' : 'text-slate-700'}`}>
@@ -1037,7 +1037,7 @@ export default function LeadDetails() {
                     key={disp}
                     onPress={() => handleSelectDisposition(disp)}
                     className={`px-3 py-2 rounded-xl border ${
-                      isSelected ? 'bg-[#0B192C] border-[#0B192C] shadow-sm' : 'border-slate-200 bg-white'
+                      isSelected ? 'bg-indigo-600 border-indigo-600 shadow-sm' : 'border-slate-200 bg-white'
                     }`}
                   >
                     <Text className={`text-[12px] font-bold ${isSelected ? 'text-white' : 'text-slate-700'}`}>
@@ -1084,7 +1084,7 @@ export default function LeadDetails() {
               }}
               placeholder="Enter client discussion summary (e.g. Discussed 15L tin pricing, customer asked for catalog on WhatsApp)..."
               placeholderTextColor="#94A3B8"
-              className={`border rounded-2xl p-3.5 text-[13px] h-20 text-slate-900 bg-slate-50 ${
+              className={`border rounded-2xl p-3.5 text-[13px] h-20 text-indigo-950 bg-slate-50 ${
                 !remarks.trim() && formError ? 'border-red-400 bg-red-50/40' : 'border-slate-200'
               }`}
               textAlignVertical="top"
@@ -1112,7 +1112,7 @@ export default function LeadDetails() {
                   }
                 }}
                 trackColor={{ false: '#CBD5E1', true: '#FFB703' }}
-                thumbColor={scheduleFollowup ? '#0B192C' : '#FFFFFF'}
+                thumbColor={scheduleFollowup ? '#4F46E5' : '#FFFFFF'}
               />
             </View>
 
@@ -1216,7 +1216,7 @@ export default function LeadDetails() {
                         onPress={() => setFollowupPriority(p)}
                         className={`px-2.5 py-1 rounded-lg border ${
                           followupPriority === p
-                            ? p === 'High' ? 'bg-red-600 border-red-600' : 'bg-slate-800 border-slate-800'
+                            ? p === 'High' ? 'bg-red-600 border-red-600' : 'bg-indigo-600 border-indigo-600'
                             : 'bg-white border-slate-200'
                         }`}
                       >
@@ -1245,15 +1245,15 @@ export default function LeadDetails() {
         <View className="bg-white rounded-3xl p-4 mb-3.5 shadow-sm border border-slate-100">
           <View className="flex-row items-center justify-between pb-3 mb-3 border-b border-slate-100">
             <View className="flex-row items-center">
-              <Paperclip size={16} color="#0B192C" />
-              <Text className="text-[14px] font-bold text-[#0B192C] uppercase tracking-wider ml-2">
+              <Paperclip size={16} color="#4F46E5" />
+              <Text className="text-[14px] font-bold text-indigo-950 uppercase tracking-wider ml-2">
                 Documents &amp; Screenshots ({lead.documents?.length || 0})
               </Text>
             </View>
             <TouchableOpacity
               onPress={handlePickAndUploadDocument}
               disabled={uploadingDoc}
-              className="bg-[#0B192C] px-3 py-1.5 rounded-xl flex-row items-center shadow-xs"
+              className="bg-indigo-600 px-3 py-1.5 rounded-xl flex-row items-center shadow-xs"
             >
               {uploadingDoc ? (
                 <ActivityIndicator size="small" color="#FFB703" />
@@ -1282,7 +1282,7 @@ export default function LeadDetails() {
                       <FileText size={16} color="#4F46E5" />
                     </View>
                     <View className="flex-1">
-                      <Text className="text-xs font-bold text-slate-900" numberOfLines={1}>
+                      <Text className="text-xs font-bold text-indigo-950" numberOfLines={1}>
                         {doc.name || `Document #${idx + 1}`}
                       </Text>
                       <Text className="text-[10px] text-slate-400 mt-0.5">
@@ -1306,8 +1306,8 @@ export default function LeadDetails() {
                     }}
                     className="px-2.5 py-1.5 bg-white rounded-xl border border-slate-200 flex-row items-center shadow-xs"
                   >
-                    <ExternalLink size={12} color="#0B192C" />
-                    <Text className="text-[11px] font-bold text-[#0B192C] ml-1">Open</Text>
+                    <ExternalLink size={12} color="#4F46E5" />
+                    <Text className="text-[11px] font-bold text-indigo-950 ml-1">Open</Text>
                   </TouchableOpacity>
                 </View>
               ))}
@@ -1334,8 +1334,8 @@ export default function LeadDetails() {
             className="flex-row justify-between items-center"
           >
             <View className="flex-row items-center">
-              <Clock size={16} color="#0B192C" />
-              <Text className="text-[13px] font-bold text-[#0B192C] ml-2 uppercase tracking-wider">
+              <Clock size={16} color="#4F46E5" />
+              <Text className="text-[13px] font-bold text-indigo-950 ml-2 uppercase tracking-wider">
                 Timeline &amp; Previous Interactions ({calls.length} calls, {followups.length} follow-ups)
               </Text>
             </View>
@@ -1355,7 +1355,7 @@ export default function LeadDetails() {
                     key={tab.key}
                     onPress={() => setTimelineFilter(tab.key)}
                     className={`px-2.5 py-1 rounded-lg border ${
-                      timelineFilter === tab.key ? 'bg-[#0B192C] border-[#0B192C]' : 'bg-slate-100 border-slate-200'
+                      timelineFilter === tab.key ? 'bg-indigo-600 border-indigo-600' : 'bg-slate-100 border-slate-200'
                     }`}
                   >
                     <Text className={`text-[10px] font-bold ${timelineFilter === tab.key ? 'text-white' : 'text-slate-700'}`}>
@@ -1402,7 +1402,7 @@ export default function LeadDetails() {
                               <Tag size={12} color="#475569" />
                             </View>
                           )}
-                          <Text className="text-[12px] font-bold text-slate-900">{item.title}</Text>
+                          <Text className="text-[12px] font-bold text-indigo-950">{item.title}</Text>
                         </View>
 
                         <Text className="text-[10px] font-bold text-slate-400">
@@ -1486,13 +1486,13 @@ export default function LeadDetails() {
           onPress={() => setCallModalFallbackVisible(true)}
           className="w-12 h-12 bg-slate-100 rounded-2xl justify-center items-center border border-slate-200 mr-2"
         >
-          <Briefcase size={20} color="#0B192C" />
+          <Briefcase size={20} color="#4F46E5" />
         </TouchableOpacity>
 
         <TouchableOpacity
           onPress={handleSaveAndComplete}
           disabled={saveCallMutation.isPending}
-          className="flex-1 bg-[#0B192C] py-4 rounded-2xl flex-row justify-center items-center shadow-lg active:bg-slate-800"
+          className="flex-1 bg-indigo-600 py-4 rounded-2xl flex-row justify-center items-center shadow-lg active:bg-indigo-700"
         >
           {saveCallMutation.isPending ? (
             <ActivityIndicator size="small" color="#FFFFFF" />
@@ -1516,10 +1516,10 @@ export default function LeadDetails() {
         transparent={true}
         onRequestClose={() => setEditModalVisible(false)}
       >
-        <View className="flex-1 justify-end bg-black/60">
+        <View className="flex-1 justify-end bg-indigo-950/50">
           <View className="bg-white rounded-t-3xl p-5 max-h-[85%]">
             <View className="flex-row justify-between items-center mb-4">
-              <Text className="text-lg font-bold text-slate-900">Edit Lead Profile</Text>
+              <Text className="text-lg font-bold text-indigo-950">Edit Lead Profile</Text>
               <TouchableOpacity onPress={() => setEditModalVisible(false)} className="p-2 bg-slate-100 rounded-full">
                 <X size={18} color="#475569" />
               </TouchableOpacity>
@@ -1541,7 +1541,7 @@ export default function LeadDetails() {
                   <TextInput
                     value={editForm[field.key]}
                     onChangeText={(val) => setEditForm({ ...editForm, [field.key]: val })}
-                    className="border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 bg-slate-50"
+                    className="border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-indigo-950 bg-slate-50"
                   />
                 </View>
               ))}
@@ -1554,7 +1554,7 @@ export default function LeadDetails() {
                       key={lvl}
                       onPress={() => setEditForm({ ...editForm, priority: lvl })}
                       className={`flex-1 py-2.5 rounded-xl border items-center ${
-                        editForm.priority === lvl ? 'bg-[#0B192C] border-[#0B192C]' : 'bg-slate-50 border-slate-200'
+                        editForm.priority === lvl ? 'bg-indigo-600 border-indigo-600' : 'bg-slate-50 border-slate-200'
                       }`}
                     >
                       <Text className={`text-xs font-bold ${editForm.priority === lvl ? 'text-white' : 'text-slate-700'}`}>
@@ -1568,7 +1568,7 @@ export default function LeadDetails() {
               <TouchableOpacity
                 onPress={() => editLeadMutation.mutate(editForm)}
                 disabled={editLeadMutation.isPending}
-                className="bg-[#0B192C] py-4 rounded-xl items-center justify-center mt-2 mb-6"
+                className="bg-indigo-600 py-4 rounded-xl items-center justify-center mt-2 mb-6"
               >
                 {editLeadMutation.isPending ? (
                   <ActivityIndicator size="small" color="#fff" />

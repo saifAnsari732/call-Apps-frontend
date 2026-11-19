@@ -8,8 +8,8 @@ const TabIcon = ({ name, icon: Icon, focused }) => {
   if (focused) {
     return (
       <View className="items-center justify-center pt-2">
-        <Icon size={22} color="#0F172A" strokeWidth={2.5} />
-        <Text className="text-slate-900 font-semibold text-[11px] mt-1">{name}</Text>
+        <Icon size={22} color="#4F46E5" strokeWidth={2.5} />
+        <Text className="text-indigo-600 font-semibold text-[11px] mt-1">{name}</Text>
       </View>
     );
   }
@@ -37,7 +37,7 @@ export default function AdminLayout() {
           paddingTop: 10,
           paddingHorizontal: 10,
           elevation: 10,
-          shadowColor: '#000',
+          shadowColor: '#6366F1',
           shadowOffset: { width: 0, height: -2 },
           shadowOpacity: 0.05,
           shadowRadius: 5,

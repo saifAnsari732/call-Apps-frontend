@@ -87,10 +87,10 @@ export default function LeadsCategories() {
   ];
 
   return (
-    <View className="flex-1 bg-[#F8FAFC]">
+    <View className="flex-1 bg-[#F5F7FF]">
       {/* Header */}
       <View 
-        className="bg-[#0F172A] px-6 rounded-b-[36px] shadow-md z-10"
+        className="bg-indigo-600 px-6 rounded-b-[36px] shadow-md shadow-indigo-500/30 z-10"
         style={{ paddingTop: Math.max(insets.top, 48), paddingBottom: 28 }}
       >
         <View className="flex-row items-center justify-between">
@@ -100,13 +100,13 @@ export default function LeadsCategories() {
             </TouchableOpacity>
             <Image 
               source={require('../../../assets/images/logo-3d.png')}
-              style={{ width: 32, height: 32, borderRadius: 8, marginRight: 10, borderWidth: 1, borderColor: '#334155' }}
+              style={{ width: 32, height: 32, borderRadius: 8, marginRight: 10, borderWidth: 1.5, borderColor: '#A5B4FC' }}
               resizeMode="cover"
             />
             <Text className="text-white text-xl font-bold tracking-tight">Leads Directory</Text>
           </View>
-          <TouchableOpacity onPress={() => router.push('/(telecaller)/lead-list')} className="p-2 bg-white/10 rounded-full">
-            <Filter size={18} color="#E2E8F0" />
+          <TouchableOpacity onPress={() => router.push('/(telecaller)/lead-list')} className="p-2 bg-white/15 rounded-full">
+            <Filter size={18} color="#FDE047" />
           </TouchableOpacity>
         </View>
       </View>
@@ -116,7 +116,7 @@ export default function LeadsCategories() {
         showsVerticalScrollIndicator={false}
       >
         {/* Status Categories Section */}
-        <Text className="text-xs font-semibold uppercase text-slate-500 tracking-wider mb-3 px-1">By Status</Text>
+        <Text className="text-xs font-semibold uppercase text-indigo-500 tracking-wider mb-3 px-1">By Status</Text>
         
         {statusCategories.map((cat, index) => {
           const Icon = cat.icon;
@@ -124,15 +124,15 @@ export default function LeadsCategories() {
             <TouchableOpacity
               key={index}
               onPress={() => router.push(`/(telecaller)/lead-list?category=${cat.category}`)}
-              className="bg-white rounded-2xl p-4 mb-3 shadow-xs border border-slate-200/80 flex-row items-center justify-between"
+              className="bg-white rounded-2xl p-4 mb-3 shadow-xs border border-indigo-100 flex-row items-center justify-between"
               activeOpacity={0.7}
             >
               <View className="flex-row items-center flex-1 pr-2">
-                <View className="w-12 h-12 rounded-2xl bg-slate-100 items-center justify-center mr-4">
-                  <Icon size={20} color="#0F172A" strokeWidth={2} />
+                <View className={`w-12 h-12 rounded-2xl ${cat.bgColor} items-center justify-center mr-4`}>
+                  <Icon size={20} color={cat.iconColor} strokeWidth={2.2} />
                 </View>
                 <View className="flex-1">
-                  <Text className="text-slate-900 text-base font-bold mb-0.5 tracking-tight">
+                  <Text className="text-indigo-950 text-base font-bold mb-0.5 tracking-tight">
                     {cat.title}
                   </Text>
                   <Text className="text-slate-500 text-xs font-medium" numberOfLines={1}>
@@ -140,13 +140,13 @@ export default function LeadsCategories() {
                   </Text>
                 </View>
               </View>
-              <ChevronRight size={20} color="#CBD5E1" strokeWidth={2.5} />
+              <ChevronRight size={20} color="#A5B4FC" strokeWidth={2.5} />
             </TouchableOpacity>
           );
         })}
 
         {/* Tag Categories Section */}
-        <Text className="text-xs font-semibold uppercase text-slate-500 tracking-wider mt-5 mb-3 px-1">By Tags &amp; Labels</Text>
+        <Text className="text-xs font-semibold uppercase text-indigo-500 tracking-wider mt-5 mb-3 px-1">By Tags &amp; Labels</Text>
         
         {tagCategories.map((tagCat, index) => {
           const Icon = tagCat.icon;
@@ -154,20 +154,20 @@ export default function LeadsCategories() {
             <TouchableOpacity
               key={index}
               onPress={() => router.push(`/(telecaller)/lead-list?tag=${tagCat.tag}`)}
-              className="bg-white rounded-2xl p-4 mb-3 shadow-xs border border-slate-200/80 flex-row items-center justify-between"
+              className="bg-white rounded-2xl p-4 mb-3 shadow-xs border border-indigo-100 flex-row items-center justify-between"
               activeOpacity={0.7}
             >
               <View className="flex-row items-center flex-1 pr-2">
-                <View className="w-12 h-12 rounded-2xl bg-slate-100 items-center justify-center mr-4">
-                  <Icon size={20} color="#0F172A" strokeWidth={2} />
+                <View className={`w-12 h-12 rounded-2xl ${tagCat.bgColor} items-center justify-center mr-4`}>
+                  <Icon size={20} color={tagCat.iconColor} strokeWidth={2.2} />
                 </View>
                 <View className="flex-1">
                   <View className="flex-row items-center">
-                    <Text className="text-slate-900 text-base font-bold mb-0.5 tracking-tight mr-2">
+                    <Text className="text-indigo-950 text-base font-bold mb-0.5 tracking-tight mr-2">
                       {tagCat.title}
                     </Text>
-                    <View className="bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-md">
-                      <Text className="text-[9px] font-semibold text-slate-700 uppercase">{tagCat.tag}</Text>
+                    <View className="bg-indigo-100 border border-indigo-200 px-2 py-0.5 rounded-md">
+                      <Text className="text-[9px] font-semibold text-indigo-700 uppercase">{tagCat.tag}</Text>
                     </View>
                   </View>
                   <Text className="text-slate-500 text-xs font-medium" numberOfLines={1}>
@@ -175,7 +175,7 @@ export default function LeadsCategories() {
                   </Text>
                 </View>
               </View>
-              <ChevronRight size={20} color="#CBD5E1" strokeWidth={2.5} />
+              <ChevronRight size={20} color="#A5B4FC" strokeWidth={2.5} />
             </TouchableOpacity>
           );
         })}

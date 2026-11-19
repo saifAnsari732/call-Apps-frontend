@@ -20,8 +20,8 @@ export default function SimpleCalendarModal({ visible, onClose, onSelect, isDark
 
   return (
     <Modal visible={visible} transparent animationType="fade">
-      <View className="flex-1 justify-center items-center bg-black/60 px-4">
-        <View className={`w-full max-w-sm rounded-3xl p-5 shadow-xl ${isDark ? 'bg-slate-900' : 'bg-white'}`}>
+      <View className="flex-1 justify-center items-center bg-indigo-950/50 px-4">
+        <View className={`w-full max-w-sm rounded-3xl p-5 shadow-xl ${isDark ? 'bg-indigo-900' : 'bg-white'}`}>
           <View className="flex-row justify-between items-center mb-4">
             <Text className={`font-bold text-lg ${isDark ? 'text-white' : 'text-slate-800'}`}>{title}</Text>
             <TouchableOpacity onPress={onClose} className={`p-2 rounded-full ${isDark ? 'bg-slate-800' : 'bg-slate-100'}`}>

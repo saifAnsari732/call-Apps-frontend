@@ -105,7 +105,7 @@ export default function BulkReassign() {
   return (
     <View className="flex-1 bg-[#F8FAFC]">
       {/* Header */}
-      <View className="bg-[#0B192C] pt-14 pb-4 px-4 flex-row items-center">
+      <View className="bg-indigo-600 pt-14 pb-4 px-4 flex-row items-center">
         <TouchableOpacity onPress={() => router.back()} className="mr-3 p-1">
           <ChevronLeft color="#ffffff" size={26} />
         </TouchableOpacity>
@@ -125,7 +125,7 @@ export default function BulkReassign() {
             className={`flex-1 py-4 border-b-2 items-center ${activeTab === tab ? 'border-[#FFB703]' : 'border-transparent'}`}
             onPress={() => setActiveTab(tab)}
           >
-            <Text className={`font-bold ${activeTab === tab ? 'text-[#0B192C]' : 'text-slate-400'}`}>{tab}</Text>
+            <Text className={`font-bold ${activeTab === tab ? 'text-indigo-950' : 'text-slate-400'}`}>{tab}</Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -141,7 +141,7 @@ export default function BulkReassign() {
               className="flex-row items-center bg-white border border-slate-200 p-4 rounded-xl mb-6 shadow-sm"
             >
               <Calendar size={20} color="#64748B" />
-              <Text className="ml-3 font-bold text-[#0B192C] text-[16px]">
+              <Text className="ml-3 font-bold text-indigo-950 text-[16px]">
                 {customDate ? customDate : 'Tap to pick a date'}
               </Text>
             </TouchableOpacity>
@@ -159,7 +159,7 @@ export default function BulkReassign() {
                       <TouchableOpacity onPress={() => setSelectedLeads(leads.slice(0, 20).map(l => l.id))} className="bg-slate-200 px-2 py-1 rounded">
                         <Text className="text-xs font-bold">20</Text>
                       </TouchableOpacity>
-                      <TouchableOpacity onPress={() => setSelectedLeads(leads.map(l => l.id))} className="bg-[#0B192C] px-2 py-1 rounded">
+                      <TouchableOpacity onPress={() => setSelectedLeads(leads.map(l => l.id))} className="bg-indigo-600 px-2 py-1 rounded">
                         <Text className="text-xs font-bold text-white">All</Text>
                       </TouchableOpacity>
                     </View>
@@ -167,7 +167,7 @@ export default function BulkReassign() {
                 </View>
 
                 {leadsLoading ? (
-                  <ActivityIndicator size="large" color="#0B192C" className="my-6" />
+                  <ActivityIndicator size="large" color="#4F46E5" className="my-6" />
                 ) : leads.length === 0 ? (
                   <View className="bg-slate-100 p-6 rounded-xl items-center mb-6 border border-slate-200 border-dashed">
                     <Text className="text-slate-400 font-bold">No leads found on this date.</Text>
@@ -182,12 +182,12 @@ export default function BulkReassign() {
                           className="flex-row items-center p-3 border-b border-slate-50"
                         >
                           {selectedLeads.includes(lead.id) ? (
-                            <CheckSquare size={18} color="#0B192C" />
+                            <CheckSquare size={18} color="#4F46E5" />
                           ) : (
                             <Square size={18} color="#CBD5E1" />
                           )}
                           <View className="ml-3 flex-1">
-                            <Text className="font-bold text-[#0B192C]" numberOfLines={1}>{lead.name}</Text>
+                            <Text className="font-bold text-indigo-950" numberOfLines={1}>{lead.name}</Text>
                             <Text className="text-xs text-slate-500">{lead.mobile} • {lead.status}</Text>
                           </View>
                         </TouchableOpacity>
@@ -208,7 +208,7 @@ export default function BulkReassign() {
                         <UserCheck size={18} color={targetCallerTab1 === caller.id ? '#F59E0B' : '#94A3B8'} />
                         {targetCallerTab1 === caller.id && <View className="w-2 h-2 bg-[#F59E0B] rounded-full" />}
                       </View>
-                      <Text className={`font-bold text-[15px] ${targetCallerTab1 === caller.id ? 'text-[#0B192C]' : 'text-slate-600'}`}>{caller.name}</Text>
+                      <Text className={`font-bold text-[15px] ${targetCallerTab1 === caller.id ? 'text-indigo-950' : 'text-slate-600'}`}>{caller.name}</Text>
                       <Text className="text-xs text-slate-400 mt-1">{caller.assigned_leads_count} Leads</Text>
                     </TouchableOpacity>
                   ))}
@@ -217,7 +217,7 @@ export default function BulkReassign() {
                 <TouchableOpacity 
                   onPress={handleBulkAssign}
                   disabled={assignMutation.isPending || selectedLeads.length === 0 || !targetCallerTab1}
-                  className={`py-4 rounded-xl items-center ${(assignMutation.isPending || selectedLeads.length === 0 || !targetCallerTab1) ? 'bg-slate-300' : 'bg-[#0B192C]'}`}
+                  className={`py-4 rounded-xl items-center ${(assignMutation.isPending || selectedLeads.length === 0 || !targetCallerTab1) ? 'bg-slate-300' : 'bg-indigo-600'}`}
                 >
                   {assignMutation.isPending ? <ActivityIndicator color="#fff" /> : <Text className="text-[#FFB703] font-bold text-[16px]">ASSIGN {selectedLeads.length} LEADS</Text>}
                 </TouchableOpacity>
@@ -246,7 +246,7 @@ export default function BulkReassign() {
                   className={`p-4 border-b border-slate-50 flex-row justify-between items-center ${fromCaller === caller.id ? 'bg-slate-50' : 'bg-white'}`}
                 >
                   <View>
-                    <Text className="font-bold text-[#0B192C]">{caller.name}</Text>
+                    <Text className="font-bold text-indigo-950">{caller.name}</Text>
                     <Text className="text-xs text-slate-500">{caller.assigned_leads_count || 0} Total Leads</Text>
                   </View>
                   <View className={`w-5 h-5 rounded-full border-2 justify-center items-center ${fromCaller === caller.id ? 'border-red-500' : 'border-slate-300'}`}>
@@ -271,7 +271,7 @@ export default function BulkReassign() {
                   className={`p-4 border-b border-slate-50 flex-row justify-between items-center ${toCaller === caller.id ? 'bg-slate-50' : 'bg-white'}`}
                 >
                   <View>
-                    <Text className="font-bold text-[#0B192C]">{caller.name}</Text>
+                    <Text className="font-bold text-indigo-950">{caller.name}</Text>
                     <Text className="text-xs text-slate-500">{caller.assigned_leads_count || 0} Total Leads</Text>
                   </View>
                   <View className={`w-5 h-5 rounded-full border-2 justify-center items-center ${toCaller === caller.id ? 'border-emerald-500' : 'border-slate-300'}`}>
@@ -284,7 +284,7 @@ export default function BulkReassign() {
             <TouchableOpacity 
               onPress={handleTransfer}
               disabled={transferMutation.isPending || !fromCaller || !toCaller}
-              className={`py-4 rounded-xl items-center shadow-lg ${(transferMutation.isPending || !fromCaller || !toCaller) ? 'bg-slate-300 shadow-none' : 'bg-[#0B192C] shadow-[#0B192C]/30'}`}
+              className={`py-4 rounded-xl items-center shadow-lg ${(transferMutation.isPending || !fromCaller || !toCaller) ? 'bg-slate-300 shadow-none' : 'bg-indigo-600 shadow-[#4F46E5]/30'}`}
             >
               {transferMutation.isPending ? <ActivityIndicator color="#fff" /> : <Text className="text-[#FFB703] font-bold text-[16px] tracking-wide">TRANSFER ALL LEADS</Text>}
             </TouchableOpacity>

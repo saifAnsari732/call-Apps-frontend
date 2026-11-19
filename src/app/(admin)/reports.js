@@ -67,7 +67,7 @@ export default function AdminReports() {
 
       {/* Header */}
       <View className="pt-14 pb-2 px-6">
-        <Text className="text-[28px] font-bold text-[#0B192C] tracking-tight">Performance Reports</Text>
+        <Text className="text-[28px] font-bold text-indigo-950 tracking-tight">Performance Reports</Text>
         <Text className="text-slate-500 text-sm mt-1 pr-6 leading-5">Download comprehensive analytical reports.</Text>
       </View>
 
@@ -80,9 +80,9 @@ export default function AdminReports() {
             <View className="flex-row items-center border border-slate-300 rounded-xl px-3 bg-white h-12 justify-between">
               <View className="flex-row items-center">
                 <Calendar size={16} color="#64748B" />
-                <Text className="ml-2 text-sm text-[#0B192C] font-bold">Last 30 Days</Text>
+                <Text className="ml-2 text-sm text-indigo-950 font-bold">Last 30 Days</Text>
               </View>
-              <ChevronDown size={16} color="#0B192C" />
+              <ChevronDown size={16} color="#4F46E5" />
             </View>
           </View>
 
@@ -92,9 +92,9 @@ export default function AdminReports() {
               <View className="flex-row items-center border border-slate-300 rounded-xl px-3 bg-white h-12 justify-between">
                 <View className="flex-row items-center">
                   <FileText size={16} color="#64748B" />
-                  <Text className="ml-2 text-sm text-[#0B192C] font-bold">Excel (.xlsx)</Text>
+                  <Text className="ml-2 text-sm text-indigo-950 font-bold">Excel (.xlsx)</Text>
                 </View>
-                <ChevronDown size={16} color="#0B192C" />
+                <ChevronDown size={16} color="#4F46E5" />
               </View>
             </View>
 
@@ -103,20 +103,20 @@ export default function AdminReports() {
               <View className="flex-row items-center border border-slate-300 rounded-xl px-3 bg-white h-12 justify-between">
                 <View className="flex-row items-center">
                   <MapPin size={16} color="#64748B" />
-                  <Text className="ml-2 text-sm text-[#0B192C] font-bold">All Divisions</Text>
+                  <Text className="ml-2 text-sm text-indigo-950 font-bold">All Divisions</Text>
                 </View>
-                <ChevronDown size={16} color="#0B192C" />
+                <ChevronDown size={16} color="#4F46E5" />
               </View>
             </View>
           </View>
 
           <TouchableOpacity className="bg-[#FFB703] h-12 rounded-xl justify-center items-center shadow-sm shadow-[#FFB703]/30">
-            <Text className="text-[#0B192C] font-bold text-sm">Apply Filters</Text>
+            <Text className="text-indigo-950 font-bold text-sm">Apply Filters</Text>
           </TouchableOpacity>
         </View>
 
         {/* Available Reports */}
-        <Text className="text-lg font-bold text-[#0B192C] mb-4">Available Reports</Text>
+        <Text className="text-lg font-bold text-indigo-950 mb-4">Available Reports</Text>
         
         {reports.map((report, index) => (
           <View key={index} className="bg-white rounded-2xl p-4 mb-3 flex-row items-center justify-between border border-slate-200 shadow-sm shadow-slate-200/40">
@@ -125,7 +125,7 @@ export default function AdminReports() {
                 {report.icon}
               </View>
               <View className="flex-1">
-                <Text className="text-base font-bold text-[#0B192C]">{report.title}</Text>
+                <Text className="text-base font-bold text-indigo-950">{report.title}</Text>
                 <Text className="text-xs text-slate-500 mt-0.5">{report.desc}</Text>
               </View>
             </View>
@@ -133,23 +133,23 @@ export default function AdminReports() {
             <TouchableOpacity 
               onPress={() => handleExport(report.type, report.title)}
               disabled={downloading === report.type}
-              className="w-10 h-10 rounded-full border-2 border-[#0B192C] justify-center items-center ml-2"
+              className="w-10 h-10 rounded-full border-2 border-indigo-600 justify-center items-center ml-2"
             >
               {downloading === report.type ? (
-                <ActivityIndicator size="small" color="#0B192C" />
+                <ActivityIndicator size="small" color="#4F46E5" />
               ) : (
-                <Download size={16} color="#0B192C" strokeWidth={2.5} />
+                <Download size={16} color="#4F46E5" strokeWidth={2.5} />
               )}
             </TouchableOpacity>
           </View>
         ))}
 
         {/* Custom Insight Banner */}
-        <View className="bg-[#0B192C] rounded-2xl p-6 mt-6 mb-4 shadow-lg shadow-slate-900/40">
+        <View className="bg-indigo-600 rounded-2xl p-6 mt-6 mb-4 shadow-lg shadow-indigo-900/40">
           <Text className="text-white text-lg font-bold mb-1">Need custom insight?</Text>
           <Text className="text-slate-300 text-xs mb-4">Contact data team for specialized report generation</Text>
           <TouchableOpacity className="bg-[#FFB703] self-start px-5 py-2.5 rounded-full">
-            <Text className="text-[#0B192C] font-bold text-sm">Request Access</Text>
+            <Text className="text-indigo-950 font-bold text-sm">Request Access</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

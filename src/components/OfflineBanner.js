@@ -47,7 +47,7 @@ export default function OfflineBanner() {
       <TouchableOpacity 
         onPress={handleSync} 
         disabled={syncing}
-        className="bg-slate-900/20 hover:bg-slate-900/30 px-3 py-1.5 rounded-lg flex-row items-center"
+        className="bg-indigo-900/20 hover:bg-indigo-900/30 px-3 py-1.5 rounded-lg flex-row items-center"
       >
         {syncing ? (
           <ActivityIndicator size="small" color="#FFFFFF" style={{ marginRight: 4 }} />

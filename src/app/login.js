@@ -39,29 +39,29 @@ export default function LoginScreen() {
   };
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} className="flex-1 bg-[#F8FAFC]">
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} className="flex-1 bg-[#EEF2FF]">
       <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
         <View className="flex-1 justify-center w-full max-w-[440px] self-center px-5 py-10">
           
           {/* Header Branding */}
           <View className="items-center mb-7 pt-4">
-            <View className="bg-slate-900 p-1 rounded-[22px] shadow-md mb-4">
+            <View className="bg-indigo-600 p-1 rounded-[22px] border-2 border-indigo-400 shadow-lg shadow-indigo-500/30 mb-4">
               <Image 
                 source={require('../../assets/images/logo-3d.png')} 
-                style={{ width: 76, height: 76, borderRadius: 20 }}
+                style={{ width: 76, height: 76, borderRadius: 18 }}
                 resizeMode="cover"
               />
             </View>
-            <Text className="text-2xl font-bold text-slate-900 tracking-tight">KisanConnect</Text>
-            <Text className="text-slate-500 text-xs mt-1 tracking-wider font-medium uppercase">Enterprise Calling &amp; Lead CRM</Text>
+            <Text className="text-2xl font-bold text-indigo-950 tracking-tight">Kisan<Text className="text-indigo-600">Connect</Text></Text>
+            <Text className="text-indigo-500 text-xs mt-1 tracking-wider font-semibold uppercase">Enterprise Calling &amp; Lead CRM</Text>
           </View>
 
           {/* Form Container */}
-          <View className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-sm">
-            <Text className="text-xl font-bold text-slate-900 mb-1 tracking-tight">
+          <View className="p-6 rounded-2xl bg-white border border-indigo-100 shadow-md shadow-indigo-200/40">
+            <Text className="text-xl font-bold text-indigo-950 mb-1 tracking-tight">
               Welcome back
             </Text>
-            <Text className="text-slate-500 text-sm mb-6">
+            <Text className="text-indigo-500/80 text-sm mb-6">
               Sign in to your account to continue
             </Text>
 
@@ -73,7 +73,7 @@ export default function LoginScreen() {
 
             {/* Mobile Number Field */}
             <View className="mb-4">
-              <Text className="text-xs font-semibold mb-2 text-slate-700">Mobile Number</Text>
+              <Text className="text-xs font-semibold mb-2 text-indigo-900">Mobile Number</Text>
               <Controller
                 control={control}
                 name="mobile"
@@ -82,10 +82,10 @@ export default function LoginScreen() {
                   pattern: { value: /^[0-9]{10}$/, message: 'Must be a 10-digit number' }
                 }}
                 render={({ field: { onChange, onBlur, value } }) => (
-                  <View className={`flex-row items-center border ${errors.mobile ? 'border-red-400 bg-red-50/50' : 'border-slate-200 bg-slate-50'} rounded-xl px-4 h-12`}>
-                    <Smartphone size={18} color={errors.mobile ? '#EF4444' : '#64748B'} className="mr-3" />
+                  <View className={`flex-row items-center border ${errors.mobile ? 'border-red-400 bg-red-50/50' : 'border-indigo-200 bg-indigo-50/40'} rounded-xl px-4 h-12`}>
+                    <Smartphone size={18} color={errors.mobile ? '#EF4444' : '#4F46E5'} className="mr-3" />
                     <TextInput
-                      className="flex-1 text-sm text-slate-900 font-medium h-full"
+                      className="flex-1 text-sm text-indigo-950 font-medium h-full"
                       placeholder="Enter 10-digit mobile number"
                       placeholderTextColor="#94A3B8"
                       keyboardType="numeric"
@@ -103,16 +103,16 @@ export default function LoginScreen() {
 
             {/* Password Field */}
             <View className="mb-4">
-              <Text className="text-xs font-semibold mb-2 text-slate-700">Password</Text>
+              <Text className="text-xs font-semibold mb-2 text-indigo-900">Password</Text>
               <Controller
                 control={control}
                 name="password"
                 rules={{ required: 'Password is required' }}
                 render={({ field: { onChange, onBlur, value } }) => (
-                  <View className={`flex-row items-center border ${errors.password ? 'border-red-400 bg-red-50/50' : 'border-slate-200 bg-slate-50'} rounded-xl px-4 h-12`}>
-                    <Lock size={18} color={errors.password ? '#EF4444' : '#64748B'} className="mr-3" />
+                  <View className={`flex-row items-center border ${errors.password ? 'border-red-400 bg-red-50/50' : 'border-indigo-200 bg-indigo-50/40'} rounded-xl px-4 h-12`}>
+                    <Lock size={18} color={errors.password ? '#EF4444' : '#4F46E5'} className="mr-3" />
                     <TextInput
-                      className="flex-1 text-sm text-slate-900 font-medium h-full"
+                      className="flex-1 text-sm text-indigo-950 font-medium h-full"
                       placeholder="••••••••"
                       placeholderTextColor="#94A3B8"
                       secureTextEntry={!showPassword}
@@ -123,9 +123,9 @@ export default function LoginScreen() {
                     />
                     <TouchableOpacity onPress={() => setShowPassword(!showPassword)} className="p-2 -mr-2">
                       {showPassword ? (
-                        <EyeOff size={18} color="#64748B" />
+                        <EyeOff size={18} color="#4F46E5" />
                       ) : (
-                        <Eye size={18} color="#64748B" />
+                        <Eye size={18} color="#4F46E5" />
                       )}
                     </TouchableOpacity>
                   </View>
@@ -142,15 +142,15 @@ export default function LoginScreen() {
                 disabled={isSubmitting}
               >
                 {rememberMe ? (
-                  <CheckSquare size={18} color="#0F172A" />
+                  <CheckSquare size={18} color="#4F46E5" />
                 ) : (
                   <Square size={18} color="#94A3B8" />
                 )}
-                <Text className="ml-2 text-xs text-slate-700 font-medium">Remember Login</Text>
+                <Text className="ml-2 text-xs text-indigo-900 font-medium">Remember Login</Text>
               </TouchableOpacity>
               
               <TouchableOpacity>
-                <Text className="text-xs font-semibold text-slate-600">Forgot Password?</Text>
+                <Text className="text-xs font-semibold text-indigo-600">Forgot Password?</Text>
               </TouchableOpacity>
             </View>
 
@@ -158,7 +158,7 @@ export default function LoginScreen() {
             <TouchableOpacity 
               onPress={handleSubmit(onSubmit)}
               disabled={isSubmitting}
-              className={`h-12 rounded-xl justify-center items-center flex-row ${isSubmitting ? 'bg-slate-400' : 'bg-[#0F172A] active:bg-slate-800'}`}
+              className={`h-12 rounded-xl justify-center items-center flex-row shadow-md shadow-indigo-500/30 ${isSubmitting ? 'bg-indigo-300' : 'bg-indigo-600 active:bg-indigo-700'}`}
             >
               {isSubmitting ? (
                 <ActivityIndicator color="#FFFFFF" />
@@ -171,17 +171,17 @@ export default function LoginScreen() {
             </TouchableOpacity>
 
             {/* Quick Role Access Section */}
-            <View className="mt-6 border border-slate-200 bg-slate-50/70 p-4 rounded-2xl">
+            <View className="mt-6 border border-indigo-200/80 bg-indigo-50/60 p-4 rounded-2xl">
               <View className="flex-row items-center justify-between mb-3">
-                <Text className="text-xs font-semibold text-slate-700 uppercase tracking-wider">Quick Role Access</Text>
-                <View className="bg-slate-200/80 px-2.5 py-0.5 rounded-full">
-                  <Text className="text-[10px] font-semibold text-slate-700">3-Tier RBAC</Text>
+                <Text className="text-xs font-semibold text-indigo-900 uppercase tracking-wider">Quick Role Access</Text>
+                <View className="bg-indigo-100 px-2.5 py-0.5 rounded-full">
+                  <Text className="text-[10px] font-semibold text-indigo-700">3-Tier RBAC</Text>
                 </View>
               </View>
               
               {/* Admin Card */}
               <TouchableOpacity 
-                className="flex-row items-center bg-white p-3 border border-slate-200/80 rounded-xl mb-2 active:bg-slate-50"
+                className="flex-row items-center bg-white p-3 border border-indigo-100 rounded-xl mb-2 shadow-xs active:bg-indigo-50/40"
                 onPress={() => {
                   setValue('mobile', '9876543210', { shouldValidate: true });
                   setValue('password', 'admin123', { shouldValidate: true });
@@ -189,21 +189,21 @@ export default function LoginScreen() {
               >
                 <Image 
                   source={require('../../assets/images/avatar-admin.png')} 
-                  style={{ width: 42, height: 42, borderRadius: 21, marginRight: 12, borderWidth: 1, borderColor: '#E2E8F0' }}
+                  style={{ width: 42, height: 42, borderRadius: 21, marginRight: 12, borderWidth: 1.5, borderColor: '#4F46E5' }}
                   resizeMode="cover"
                 />
                 <View className="flex-1">
-                  <Text className="text-sm font-semibold text-slate-900">Sanjay Gupta</Text>
-                  <Text className="text-xs text-slate-500 mt-0.5">Managing Director • 9876543210</Text>
+                  <Text className="text-sm font-semibold text-indigo-950">Sanjay Gupta</Text>
+                  <Text className="text-xs text-indigo-600/80 mt-0.5">Managing Director • 9876543210</Text>
                 </View>
-                <View className="bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-md">
-                  <Text className="text-[10px] text-slate-700 font-semibold">ADMIN</Text>
+                <View className="bg-indigo-100 border border-indigo-200 px-2.5 py-1 rounded-md">
+                  <Text className="text-[10px] text-indigo-700 font-semibold">ADMIN</Text>
                 </View>
               </TouchableOpacity>
 
               {/* Team Leader NCR Card */}
               <TouchableOpacity 
-                className="flex-row items-center bg-white p-3 border border-slate-200/80 rounded-xl mb-2 active:bg-slate-50"
+                className="flex-row items-center bg-white p-3 border border-indigo-100 rounded-xl mb-2 shadow-xs active:bg-indigo-50/40"
                 onPress={() => {
                   setValue('mobile', '9876543212', { shouldValidate: true });
                   setValue('password', 'admin123', { shouldValidate: true });
@@ -211,21 +211,21 @@ export default function LoginScreen() {
               >
                 <Image 
                   source={require('../../assets/images/avatar-teamleader.png')} 
-                  style={{ width: 42, height: 42, borderRadius: 21, marginRight: 12, borderWidth: 1, borderColor: '#E2E8F0' }}
+                  style={{ width: 42, height: 42, borderRadius: 21, marginRight: 12, borderWidth: 1.5, borderColor: '#7C3AED' }}
                   resizeMode="cover"
                 />
                 <View className="flex-1">
-                  <Text className="text-sm font-semibold text-slate-900">Vikram Malhotra</Text>
-                  <Text className="text-xs text-slate-500 mt-0.5">Team Leader • Delhi NCR (9876543212)</Text>
+                  <Text className="text-sm font-semibold text-indigo-950">Vikram Malhotra</Text>
+                  <Text className="text-xs text-indigo-600/80 mt-0.5">Team Leader • Delhi NCR (9876543212)</Text>
                 </View>
-                <View className="bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-md">
-                  <Text className="text-[10px] text-slate-700 font-semibold">TL NCR</Text>
+                <View className="bg-violet-100 border border-violet-200 px-2.5 py-1 rounded-md">
+                  <Text className="text-[10px] text-violet-700 font-semibold">TL NCR</Text>
                 </View>
               </TouchableOpacity>
 
               {/* Team Leader Mumbai Card */}
               <TouchableOpacity 
-                className="flex-row items-center bg-white p-3 border border-slate-200/80 rounded-xl mb-2 active:bg-slate-50"
+                className="flex-row items-center bg-white p-3 border border-indigo-100 rounded-xl mb-2 shadow-xs active:bg-indigo-50/40"
                 onPress={() => {
                   setValue('mobile', '9876543215', { shouldValidate: true });
                   setValue('password', 'admin123', { shouldValidate: true });
@@ -233,21 +233,21 @@ export default function LoginScreen() {
               >
                 <Image 
                   source={require('../../assets/images/avatar-teamleader.png')} 
-                  style={{ width: 42, height: 42, borderRadius: 21, marginRight: 12, borderWidth: 1, borderColor: '#E2E8F0' }}
+                  style={{ width: 42, height: 42, borderRadius: 21, marginRight: 12, borderWidth: 1.5, borderColor: '#0284C7' }}
                   resizeMode="cover"
                 />
                 <View className="flex-1">
-                  <Text className="text-sm font-semibold text-slate-900">Neha Kapoor</Text>
-                  <Text className="text-xs text-slate-500 mt-0.5">Team Leader • West (9876543215)</Text>
+                  <Text className="text-sm font-semibold text-indigo-950">Neha Kapoor</Text>
+                  <Text className="text-xs text-indigo-600/80 mt-0.5">Team Leader • West (9876543215)</Text>
                 </View>
-                <View className="bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-md">
-                  <Text className="text-[10px] text-slate-700 font-semibold">TL WEST</Text>
+                <View className="bg-sky-100 border border-sky-200 px-2.5 py-1 rounded-md">
+                  <Text className="text-[10px] text-sky-700 font-semibold">TL WEST</Text>
                 </View>
               </TouchableOpacity>
 
               {/* Telecaller Card */}
               <TouchableOpacity 
-                className="flex-row items-center bg-white p-3 border border-slate-200/80 rounded-xl active:bg-slate-50"
+                className="flex-row items-center bg-white p-3 border border-indigo-100 rounded-xl shadow-xs active:bg-indigo-50/40"
                 onPress={() => {
                   setValue('mobile', '9876543211', { shouldValidate: true });
                   setValue('password', 'admin123', { shouldValidate: true });
@@ -255,15 +255,15 @@ export default function LoginScreen() {
               >
                 <Image 
                   source={require('../../assets/images/avatar-telecaller.png')} 
-                  style={{ width: 42, height: 42, borderRadius: 21, marginRight: 12, borderWidth: 1, borderColor: '#E2E8F0' }}
+                  style={{ width: 42, height: 42, borderRadius: 21, marginRight: 12, borderWidth: 1.5, borderColor: '#10B981' }}
                   resizeMode="cover"
                 />
                 <View className="flex-1">
-                  <Text className="text-sm font-semibold text-slate-900">Amit Sharma</Text>
-                  <Text className="text-xs text-slate-500 mt-0.5">Telecaller • NCR Team (9876543211)</Text>
+                  <Text className="text-sm font-semibold text-indigo-950">Amit Sharma</Text>
+                  <Text className="text-xs text-indigo-600/80 mt-0.5">Telecaller • NCR Team (9876543211)</Text>
                 </View>
-                <View className="bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-md">
-                  <Text className="text-[10px] text-slate-700 font-semibold">CALLER</Text>
+                <View className="bg-emerald-100 border border-emerald-200 px-2.5 py-1 rounded-md">
+                  <Text className="text-[10px] text-emerald-700 font-semibold">CALLER</Text>
                 </View>
               </TouchableOpacity>
             </View>
@@ -274,8 +274,8 @@ export default function LoginScreen() {
         
         {/* Footer */}
         <View className="items-center pb-8">
-          <Text className="text-slate-500 text-xs mb-1">Need help accessing the panel?</Text>
-          <Text className="text-slate-800 text-xs font-semibold">Contact System Administrator</Text>
+          <Text className="text-indigo-400 text-xs mb-1">Need help accessing the panel?</Text>
+          <Text className="text-indigo-600 text-xs font-semibold">Contact System Administrator</Text>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

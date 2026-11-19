@@ -52,7 +52,7 @@ export default function AdminLeads() {
   const getStatusBorder = (status) => {
     const s = (status || '').toLowerCase();
     if (s === 'new' || s === 'fresh') return 'bg-emerald-600';
-    if (s === 'follow_up' || s === 'follow up') return 'bg-[#0B192C]';
+    if (s === 'follow_up' || s === 'follow up') return 'bg-indigo-600';
     if (s === 'callback') return 'bg-red-600';
     if (s === 'closed' || s === 'converted') return 'bg-slate-600';
     return 'bg-slate-300';
@@ -100,7 +100,7 @@ export default function AdminLeads() {
                   resizeMode="cover"
                 />
                 <View className="flex-1">
-                  <Text className="text-[15px] font-bold text-[#0B192C]">{item.business_name || item.name || 'Unknown Business'}</Text>
+                  <Text className="text-[15px] font-bold text-indigo-950">{item.business_name || item.name || 'Unknown Business'}</Text>
                   <Text className="text-[13px] text-slate-500 mt-0.5 mb-1.5">Lead #{item.mobile || 'N/A'}</Text>
                   
                   {item.tags && item.tags.length > 0 && (
@@ -124,14 +124,14 @@ export default function AdminLeads() {
               <Text className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Assigned To</Text>
               <View className="flex-row items-center">
                 <User size={12} color="#64748B" />
-                <Text className="text-[13px] font-bold text-[#0B192C] ml-1.5">{item.assigned_to?.name || 'Unassigned'}</Text>
+                <Text className="text-[13px] font-bold text-indigo-950 ml-1.5">{item.assigned_to?.name || 'Unassigned'}</Text>
               </View>
             </View>
             <View className="flex-1">
               <Text className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Created On</Text>
               <View className="flex-row items-center">
                 <Calendar size={12} color="#64748B" />
-                <Text className="text-[13px] text-[#0B192C] ml-1.5">{dateStr}</Text>
+                <Text className="text-[13px] text-indigo-950 ml-1.5">{dateStr}</Text>
               </View>
             </View>
           </View>
@@ -139,14 +139,14 @@ export default function AdminLeads() {
           <View className="flex-row justify-between items-center border-t border-slate-100 pt-4">
             <View className="flex-row">
               <TouchableOpacity className="w-10 h-10 rounded-full border border-slate-200 justify-center items-center mr-2">
-                <CornerUpRight size={18} color="#0B192C" />
+                <CornerUpRight size={18} color="#4F46E5" />
               </TouchableOpacity>
               <TouchableOpacity className="w-10 h-10 rounded-full border border-slate-200 justify-center items-center">
-                <PenLine size={18} color="#0B192C" />
+                <PenLine size={18} color="#4F46E5" />
               </TouchableOpacity>
             </View>
             <TouchableOpacity 
-              className="bg-[#0B192C] px-6 py-2.5 rounded-full flex-row items-center"
+              className="bg-indigo-600 px-6 py-2.5 rounded-full flex-row items-center"
               onPress={() => router.push(`/lead/${item._id || item.id}`)}
             >
               <Text className="text-white font-bold text-sm">View Details</Text>
@@ -161,7 +161,7 @@ export default function AdminLeads() {
             onPress={() => toggleSelect(item.id)}
           >
             <View className={`w-6 h-6 rounded-md border-2 justify-center items-center ${isSelected ? 'bg-[#FFB703] border-[#FFB703]' : 'border-slate-300 bg-white'}`}>
-              {isSelected && <CheckSquare size={14} color="#0B192C" />}
+              {isSelected && <CheckSquare size={14} color="#4F46E5" />}
             </View>
           </TouchableOpacity>
         )}
@@ -175,7 +175,7 @@ export default function AdminLeads() {
       
       {/* Header */}
       <View className="pt-14 pb-2 px-5">
-        <Text className="text-[28px] font-bold text-[#0B192C] tracking-tight">Manage Leads</Text>
+        <Text className="text-[28px] font-bold text-indigo-950 tracking-tight">Manage Leads</Text>
         <Text className="text-slate-500 text-sm mt-1 pr-6 leading-5">Centralized distribution and tracking for oil manufacturing divisions.</Text>
       </View>
 
@@ -190,8 +190,8 @@ export default function AdminLeads() {
           onPress={() => router.push('/(admin)/reassign')}
           className="flex-row items-center bg-[#FFB703] px-4 py-2.5 rounded-xl shadow-sm shadow-[#FFB703]/30"
         >
-          <UserCheck size={16} color="#0B192C" />
-          <Text className="text-[#0B192C] font-bold ml-2 text-sm tracking-wide">Bulk Reassign</Text>
+          <UserCheck size={16} color="#4F46E5" />
+          <Text className="text-indigo-950 font-bold ml-2 text-sm tracking-wide">Bulk Reassign</Text>
         </TouchableOpacity>
       </View>
 
@@ -201,7 +201,7 @@ export default function AdminLeads() {
           <TouchableOpacity 
             key={tab} 
             onPress={() => setActiveTab(tab)}
-            className={`mr-3 px-4 py-2 rounded-full border ${activeTab === tab ? 'bg-[#0B192C] border-[#0B192C]' : 'bg-white border-slate-200'}`}
+            className={`mr-3 px-4 py-2 rounded-full border ${activeTab === tab ? 'bg-indigo-600 border-indigo-600' : 'bg-white border-slate-200'}`}
           >
             <Text className={`text-sm font-bold ${activeTab === tab ? 'text-white' : 'text-slate-500'}`}>{tab}</Text>
           </TouchableOpacity>
@@ -215,8 +215,8 @@ export default function AdminLeads() {
             setMultiSelectMode(!multiSelectMode);
             if (multiSelectMode) setSelectedLeads([]); // Clear when turning off
           }}>
-            {multiSelectMode ? <CheckSquare size={18} color="#0B192C" /> : <Square size={18} color="#64748B" />}
-            <Text className={`font-medium ml-2 text-sm ${multiSelectMode ? 'text-[#0B192C]' : 'text-slate-600'}`}>
+            {multiSelectMode ? <CheckSquare size={18} color="#4F46E5" /> : <Square size={18} color="#64748B" />}
+            <Text className={`font-medium ml-2 text-sm ${multiSelectMode ? 'text-indigo-950' : 'text-slate-600'}`}>
               Multi-select Mode
             </Text>
           </TouchableOpacity>
@@ -237,7 +237,7 @@ export default function AdminLeads() {
               </TouchableOpacity>
               <TouchableOpacity 
                 onPress={() => setSelectedLeads(displayLeads.map(l => l.id || l._id))}
-                className="bg-[#0B192C] px-3 py-1.5 rounded-lg"
+                className="bg-indigo-600 px-3 py-1.5 rounded-lg"
               >
                 <Text className="text-[11px] font-bold text-white">All</Text>
               </TouchableOpacity>
@@ -283,7 +283,7 @@ export default function AdminLeads() {
               <View className="w-10 h-10 bg-white border border-slate-200 rounded-xl justify-center items-center mx-1">
                 <ChevronRight size={16} color="#64748B" style={{ transform: [{ rotate: '180deg' }] }} />
               </View>
-              <View className="w-10 h-10 bg-[#0B192C] rounded-xl justify-center items-center mx-1">
+              <View className="w-10 h-10 bg-indigo-600 rounded-xl justify-center items-center mx-1">
                 <Text className="text-white font-bold">1</Text>
               </View>
               <View className="w-10 h-10 bg-white border border-slate-200 rounded-xl justify-center items-center mx-1">
@@ -297,7 +297,7 @@ export default function AdminLeads() {
                 <Text className="text-slate-600 font-medium">104</Text>
               </View>
               <View className="w-10 h-10 bg-white border border-slate-200 rounded-xl justify-center items-center mx-1">
-                <ChevronRight size={16} color="#0B192C" />
+                <ChevronRight size={16} color="#4F46E5" />
               </View>
             </View>
           </View>
@@ -306,7 +306,7 @@ export default function AdminLeads() {
 
       {/* Floating Add Button */}
       <TouchableOpacity 
-        className="absolute bottom-24 right-5 w-16 h-16 bg-[#0B192C] rounded-full justify-center items-center shadow-lg shadow-[#0B192C]/50 z-50"
+        className="absolute bottom-24 right-5 w-16 h-16 bg-indigo-600 rounded-full justify-center items-center shadow-lg shadow-[#4F46E5]/50 z-50"
       >
         <Plus size={32} color="#FFFFFF" />
       </TouchableOpacity>

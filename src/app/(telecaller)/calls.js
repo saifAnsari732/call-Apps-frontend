@@ -35,11 +35,11 @@ export default function CallLogsPage() {
   }) || [];
 
   return (
-    <View className="flex-1 bg-[#F8FAFC]">
+    <View className="flex-1 bg-[#F5F7FF]">
       <OfflineBanner />
 
       {/* HEADER */}
-      <View className="bg-[#0F172A] pt-14 pb-0 z-10 shadow-sm">
+      <View className="bg-indigo-600 pt-14 pb-0 z-10 shadow-sm">
         <View className="px-4 flex-row items-center justify-between mb-6">
           <View className="flex-row items-center">
             <TouchableOpacity onPress={() => router.back()} className="mr-3 p-1">
@@ -47,7 +47,7 @@ export default function CallLogsPage() {
             </TouchableOpacity>
             <Image 
               source={require('../../../assets/images/logo-3d.png')}
-              style={{ width: 30, height: 30, borderRadius: 8, marginRight: 8, borderWidth: 1, borderColor: '#334155' }}
+              style={{ width: 30, height: 30, borderRadius: 8, marginRight: 8, borderWidth: 1.5, borderColor: '#A5B4FC' }}
               resizeMode="cover"
             />
             <Text className="text-white text-xl font-bold tracking-tight">
@@ -65,9 +65,9 @@ export default function CallLogsPage() {
             <TouchableOpacity
               key={tab}
               onPress={() => setActiveTab(tab)}
-              className={`pb-3 border-b-[3px] ${activeTab === tab ? 'border-white' : 'border-transparent'}`}
+              className={`pb-3 border-b-[3px] ${activeTab === tab ? 'border-amber-300' : 'border-transparent'}`}
             >
-              <Text className={`text-[12px] font-semibold tracking-widest ${activeTab === tab ? 'text-white' : 'text-slate-400'}`}>
+              <Text className={`text-[12px] font-semibold tracking-widest ${activeTab === tab ? 'text-white' : 'text-indigo-200'}`}>
                 {tab}
               </Text>
             </TouchableOpacity>
@@ -78,7 +78,7 @@ export default function CallLogsPage() {
       {/* LIST */}
       {isLoading ? (
         <View className="flex-1 justify-center items-center">
-          <ActivityIndicator size="large" color="#0F172A" />
+          <ActivityIndicator size="large" color="#4F46E5" />
         </View>
       ) : error ? (
         <View className="flex-1 justify-center items-center">
@@ -87,7 +87,7 @@ export default function CallLogsPage() {
       ) : (
         <ScrollView
           contentContainerStyle={{ padding: 16, paddingBottom: 100 }}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#0F172A']} />}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#4F46E5']} />}
           showsVerticalScrollIndicator={false}
         >
           {filteredLogs.length === 0 ? (
@@ -97,7 +97,7 @@ export default function CallLogsPage() {
                 style={{ width: 140, height: 140, marginBottom: 14 }}
                 resizeMode="contain"
               />
-              <Text className="text-slate-900 font-bold text-base">No Call History Found</Text>
+              <Text className="text-indigo-950 font-bold text-base">No Call History Found</Text>
               <Text className="text-slate-500 text-xs mt-1 text-center">New incoming and outgoing call attempts will appear here.</Text>
             </View>
           ) : (
@@ -106,44 +106,44 @@ export default function CallLogsPage() {
               const dateString = new Date(log.start_time).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
               
               return (
-                <View key={log.id} className="bg-white p-4 rounded-2xl mb-3 shadow-xs border border-slate-200/90 flex-row justify-between items-start">
+                <View key={log.id} className="bg-white p-4 rounded-2xl mb-3 shadow-xs border border-indigo-100 flex-row justify-between items-start">
                   <Image 
                     source={require('../../../assets/images/avatar-customer.png')}
-                    style={{ width: 40, height: 40, borderRadius: 20, marginRight: 12, borderWidth: 1, borderColor: '#E2E8F0' }}
+                    style={{ width: 40, height: 40, borderRadius: 20, marginRight: 12, borderWidth: 1.5, borderColor: '#C7D2FE' }}
                     resizeMode="cover"
                   />
                   <View className="flex-1 space-y-1.5 pr-2">
                     <View className="flex-row justify-between items-start">
-                      <Text className="text-[15px] font-bold text-slate-900">{log.lead_name}</Text>
-                      <View className={`px-2 py-0.5 rounded-full border ${log.status === 'Not Connected' ? 'bg-slate-100 border-slate-200' : 'bg-slate-100 border-slate-200'}`}>
-                        <Text className={`text-[10px] font-semibold ${log.status === 'Not Connected' ? 'text-slate-600' : 'text-slate-700'}`}>{log.status}</Text>
+                      <Text className="text-[15px] font-bold text-indigo-950">{log.lead_name}</Text>
+                      <View className={`px-2 py-0.5 rounded-full border ${log.status === 'Not Connected' ? 'bg-orange-50 border-orange-200' : 'bg-emerald-50 border-emerald-200'}`}>
+                        <Text className={`text-[10px] font-semibold ${log.status === 'Not Connected' ? 'text-orange-700' : 'text-emerald-700'}`}>{log.status}</Text>
                       </View>
                     </View>
-                    <Text className="text-[13px] text-slate-600 font-semibold mb-1">{log.lead_mobile}  •  {log.duration}s</Text>
+                    <Text className="text-[13px] text-indigo-600 font-semibold mb-1">{log.lead_mobile}  •  {log.duration}s</Text>
                     <Text className="text-[12px] text-slate-500 font-medium">
                       {dateString} at {timeString}
                     </Text>
                     {log.notes ? (
-                      <View className="mt-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                        <Text className="text-[13px] text-slate-700 font-medium">{log.notes}</Text>
+                      <View className="mt-2 bg-indigo-50/40 p-2.5 rounded-xl border border-indigo-100">
+                        <Text className="text-[13px] text-indigo-950 font-medium">{log.notes}</Text>
                       </View>
                     ) : null}
                     
                     {log.followup_date && (
-                      <View className="mt-2 bg-slate-100 p-2.5 rounded-xl border border-slate-200 flex-row items-center">
-                        <Text className="text-[12px] font-semibold text-slate-800">Follow-up: </Text>
-                        <Text className="text-[12px] font-medium text-slate-600">{log.followup_date} at {log.followup_time}</Text>
+                      <View className="mt-2 bg-amber-50 p-2.5 rounded-xl border border-amber-200 flex-row items-center">
+                        <Text className="text-[12px] font-semibold text-amber-800">Follow-up: </Text>
+                        <Text className="text-[12px] font-medium text-amber-700">{log.followup_date} at {log.followup_time}</Text>
                       </View>
                     )}
                     {log.recording_url ? (
-                      <TouchableOpacity className="mt-2 bg-slate-100 p-2 rounded-xl border border-slate-200 flex-row items-center w-[120px] justify-center">
-                        <Text className="text-[12px] font-semibold text-slate-800">Play Recording</Text>
+                      <TouchableOpacity className="mt-2 bg-indigo-50 p-2 rounded-xl border border-indigo-200 flex-row items-center w-[120px] justify-center">
+                        <Text className="text-[12px] font-semibold text-indigo-700">Play Recording</Text>
                       </TouchableOpacity>
                     ) : null}
                   </View>
                   <View className="mt-1">
                     {/* Icon indicating call type */}
-                    <PhoneOutgoing size={18} color="#475569" />
+                    <PhoneOutgoing size={18} color="#4F46E5" />
                   </View>
                 </View>
               );
