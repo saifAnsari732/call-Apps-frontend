@@ -36,8 +36,10 @@ export default function AdminDashboard() {
     router.push({ pathname: '/(admin)/leads', params });
   };
 
+  const isTeamLeader = user?.role === 'team_leader' || user?.role === 'manager';
+
   const { data, isLoading, error, refetch, isFetching } = useQuery({
-    queryKey: ['adminDashboardStats', dateFilter],
+    queryKey: ['adminDashboardStats', dateFilter, user?.role],
     queryFn: async () => {
       let startDate = undefined;
       let endDate = undefined;
@@ -64,7 +66,8 @@ export default function AdminDashboard() {
         endDate = customDate;
       }
 
-      const response = await api.get('/reports/admin-dashboard', {
+      const endpoint = isTeamLeader ? '/reports/team-leader-dashboard' : '/reports/admin-dashboard';
+      const response = await api.get(endpoint, {
         params: { startDate, endDate }
       });
       return response.data;
@@ -92,18 +95,27 @@ export default function AdminDashboard() {
 
   const kpis = data?.kpis || {};
   const performanceChart = data?.performanceChart || [];
-  const conversionAnalytics = data?.conversionAnalytics || {};
-  const rankings = data?.rankings || [];
+  const conversionAnalytics = data?.conversionAnalytics || {
+    connectedCalls: kpis.connectedCalls || 0,
+    notConnectedCalls: Math.max(0, (kpis.totalCalls || 0) - (kpis.connectedCalls || 0)),
+    conversionRate: kpis.conversionRate || 0,
+    avgTalkTime: kpis.avgFirstResponseTimeMinutes ? kpis.avgFirstResponseTimeMinutes * 60 : 120
+  };
+  const rankings = data?.rankings || {
+    topPerformer: data?.leaderboard?.[0]?.name || 'N/A',
+    topCloser: data?.leaderboard?.[0]?.name || 'N/A',
+    topTelecaller: data?.leaderboard?.[0]?.name || 'N/A'
+  };
 
   const kpiItems = [
-    { label: 'Total Leads', value: kpis.totalLeads || 0, gradient: ['#6366F1', '#818CF8'], Icon: Users },
-    { label: 'Fresh Leads', value: kpis.freshLeads || 0, gradient: ['#3B82F6', '#60A5FA'], Icon: UserPlus },
-    { label: 'Assigned Leads', value: kpis.assignedLeads || 0, gradient: ['#8B5CF6', '#A855F7'], Icon: UserCheck },
+    { label: isTeamLeader ? 'Team Leads' : 'Total Leads', value: kpis.totalLeads ?? kpis.teamTotalLeads ?? 0, gradient: ['#6366F1', '#818CF8'], Icon: Users },
+    { label: 'Fresh Leads', value: kpis.freshLeads ?? kpis.newLeads ?? 0, gradient: ['#3B82F6', '#60A5FA'], Icon: UserPlus },
+    { label: 'Assigned Leads', value: kpis.assignedLeads ?? kpis.teamTotalLeads ?? 0, gradient: ['#8B5CF6', '#A855F7'], Icon: UserCheck },
     { label: 'Interested', value: kpis.interestedLeads || 0, gradient: ['#10B981', '#34D399'], Icon: ThumbsUp },
-    { label: 'Follow Ups', value: kpis.followUpLeads || 0, gradient: ['#F59E0B', '#FBBF24'], Icon: Calendar },
-    { label: 'Callbacks', value: kpis.callbackLeads || 0, gradient: ['#EAB308', '#FDE047'], Icon: PhoneForwarded },
-    { label: 'Closed Leads', value: kpis.closedLeads || 0, gradient: ['#14B8A6', '#2DD4BF'], Icon: CheckCircle2 },
-    { label: 'Not Connected', value: kpis.notConnectedLeads || 0, gradient: ['#EF4444', '#F87171'], Icon: PhoneOff },
+    { label: 'Follow Ups', value: kpis.followUpLeads ?? kpis.todayFollowupsCount ?? 0, gradient: ['#F59E0B', '#FBBF24'], Icon: Calendar },
+    { label: 'Callbacks', value: kpis.callbackLeads ?? kpis.overdueFollowupsCount ?? 0, gradient: ['#EAB308', '#FDE047'], Icon: PhoneForwarded },
+    { label: 'Closed Leads', value: kpis.closedLeads ?? kpis.convertedLeads ?? 0, gradient: ['#14B8A6', '#2DD4BF'], Icon: CheckCircle2 },
+    { label: 'Not Connected', value: kpis.notConnectedLeads ?? kpis.lostLeads ?? 0, gradient: ['#EF4444', '#F87171'], Icon: PhoneOff },
     { label: 'Distributor Int.', value: kpis.distributorInterestedLeads || 0, gradient: ['#EC4899', '#F472B6'], Icon: Briefcase },
     { label: 'Trader Int.', value: kpis.traderInterestedLeads || 0, gradient: ['#F43F5E', '#FB7185'], Icon: TrendingUp },
   ];
@@ -134,11 +146,11 @@ export default function AdminDashboard() {
                 </Text>
               </View>
               <Text className="text-[11px] uppercase font-extrabold tracking-widest text-rose-200">
-                Welcome Back, {user?.name?.split(' ')[0] || 'Admin'}
+                Welcome Back, {isTeamLeader ? 'Team Leader ' + (user?.name?.split(' ')[0] || '') : (user?.name?.split(' ')[0] || 'Admin')}
               </Text>
             </View>
             <Text className="text-4xl font-black tracking-tight text-white mt-4 mb-2">
-              Overview Matrix
+              {isTeamLeader ? 'Team Matrix' : 'Overview Matrix'}
             </Text>
           </View>
           <TouchableOpacity onPress={() => refetch()} className="p-3 rounded-full bg-white/20 border border-white/30 backdrop-blur-md">

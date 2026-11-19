@@ -10,7 +10,7 @@ import { useThemeStore } from '../../store/themeStore';
 export default function AdminLeads() {
   const queryClient = useQueryClient();
   const router = useRouter();
-  const params = useLocalSearchParams();
+  const localParams = useLocalSearchParams();
 
   const { theme } = useThemeStore();
   const isDark = theme === 'dark';
@@ -22,16 +22,19 @@ export default function AdminLeads() {
 
   // Fetch leads
   const { data: leadsData, isLoading: leadsLoading, refetch: refetchLeads } = useQuery({
-    queryKey: ['adminLeadsList', activeTab],
+    queryKey: ['adminLeadsList', activeTab, localParams.status, localParams.business_type],
     queryFn: async () => {
-      let statusFilter = '';
-      if (activeTab === 'Fresh') statusFilter = 'new';
-      if (activeTab === 'Follow Up') statusFilter = 'follow_up';
-      if (activeTab === 'Callback') statusFilter = 'callback';
+      let statusFilter = localParams.status || '';
+      if (activeTab === 'Fresh') statusFilter = 'New';
+      if (activeTab === 'Follow Up') statusFilter = 'Follow Up';
+      if (activeTab === 'Callback') statusFilter = 'Callback';
       
-      const params = { status: statusFilter || undefined };
+      const queryParams = {
+        status: statusFilter || undefined,
+        business_type: localParams.business_type || undefined
+      };
       
-      const response = await api.get('/leads', { params });
+      const response = await api.get('/leads', { params: queryParams });
       return response.data;
     },
     staleTime: 5 * 60 * 1000
@@ -64,15 +67,7 @@ export default function AdminLeads() {
     return status || 'Fresh';
   };
 
-  // Mock data if API is empty to match Image 8 exactly
-  const mockLeads = [
-    { id: '1', business_name: 'Industrial Lubricants Ltd', mobile: '8853109053', status: 'Fresh', assigned_to: { name: 'Kuldeep Kesharwani' }, created_at: '2026-06-27T10:00:00Z' },
-    { id: '2', business_name: 'Global Gas Corp', mobile: '9621619343', status: 'Follow Up', assigned_to: { name: 'Abhishek Rai Ghandhi' }, created_at: '2026-06-26T10:00:00Z' },
-    { id: '3', business_name: 'PetroChem Solutions', mobile: '9312241263', status: 'Callback', assigned_to: { name: 'Kumar Prashant' }, created_at: '2026-06-25T10:00:00Z' },
-    { id: '4', business_name: 'Apex Oil Refineries', mobile: '9910029341', status: 'Closed', assigned_to: null, created_at: '2026-06-24T10:00:00Z' }
-  ];
-
-  const displayLeads = leadsData?.leads && leadsData.leads.length > 0 ? leadsData.leads : mockLeads;
+  const displayLeads = leadsData?.leads || [];
 
   const toggleSelect = (id) => {
     if (selectedLeads.includes(id)) {
@@ -257,6 +252,13 @@ export default function AdminLeads() {
         data={displayLeads}
         keyExtractor={(item, index) => item.id?.toString() || index.toString()}
         renderItem={renderLeadItem}
+        ListEmptyComponent={
+          !leadsLoading ? (
+            <View className="py-16 items-center justify-center">
+              <Text className="text-slate-500 font-bold text-sm">No leads found for this filter.</Text>
+            </View>
+          ) : null
+        }
         contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 120 }}
         showsVerticalScrollIndicator={false}
         refreshing={leadsLoading}

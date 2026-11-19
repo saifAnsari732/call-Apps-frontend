@@ -22,16 +22,17 @@ export default function GlobalReminderFAB() {
     if (todaysFollowups.length > 0) {
       const activeFollowup = todaysFollowups[0];
       const leadId = activeFollowup.lead?._id || activeFollowup.lead;
-      const mobile = activeFollowup.lead_mobile;
+      const rawMobile = activeFollowup.lead_mobile;
+      const cleanMobile = String(rawMobile || '').replace(/\D/g, '').slice(-10);
 
       Alert.alert(
         '🔔 Follow-up Reminder',
-        `Lead: ${activeFollowup.lead_name}\nMobile: ${mobile || 'N/A'}\nScheduled Time: ${activeFollowup.time}\nNotes: ${activeFollowup.notes || 'Routine follow-up call'}`,
+        `Lead: ${activeFollowup.lead_name}\nMobile: ${cleanMobile ? `+91 ${cleanMobile}` : (rawMobile || 'N/A')}\nScheduled Time: ${activeFollowup.time}\nNotes: ${activeFollowup.notes || 'Routine follow-up call'}`,
         [
-          ...(mobile ? [{
+          ...(cleanMobile ? [{
             text: '📞 Call Now',
             onPress: () => {
-              Linking.openURL(`tel:${mobile}`);
+              Linking.openURL(`tel:${cleanMobile}`).catch(() => {});
               if (leadId) router.push(`/lead/${leadId}`);
             }
           }] : []),

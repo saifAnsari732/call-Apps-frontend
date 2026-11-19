@@ -56,17 +56,18 @@ export default function TelecallerFollowups() {
   const list = data?.[activeTab] || [];
 
   const handleCall = (item) => {
-    const mobile = item.lead_mobile || item.lead?.mobile;
+    const rawMobile = item.lead_mobile || item.lead?.mobile;
+    const cleanMobile = String(rawMobile || '').replace(/\D/g, '').slice(-10);
     const leadId = item.lead?._id || item.lead;
     const leadObj = {
       id: leadId,
       name: item.lead_name || item.lead?.name || 'Lead',
-      mobile
+      mobile: cleanMobile || rawMobile
     };
     setSelectedLeadForCall(leadObj);
 
-    if (mobile) {
-      Linking.openURL(`tel:${mobile}`).catch(() => {});
+    if (cleanMobile) {
+      Linking.openURL(`tel:${cleanMobile}`).catch(() => {});
     }
     setTimeout(() => {
       setCallModalVisible(true);
@@ -75,13 +76,26 @@ export default function TelecallerFollowups() {
 
   const handleWhatsApp = (item) => {
     const mobile = String(item.lead_mobile || item.lead?.mobile || '').replace(/\D/g, '').slice(-10);
-    if (!mobile) {
-      Alert.alert('No Mobile', 'Valid mobile number not found for this lead.');
+    if (!mobile || mobile.length < 10) {
+      Alert.alert('No Mobile', 'Valid 10-digit mobile number not found for this lead.');
       return;
     }
     const name = item.lead_name || item.lead?.name || 'Sir';
     const text = encodeURIComponent(`Namaste ${name} ji, KisanConnect se aapke scheduled follow-up ke liye sampark kar rahe hain.`);
-    Linking.openURL(`https://wa.me/91${mobile}?text=${text}`).catch(() => {});
+    const nativeUrl = `whatsapp://send?phone=91${mobile}&text=${text}`;
+    const webUrl = `https://wa.me/91${mobile}?text=${text}`;
+
+    Linking.canOpenURL(nativeUrl)
+      .then((supported) => {
+        if (supported) {
+          return Linking.openURL(nativeUrl);
+        } else {
+          return Linking.openURL(webUrl);
+        }
+      })
+      .catch(() => {
+        Linking.openURL(webUrl).catch(() => {});
+      });
   };
 
   const tabOptions = [

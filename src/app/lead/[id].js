@@ -139,6 +139,12 @@ export default function LeadDetails() {
       }
 
       if (!recordingUrl) return;
+      try {
+        await Audio.setAudioModeAsync({
+          allowsRecordingIOS: false,
+          playsInSilentModeIOS: true,
+        });
+      } catch {}
       const fullUrl = getDocumentFullUrl(recordingUrl);
       setPlayingAudioUrl(recordingUrl);
       const { sound } = await Audio.Sound.createAsync(
@@ -300,8 +306,12 @@ export default function LeadDetails() {
       return;
     }
     const cleanNumber = String(phoneNumber).replace(/\D/g, '').slice(-10);
+    if (!cleanNumber || cleanNumber.length < 10) {
+      Alert.alert('Invalid Number', 'Please check mobile number format (must be 10 digits).');
+      return;
+    }
     callStartedAtRef.current = Date.now();
-    Linking.openURL(`tel:${cleanNumber || phoneNumber}`).catch(() => {
+    Linking.openURL(`tel:${cleanNumber}`).catch(() => {
       setDurationSec('45');
       Alert.alert('Notice', 'Dialer could not be launched directly (simulator/test device). Duration set to 45s.');
     });
@@ -350,7 +360,7 @@ export default function LeadDetails() {
   const handleSendWhatsApp = (customTemplate, targetNumber) => {
     const rawNumber = targetNumber || lead.mobile;
     const cleanPhone = String(rawNumber || '').replace(/\D/g, '').slice(-10);
-    if (!cleanPhone) {
+    if (!cleanPhone || cleanPhone.length < 10) {
       Alert.alert('Invalid Phone', 'Lead does not have a valid 10-digit mobile number.');
       return;
     }
@@ -615,6 +625,12 @@ export default function LeadDetails() {
     }
   }
 
+  // Cleaned phone numbers for dialing & deep links
+  const cleanMobile = String(lead.mobile || '').replace(/\D/g, '').slice(-10);
+  const cleanAltMobile = String(lead.alternate_mobile || '').replace(/\D/g, '').slice(-10);
+  const displayMobile = cleanMobile ? `+91 ${cleanMobile}` : (lead.mobile || 'No Mobile');
+  const displayAltMobile = cleanAltMobile ? `+91 ${cleanAltMobile}` : lead.alternate_mobile;
+
   // Filter timeline items
   const filteredTimeline = timeline.filter((item) => {
     if (timelineFilter === 'CALLS') return item.type === 'CALL';
@@ -747,8 +763,8 @@ export default function LeadDetails() {
           <View className="bg-slate-50 rounded-2xl p-2.5 mb-3 border border-slate-100 flex-row justify-between items-center">
             <View className="flex-row items-center flex-1">
               <PhoneCall size={13} color="#0B192C" />
-              <Text className="text-[13px] font-black text-slate-900 ml-1.5">+91 {lead.mobile}</Text>
-              <TouchableOpacity onPress={() => copyPhoneNumber(lead.mobile, false)} className="ml-1.5 p-1">
+              <Text className="text-[13px] font-black text-slate-900 ml-1.5">{displayMobile}</Text>
+              <TouchableOpacity onPress={() => copyPhoneNumber(cleanMobile || lead.mobile, false)} className="ml-1.5 p-1">
                 {copiedNumber ? <Check size={14} color="#16A34A" /> : <Copy size={12} color="#64748B" />}
               </TouchableOpacity>
               {copiedNumber && <Text className="text-[10px] font-bold text-emerald-600 ml-1">Copied!</Text>}
@@ -761,14 +777,22 @@ export default function LeadDetails() {
                 </Text>
               </View>
 
-              {lead.alternate_mobile ? (
-                <TouchableOpacity
-                  onPress={() => handleStartPhoneCall(lead.alternate_mobile)}
-                  className="bg-sky-100 px-2 py-0.5 rounded-md flex-row items-center border border-sky-200"
-                >
-                  <PhoneCall size={10} color="#0284C7" />
-                  <Text className="text-[10px] font-bold text-sky-800 ml-1">Alt: {lead.alternate_mobile}</Text>
-                </TouchableOpacity>
+              {cleanAltMobile ? (
+                <View className="flex-row items-center gap-1">
+                  <TouchableOpacity
+                    onPress={() => handleStartPhoneCall(cleanAltMobile)}
+                    className="bg-sky-100 px-2 py-0.5 rounded-md flex-row items-center border border-sky-200"
+                  >
+                    <PhoneCall size={10} color="#0284C7" />
+                    <Text className="text-[10px] font-bold text-sky-800 ml-1">Alt: {cleanAltMobile}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => handleSendWhatsApp(null, cleanAltMobile)}
+                    className="bg-emerald-100 px-1.5 py-0.5 rounded-md flex-row items-center border border-emerald-200"
+                  >
+                    <MessageCircle size={10} color="#059669" />
+                  </TouchableOpacity>
+                </View>
               ) : null}
             </View>
           </View>
@@ -777,13 +801,13 @@ export default function LeadDetails() {
           <View className="flex-row gap-2.5 mb-2.5">
             {/* 1-Click Call Button */}
             <TouchableOpacity
-              onPress={() => handleStartPhoneCall(lead.mobile)}
+              onPress={() => handleStartPhoneCall(cleanMobile || lead.mobile)}
               className="flex-1 bg-[#0B192C] py-3.5 rounded-2xl flex-row justify-center items-center shadow-md active:bg-slate-800"
             >
               <PhoneCall size={19} color="#FFB703" />
               <View className="ml-2">
                 <Text className="text-white text-[13px] font-black tracking-wider uppercase">CALL NOW</Text>
-                <Text className="text-[#FFB703] text-[10px] font-bold">+91 {lead.mobile}</Text>
+                <Text className="text-[#FFB703] text-[10px] font-bold">{displayMobile}</Text>
               </View>
             </TouchableOpacity>
 
@@ -1343,6 +1367,8 @@ export default function LeadDetails() {
                 filteredTimeline.map((item, idx) => {
                   const isCall = item.type === 'CALL';
                   const isFollowup = item.type === 'FOLLOWUP';
+                  const isDoc = item.type === 'DOCUMENT';
+                  const isFlag = item.type === 'INVALID_FLAG';
 
                   return (
                     <View key={idx} className="bg-slate-50 p-3 rounded-2xl mb-2.5 border border-slate-100">
@@ -1355,6 +1381,14 @@ export default function LeadDetails() {
                           ) : isFollowup ? (
                             <View className="w-6 h-6 rounded-full bg-amber-100 items-center justify-center mr-2">
                               <Calendar size={12} color="#B45309" />
+                            </View>
+                          ) : isDoc ? (
+                            <View className="w-6 h-6 rounded-full bg-purple-100 items-center justify-center mr-2">
+                              <Paperclip size={12} color="#7C3AED" />
+                            </View>
+                          ) : isFlag ? (
+                            <View className="w-6 h-6 rounded-full bg-red-100 items-center justify-center mr-2">
+                              <Ban size={12} color="#DC2626" />
                             </View>
                           ) : (
                             <View className="w-6 h-6 rounded-full bg-slate-200 items-center justify-center mr-2">
@@ -1378,6 +1412,23 @@ export default function LeadDetails() {
                         <Text className="text-[11px] font-medium text-slate-600 bg-white p-2 rounded-xl border border-slate-100 mt-1">
                           {item.description}
                         </Text>
+                      ) : null}
+
+                      {/* Document Attachment Direct Link */}
+                      {isDoc && item.document_url ? (
+                        <View className="mt-2 pt-2 border-t border-slate-200/60 flex-row items-center justify-between">
+                          <Text className="text-[10px] font-bold text-slate-500">Attachment Available</Text>
+                          <TouchableOpacity
+                            onPress={() => {
+                              const fullUrl = getDocumentFullUrl(item.document_url);
+                              if (fullUrl) Linking.openURL(fullUrl).catch(() => {});
+                            }}
+                            className="px-2.5 py-1 bg-white rounded-lg border border-purple-200 flex-row items-center"
+                          >
+                            <ExternalLink size={10} color="#7C3AED" />
+                            <Text className="text-[10px] font-bold text-purple-700 ml-1">Open File</Text>
+                          </TouchableOpacity>
+                        </View>
                       ) : null}
 
                       {/* Audio Recording Playback (Requirement 5) */}

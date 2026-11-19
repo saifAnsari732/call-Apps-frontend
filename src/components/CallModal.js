@@ -17,6 +17,7 @@ export const PRIMARY_STATUSES = [
   { label: 'Wrong Number', value: 'Wrong Number', color: 'bg-red-600', activeBorder: 'border-red-600' },
   { label: 'Busy', value: 'Busy', color: 'bg-yellow-600', activeBorder: 'border-yellow-600' },
   { label: 'Call Not Connected', value: 'Call Not Connected', color: 'bg-purple-600', activeBorder: 'border-purple-600' },
+  { label: 'No Response', value: 'No Response', color: 'bg-stone-600', activeBorder: 'border-stone-600' },
   { label: 'Duplicate Lead', value: 'Duplicate Lead', color: 'bg-zinc-600', activeBorder: 'border-zinc-600' },
   { label: 'Invalid Lead', value: 'Invalid Lead', color: 'bg-red-800', activeBorder: 'border-red-800' },
   { label: 'Lost', value: 'Lost', color: 'bg-slate-700', activeBorder: 'border-slate-700' },
