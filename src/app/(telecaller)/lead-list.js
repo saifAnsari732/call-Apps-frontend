@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, FlatList, TextInput, TouchableOpacity, ActivityIndicator, RefreshControl, Linking, Alert, ScrollView, Image } from 'react-native';
 import { useQuery } from '@tanstack/react-query';
 import api from '../../services/api';
-import { Search, MapPin, Briefcase, CalendarClock, ChevronRight, Phone, ChevronLeft, MessageCircle, X, Tag, Star, Zap } from 'lucide-react-native';
+import { Search, MapPin, Briefcase, CalendarClock, ChevronRight, Phone, ChevronLeft, MessageCircle, X, Tag, Star, Zap, Flame, Award, Ban } from 'lucide-react-native';
 import OfflineBanner from '../../components/OfflineBanner';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 
@@ -156,21 +156,21 @@ export default function TelecallerLeadList() {
   };
 
   return (
-    <View className="flex-1 bg-[#FFF1F2]">
+    <View className="flex-1 bg-[#F8FAFC]">
       <OfflineBanner />
 
       {/* Header */}
-      <View className="bg-[#E11D48] pt-14 pb-5 px-4 shadow-md z-10">
+      <View className="bg-[#0B192C] pt-14 pb-5 px-4 shadow-md z-10">
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center flex-1 pr-2">
-            <TouchableOpacity onPress={() => router.back()} className="p-2 mr-2 bg-white/20 rounded-full">
+            <TouchableOpacity onPress={() => router.back()} className="p-2 mr-2 bg-white/10 rounded-full">
               <ChevronLeft size={22} color="#ffffff" />
             </TouchableOpacity>
             <View>
               <Text className="text-white text-xl font-black tracking-tight" numberOfLines={1}>
                 {category ? `${category} Leads` : tag ? `${tag} Leads` : 'All Leads Directory'}
               </Text>
-              <Text className="text-rose-100 text-xs font-semibold">
+              <Text className="text-[#FFB703] text-xs font-semibold">
                 {filteredLeads.length} prospects matching
               </Text>
             </View>
@@ -179,7 +179,7 @@ export default function TelecallerLeadList() {
 
         {/* Global Search Bar (Requirement 10: Phone & Name) */}
         <View className="mt-3.5 flex-row items-center bg-white rounded-xl px-3.5 py-2.5 shadow-sm">
-          <Search size={16} color="#E11D48" />
+          <Search size={16} color="#0B192C" />
           <TextInput
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -197,25 +197,33 @@ export default function TelecallerLeadList() {
       </View>
 
       {/* Filter Chips Bar */}
-      <View className="bg-white px-3 py-2.5 border-b border-rose-100 shadow-xs">
+      <View className="bg-white px-3 py-2.5 border-b border-slate-200 shadow-xs">
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <View className="flex-row gap-2">
             {[
-              { key: 'ALL', label: 'All Leads' },
-              { key: 'HOT', label: '🔥 Hot & VIP' },
-              { key: 'UNCONTACTED', label: '⚡ Fresh & Uncalled' },
-              { key: 'INTERESTED', label: '⭐ Interested' },
-              { key: 'CONVERTED', label: '🏆 Converted' }
+              { key: 'ALL', label: 'All Leads', icon: null },
+              { key: 'HOT', label: 'Hot & VIP', icon: Flame },
+              { key: 'UNCONTACTED', label: 'Fresh & Uncalled', icon: Zap },
+              { key: 'INTERESTED', label: 'Interested', icon: Star },
+              { key: 'CONVERTED', label: 'Converted', icon: Award }
             ].map((chip) => {
               const isSelected = activeFilter === chip.key;
+              const ChipIcon = chip.icon;
               return (
                 <TouchableOpacity
                   key={chip.key}
                   onPress={() => setActiveFilter(chip.key)}
-                  className={`px-3 py-1.5 rounded-full border ${
-                    isSelected ? 'bg-[#E11D48] border-[#E11D48]' : 'bg-slate-50 border-slate-200'
+                  className={`px-3 py-1.5 rounded-full border flex-row items-center ${
+                    isSelected ? 'bg-[#0B192C] border-[#0B192C]' : 'bg-slate-50 border-slate-200'
                   }`}
                 >
+                  {ChipIcon && (
+                    <ChipIcon
+                      size={12}
+                      color={isSelected ? '#FFB703' : '#64748B'}
+                      style={{ marginRight: 5 }}
+                    />
+                  )}
                   <Text className={`text-xs font-bold ${isSelected ? 'text-white' : 'text-slate-700'}`}>
                     {chip.label}
                   </Text>

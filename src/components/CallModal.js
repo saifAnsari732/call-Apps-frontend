@@ -9,28 +9,31 @@ export const PRIMARY_STATUSES = [
   { label: 'Interested', value: 'Interested', color: 'bg-emerald-600', activeBorder: 'border-emerald-600' },
   { label: 'Follow-up Required', value: 'Follow-up Required', color: 'bg-amber-600', activeBorder: 'border-amber-600', triggersFollowup: true },
   { label: 'Qualified', value: 'Qualified', color: 'bg-indigo-600', activeBorder: 'border-indigo-600' },
-  { label: 'Demo Scheduled', value: 'Demo Scheduled', color: 'bg-violet-600', activeBorder: 'border-violet-600', triggersFollowup: true },
+  { label: 'Demo/Meeting Scheduled', value: 'Demo/Meeting Scheduled', color: 'bg-violet-600', activeBorder: 'border-violet-600', triggersFollowup: true },
   { label: 'Payment Pending', value: 'Payment Pending', color: 'bg-orange-600', activeBorder: 'border-orange-600' },
   { label: 'Converted', value: 'Converted', color: 'bg-green-600', activeBorder: 'border-green-600' },
   { label: 'Not Interested', value: 'Not Interested', color: 'bg-rose-600', activeBorder: 'border-rose-600' },
   { label: 'Wrong Number', value: 'Wrong Number', color: 'bg-red-600', activeBorder: 'border-red-600' },
   { label: 'Busy', value: 'Busy', color: 'bg-yellow-600', activeBorder: 'border-yellow-600' },
   { label: 'Call Not Connected', value: 'Call Not Connected', color: 'bg-purple-600', activeBorder: 'border-purple-600' },
-  { label: 'Duplicate', value: 'Duplicate', color: 'bg-zinc-600', activeBorder: 'border-zinc-600' },
+  { label: 'Duplicate Lead', value: 'Duplicate Lead', color: 'bg-zinc-600', activeBorder: 'border-zinc-600' },
+  { label: 'Invalid Lead', value: 'Invalid Lead', color: 'bg-red-800', activeBorder: 'border-red-800' },
   { label: 'Lost', value: 'Lost', color: 'bg-slate-700', activeBorder: 'border-slate-700' },
 ];
 
 export const CALL_DISPOSITIONS = [
-  'Connected',
-  'Callback requested',
+  'Call connected',
+  'Call back requested',
   'No answer',
   'Switched off',
-  'Busy',
+  'Number busy',
+  'Interested',
   'Price issue',
   'Timing issue',
-  'Family approval',
-  'Already bought',
-  'Not eligible'
+  'Needs family approval',
+  'Already purchased elsewhere',
+  'Not eligible',
+  'Language issue'
 ];
 
 export const QUICK_REMARK_TAGS = [

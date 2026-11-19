@@ -48,9 +48,15 @@ import {
   Paperclip,
   FileText,
   Upload,
-  ExternalLink
+  ExternalLink,
+  Play,
+  Square,
+  Volume2,
+  Award,
+  Ban
 } from 'lucide-react-native';
 import * as DocumentPicker from 'expo-document-picker';
+import { Audio } from 'expo-av';
 import OfflineBanner from '../../components/OfflineBanner';
 import CallModal, { PRIMARY_STATUSES, CALL_DISPOSITIONS, QUICK_REMARK_TAGS } from '../../components/CallModal';
 import SimpleCalendarModal from '../../components/SimpleCalendarModal';
@@ -117,6 +123,49 @@ export default function LeadDetails() {
   const appStateRef = useRef(AppState.currentState);
   const scrollViewRef = useRef(null);
   const remarksInputRef = useRef(null);
+  const soundRef = useRef(null);
+  const [playingAudioUrl, setPlayingAudioUrl] = useState(null);
+
+  // Audio Playback Handler for Call Recordings (Requirement 5)
+  const handleToggleAudioPlayback = async (recordingUrl) => {
+    try {
+      if (soundRef.current) {
+        await soundRef.current.unloadAsync();
+        soundRef.current = null;
+        if (playingAudioUrl === recordingUrl) {
+          setPlayingAudioUrl(null);
+          return;
+        }
+      }
+
+      if (!recordingUrl) return;
+      const fullUrl = getDocumentFullUrl(recordingUrl);
+      setPlayingAudioUrl(recordingUrl);
+      const { sound } = await Audio.Sound.createAsync(
+        { uri: fullUrl },
+        { shouldPlay: true }
+      );
+      soundRef.current = sound;
+      sound.setOnPlaybackStatusUpdate((status) => {
+        if (status.didJustFinish) {
+          setPlayingAudioUrl(null);
+          soundRef.current = null;
+        }
+      });
+    } catch (e) {
+      console.log('Audio playback error:', e.message);
+      setPlayingAudioUrl(null);
+      Alert.alert('Playback Notice', 'Audio recording could not be streamed.');
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (soundRef.current) {
+        soundRef.current.unloadAsync().catch(() => {});
+      }
+    };
+  }, []);
 
   // Fetch Lead Details
   const { data: leadData, isLoading, refetch } = useQuery({
@@ -231,6 +280,16 @@ export default function LeadDetails() {
     mutationFn: (newPriority) => api.put(`/leads/${id}`, { priority: newPriority }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['leadDetails', id] });
+    }
+  });
+
+  // Mutation: Mark Invalid / Fake / Wrong Number (Requirement 9)
+  const markInvalidMutation = useMutation({
+    mutationFn: (reason) => api.patch(`/leads/${id}/mark-invalid`, { reason, remarks: `Marked by ${agentName}` }),
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({ queryKey: ['leadDetails', id] });
+      queryClient.invalidateQueries({ queryKey: ['telecallerLeadsList'] });
+      Alert.alert('Status Updated', res.data?.message || 'Lead marked as invalid.');
     }
   });
 
@@ -637,8 +696,13 @@ export default function LeadDetails() {
               </View>
             </View>
 
-            {/* Quick Priority Toggle & Edit Button */}
+            {/* Quick Priority Toggle, Score & Edit Button */}
             <View className="flex-row items-center gap-1.5">
+              <View className="px-2 py-1 rounded-full bg-slate-100 border border-slate-200 flex-row items-center">
+                <Award size={11} color="#0B192C" />
+                <Text className="text-[10px] font-black text-slate-800 ml-1">Score: {lead.quality_score || 50}</Text>
+              </View>
+
               <TouchableOpacity
                 onPress={() => {
                   const nextP = lead.priority === 'Hot' ? 'Warm' : lead.priority === 'Warm' ? 'Cold' : 'Hot';
@@ -658,6 +722,23 @@ export default function LeadDetails() {
                 className="p-1.5 bg-slate-100 rounded-full"
               >
                 <Pencil size={13} color="#0B192C" />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  Alert.alert(
+                    'Mark Lead as Invalid',
+                    'Choose invalidity category:',
+                    [
+                      { text: 'Cancel', style: 'cancel' },
+                      { text: 'Wrong Number', onPress: () => markInvalidMutation.mutate('Wrong Number') },
+                      { text: 'Fake / Invalid Lead', onPress: () => markInvalidMutation.mutate('Invalid Lead') }
+                    ]
+                  );
+                }}
+                className="p-1.5 bg-red-50 rounded-full border border-red-100"
+              >
+                <Ban size={13} color="#DC2626" />
               </TouchableOpacity>
             </View>
           </View>
@@ -1026,9 +1107,10 @@ export default function LeadDetails() {
                   ))}
                   <TouchableOpacity
                     onPress={() => setCalendarModalVisible(true)}
-                    className="px-2.5 py-1.5 rounded-lg border border-amber-300 bg-amber-50"
+                    className="px-2.5 py-1.5 rounded-lg border border-amber-300 bg-amber-50 flex-row items-center"
                   >
-                    <Text className="text-[11px] font-bold text-amber-800">Calendar 📅</Text>
+                    <Calendar size={11} color="#B45309" />
+                    <Text className="text-[11px] font-bold text-amber-800 ml-1">Pick Date</Text>
                   </TouchableOpacity>
                 </View>
 
@@ -1296,6 +1378,38 @@ export default function LeadDetails() {
                         <Text className="text-[11px] font-medium text-slate-600 bg-white p-2 rounded-xl border border-slate-100 mt-1">
                           {item.description}
                         </Text>
+                      ) : null}
+
+                      {/* Audio Recording Playback (Requirement 5) */}
+                      {isCall && item.recording_url ? (
+                        <View className="mt-2 pt-2 border-t border-slate-200/60 flex-row items-center justify-between">
+                          <View className="flex-row items-center">
+                            <Volume2 size={13} color="#2563EB" />
+                            <Text className="text-[10px] font-bold text-slate-600 ml-1.5">
+                              Call Audio Recording
+                            </Text>
+                          </View>
+                          <TouchableOpacity
+                            onPress={() => handleToggleAudioPlayback(item.recording_url)}
+                            className={`px-3 py-1.5 rounded-xl border flex-row items-center shadow-xs ${
+                              playingAudioUrl === item.recording_url
+                                ? 'bg-blue-600 border-blue-600'
+                                : 'bg-white border-blue-200'
+                            }`}
+                          >
+                            {playingAudioUrl === item.recording_url ? (
+                              <>
+                                <Square size={11} color="#ffffff" fill="#ffffff" />
+                                <Text className="text-[10px] font-black text-white ml-1">Stop Audio</Text>
+                              </>
+                            ) : (
+                              <>
+                                <Play size={11} color="#1D4ED8" fill="#1D4ED8" />
+                                <Text className="text-[10px] font-black text-blue-700 ml-1">Play Recording</Text>
+                              </>
+                            )}
+                          </TouchableOpacity>
+                        </View>
                       ) : null}
                     </View>
                   );

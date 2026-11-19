@@ -201,16 +201,16 @@ export default function TelecallerDashboard() {
   ];
 
   return (
-    <View className="flex-1 bg-[#FFF1F2]">
+    <View className="flex-1 bg-[#F8FAFC]">
       <OfflineBanner />
 
       {/* Top Header */}
-      <View className="bg-[#E11D48] pt-16 pb-10 px-6 rounded-b-[44px] shadow-xl shadow-rose-900/20 z-20">
+      <View className="bg-[#0B192C] pt-16 pb-10 px-6 rounded-b-[44px] shadow-xl z-20">
         <View className="flex-row items-center justify-between mb-6">
-          <TouchableOpacity onPress={cycleShiftStatus} className="bg-white/20 px-3 py-1.5 rounded-full flex-row items-center border border-white/30">
+          <TouchableOpacity onPress={cycleShiftStatus} className="bg-white/10 px-3 py-1.5 rounded-full flex-row items-center border border-white/20">
             <View
               className={`w-2 h-2 rounded-full mr-1.5 ${
-                currentShift === 'Clocked In' ? 'bg-emerald-400' : currentShift === 'On Break' ? 'bg-amber-300' : 'bg-slate-300'
+                currentShift === 'Clocked In' ? 'bg-emerald-400' : currentShift === 'On Break' ? 'bg-amber-300' : 'bg-slate-400'
               }`}
             />
             <Text className="text-white text-[11px] font-bold">{currentShift}</Text>
@@ -219,7 +219,7 @@ export default function TelecallerDashboard() {
           <View className="flex-row items-center">
             <Image 
               source={require('../../../assets/images/logo-glow.png')}
-              style={{ width: 30, height: 30, borderRadius: 15, marginRight: 7, borderWidth: 2, borderColor: '#FDA4AF' }}
+              style={{ width: 30, height: 30, borderRadius: 15, marginRight: 7, borderWidth: 2, borderColor: '#FFB703' }}
               resizeMode="cover"
             />
             <Text className="text-white text-sm font-black tracking-widest">KisanConnect</Text>
@@ -227,10 +227,10 @@ export default function TelecallerDashboard() {
 
           <View className="flex-row items-center gap-2">
             <TouchableOpacity onPress={() => router.push('/(telecaller)/followups')} className="p-2 relative -mr-2">
-              <Bell size={20} color="#FFF1F2" />
+              <Bell size={20} color="#FFB703" />
               {(overdueFollowups + todayFollowups) > 0 && (
-                <View className="absolute top-1 right-1 bg-[#FDA4AF] w-4 h-4 rounded-full border-2 border-[#E11D48] justify-center items-center">
-                  <Text className="text-[8px] font-bold text-rose-900">{overdueFollowups + todayFollowups}</Text>
+                <View className="absolute top-1 right-1 bg-[#FFB703] w-4 h-4 rounded-full border-2 border-[#0B192C] justify-center items-center">
+                  <Text className="text-[8px] font-black text-[#0B192C]">{overdueFollowups + todayFollowups}</Text>
                 </View>
               )}
             </TouchableOpacity>
@@ -238,29 +238,29 @@ export default function TelecallerDashboard() {
         </View>
 
         <View className="items-center mb-2">
-          <Text className="text-rose-200 text-xs font-bold mb-1 tracking-wider uppercase">
+          <Text className="text-[#FFB703] text-xs font-bold mb-1 tracking-wider uppercase">
             {user?.team || 'North Region Sales'} • {user?.employee_id || 'EMP101'}
           </Text>
           <Text className="text-white text-3xl font-black mb-5 tracking-tight">{user?.name || 'Telecaller'}</Text>
 
           {/* Daily Call & Conversion Target Bar (Requirement 1: Calling Target vs Achievement) */}
-          <View className="w-full bg-white/15 rounded-2xl p-3.5 mb-5 border border-white/20">
+          <View className="w-full bg-white/10 rounded-2xl p-3.5 mb-5 border border-white/20">
             <View className="flex-row justify-between items-center mb-1.5">
               <Text className="text-white text-xs font-bold">Calling Target: {todaysCalls} / {callTarget} calls</Text>
-              <Text className="text-rose-100 text-xs font-black">{callProgressPct}% • Enrolled: {closedDeals}/{convTarget}</Text>
+              <Text className="text-[#FFB703] text-xs font-black">{callProgressPct}% • Enrolled: {closedDeals}/{convTarget}</Text>
             </View>
-            <View className="w-full bg-rose-950/40 h-2 rounded-full overflow-hidden">
-              <View className="bg-amber-300 h-full rounded-full" style={{ width: `${callProgressPct}%` }} />
+            <View className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+              <View className="bg-[#FFB703] h-full rounded-full" style={{ width: `${callProgressPct}%` }} />
             </View>
           </View>
 
           <TouchableOpacity
             onPress={handleStartPowerDialer}
             activeOpacity={0.85}
-            className="bg-white w-[92%] py-4 rounded-2xl shadow-lg shadow-black/10 flex-row justify-center items-center"
+            className="bg-[#FFB703] w-[92%] py-4 rounded-2xl shadow-lg flex-row justify-center items-center active:bg-amber-400"
           >
-            <Zap size={18} color="#E11D48" fill="#E11D48" />
-            <Text className="text-[#E11D48] text-base font-black tracking-wide ml-2">Start Power Calling Now</Text>
+            <Zap size={18} color="#0B192C" fill="#0B192C" />
+            <Text className="text-[#0B192C] text-base font-black tracking-wide ml-2">Start Power Calling Now</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -529,7 +529,8 @@ export default function TelecallerDashboard() {
               </View>
             ) : !powerQueueData?.queue || powerQueueData.queue.length === 0 ? (
               <View className="py-12 items-center">
-                <Text className="text-sm font-bold text-slate-700">All caught up! 🎉</Text>
+                <CheckCircle2 size={32} color="#10B981" />
+                <Text className="text-sm font-bold text-slate-700 mt-2">All caught up!</Text>
                 <Text className="text-xs text-slate-400 mt-1">No pending uncontacted leads or due follow-ups.</Text>
               </View>
             ) : (

@@ -12,7 +12,7 @@ export default function LoginScreen() {
   const [errorMsg, setErrorMsg] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const { control, handleSubmit, setValue, formState: { errors } } = useForm({
     defaultValues: { mobile: '', password: '' }
   });
 
@@ -179,30 +179,33 @@ export default function LoginScreen() {
               <Text className="text-xs font-bold text-slate-700 mb-2">Demo Accounts (Tap to fill):</Text>
               
               <TouchableOpacity 
-                className="flex-row justify-between items-center bg-white p-2 border border-slate-200 rounded-lg mb-2"
+                className="flex-row justify-between items-center bg-white p-2.5 border border-slate-200 rounded-xl mb-2 active:bg-slate-100"
                 onPress={() => {
-                  control._defaultValues.mobile = '9999999999';
-                  control._defaultValues.password = 'admin123';
-                  // In a real app we might use setValue from useForm, but for a quick demo this is fine, or just type it
+                  setValue('mobile', '9999999999', { shouldValidate: true });
+                  setValue('password', 'admin123', { shouldValidate: true });
                 }}
               >
                 <View>
                   <Text className="text-xs font-bold text-slate-800">Admin Account</Text>
                   <Text className="text-[10px] text-slate-500">ID: 9999999999 | Pass: admin123</Text>
                 </View>
-                <View className="bg-indigo-100 px-2 py-1 rounded">
+                <View className="bg-indigo-100 px-2.5 py-1 rounded-md">
                   <Text className="text-[10px] text-indigo-700 font-bold">Admin</Text>
                 </View>
               </TouchableOpacity>
 
               <TouchableOpacity 
-                className="flex-row justify-between items-center bg-white p-2 border border-slate-200 rounded-lg"
+                className="flex-row justify-between items-center bg-white p-2.5 border border-slate-200 rounded-xl active:bg-slate-100"
+                onPress={() => {
+                  setValue('mobile', '8888888888', { shouldValidate: true });
+                  setValue('password', 'caller123', { shouldValidate: true });
+                }}
               >
                 <View>
                   <Text className="text-xs font-bold text-slate-800">Telecaller Account</Text>
                   <Text className="text-[10px] text-slate-500">ID: 8888888888 | Pass: caller123</Text>
                 </View>
-                <View className="bg-emerald-100 px-2 py-1 rounded">
+                <View className="bg-emerald-100 px-2.5 py-1 rounded-md">
                   <Text className="text-[10px] text-emerald-700 font-bold">Caller</Text>
                 </View>
               </TouchableOpacity>

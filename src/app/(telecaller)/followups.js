@@ -92,26 +92,26 @@ export default function TelecallerFollowups() {
   ];
 
   return (
-    <View className="flex-1 bg-[#FFF1F2]">
+    <View className="flex-1 bg-[#F8FAFC]">
       <OfflineBanner />
 
       {/* Top Header */}
-      <View className="bg-[#E11D48] pt-14 pb-5 px-5 shadow-md">
+      <View className="bg-[#0B192C] pt-14 pb-5 px-5 shadow-md">
         <View className="flex-row items-center justify-between">
           <View>
             <Text className="text-white text-xl font-black tracking-tight">Follow-ups &amp; Callbacks</Text>
-            <Text className="text-rose-100 text-xs font-semibold mt-0.5">
+            <Text className="text-[#FFB703] text-xs font-semibold mt-0.5">
               Scheduled tasks, reminders &amp; customer callback queue
             </Text>
           </View>
-          <TouchableOpacity onPress={onRefresh} className="p-2 bg-white/20 rounded-full">
-            <Bell size={18} color="#ffffff" />
+          <TouchableOpacity onPress={onRefresh} className="p-2 bg-white/10 rounded-full">
+            <Bell size={18} color="#FFB703" />
           </TouchableOpacity>
         </View>
       </View>
 
       {/* 4 Tabs Filter (Requirement 6: Today, tomorrow, this week, overdue) */}
-      <View className="px-4 py-3 bg-white border-b border-rose-100 shadow-xs">
+      <View className="px-4 py-3 bg-white border-b border-slate-200 shadow-xs">
         <View className="flex-row bg-slate-100 rounded-xl p-1">
           {tabOptions.map((tab) => {
             const isActive = activeTab === tab.key;
@@ -120,7 +120,7 @@ export default function TelecallerFollowups() {
                 key={tab.key}
                 onPress={() => setActiveTab(tab.key)}
                 className={`flex-1 py-2 rounded-lg items-center justify-center ${
-                  isActive ? 'bg-[#E11D48] shadow-xs' : 'bg-transparent'
+                  isActive ? 'bg-[#0B192C] shadow-xs' : 'bg-transparent'
                 }`}
               >
                 <Text
@@ -132,7 +132,7 @@ export default function TelecallerFollowups() {
                 </Text>
                 <Text
                   className={`text-[10px] font-bold ${
-                    isActive ? 'text-rose-100' : 'text-slate-400'
+                    isActive ? 'text-[#FFB703]' : 'text-slate-400'
                   }`}
                 >
                   {tab.count}

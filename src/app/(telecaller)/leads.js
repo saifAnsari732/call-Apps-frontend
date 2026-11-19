@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Image } from 'react-native';
-import { ChevronRight, Filter, Users, PhoneCall, CalendarCheck, CheckCircle2, PhoneOff, XCircle, Tag, Star, AlertCircle, MessageSquare } from 'lucide-react-native';
+import { ChevronRight, Filter, Users, PhoneCall, CalendarCheck, CheckCircle2, PhoneOff, XCircle, Tag, Star, AlertCircle, MessageSquare, ChevronLeft } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -87,26 +87,26 @@ export default function LeadsCategories() {
   ];
 
   return (
-    <View className="flex-1 bg-[#FFF1F2]">
+    <View className="flex-1 bg-[#F8FAFC]">
       {/* Header */}
       <View 
-        className="bg-[#E11D48] px-6 rounded-b-[40px] shadow-xl shadow-rose-900/20 z-10"
+        className="bg-[#0B192C] px-6 rounded-b-[40px] shadow-xl z-10"
         style={{ paddingTop: Math.max(insets.top, 48), paddingBottom: 28 }}
       >
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center">
             <TouchableOpacity onPress={() => router.back()} className="mr-3 p-1">
-              <Text className="text-white text-2xl font-bold">‹</Text>
+              <ChevronLeft size={24} color="#ffffff" />
             </TouchableOpacity>
             <Image 
               source={require('../../../assets/brand-logo.jpg')}
-              style={{ width: 32, height: 32, borderRadius: 16, marginRight: 10, borderWidth: 1.5, borderColor: '#FDA4AF' }}
+              style={{ width: 32, height: 32, borderRadius: 16, marginRight: 10, borderWidth: 1.5, borderColor: '#FFB703' }}
               resizeMode="cover"
             />
             <Text className="text-white text-xl font-black tracking-tight">Leads Directory</Text>
           </View>
-          <TouchableOpacity className="p-2 bg-white/20 rounded-full">
-            <Filter size={18} color="#FFFFFF" />
+          <TouchableOpacity onPress={() => router.push('/(telecaller)/lead-list')} className="p-2 bg-white/10 rounded-full">
+            <Filter size={18} color="#FFB703" />
           </TouchableOpacity>
         </View>
       </View>
