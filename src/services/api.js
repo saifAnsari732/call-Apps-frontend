@@ -130,8 +130,8 @@ api.interceptors.response.use(
     return response;
   },
   async (error) => {
-    if (error.response && error.response.status === 401) {
-      console.log('401 Unauthorized detected - logging out automatically.');
+    if (error.response && (error.response.status === 401 || (error.response.status === 403 && String(error.response.data?.error || '').toLowerCase().includes('token')))) {
+      console.log('Session expired or unauthorized - logging out automatically.');
       useAuthStore.getState().logout();
       return Promise.reject(error);
     }

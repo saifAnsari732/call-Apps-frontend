@@ -22,29 +22,31 @@ export const useAuthStore = create((set, get) => ({
       if (storedToken && storedUser && storedToken !== 'undefined' && storedUser !== 'undefined' && remember) {
         let token, user;
         try {
-          token = JSON.parse(storedToken);
-          user = JSON.parse(storedUser);
+          token = storedToken.startsWith('"') ? JSON.parse(storedToken) : storedToken;
+          user = typeof storedUser === 'string' && storedUser.startsWith('{') ? JSON.parse(storedUser) : storedUser;
         } catch(e) {
-          await AsyncStorage.removeItem('token');
-          await AsyncStorage.removeItem('user');
-          set({ token: null, user: null, isAuthenticated: false, isLoading: false });
-          return;
+          token = storedToken;
+          user = null;
         }
         
-        set({ token, user, isAuthenticated: true, isLoading: false });
+        if (token) {
+          set({ token, user, isAuthenticated: true, isLoading: false });
 
-        // Verify token with backend to refresh user info in background
-        const api = require('../services/api').default;
-        api.get('/auth/me').then(async (response) => {
-          const freshUser = response.data.user;
-          await AsyncStorage.setItem('user', JSON.stringify(freshUser));
-          set({ user: freshUser });
-        }).catch((apiError) => {
-          console.log('Session validation failed. User may be offline or token expired.', apiError.message);
-          if (apiError.response && (apiError.response.status === 401 || apiError.response.status === 403)) {
-            get().logout();
-          }
-        });
+          // Verify token with backend to refresh user info in background
+          const api = require('../services/api').default;
+          api.get('/auth/verify-session').then(async (response) => {
+            const freshUser = response.data.user;
+            await AsyncStorage.setItem('user', JSON.stringify(freshUser));
+            set({ user: freshUser });
+          }).catch((apiError) => {
+            console.log('Session validation failed. User may be offline or token expired.', apiError.message);
+            if (apiError.response && (apiError.response.status === 401 || apiError.response.status === 403)) {
+              get().logout();
+            }
+          });
+        } else {
+          set({ token: null, user: null, isAuthenticated: false, isLoading: false });
+        }
       } else {
         // No valid session
         set({ token: null, user: null, isAuthenticated: false });
