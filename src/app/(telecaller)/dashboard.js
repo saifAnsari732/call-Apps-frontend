@@ -238,6 +238,17 @@ export default function TelecallerDashboard() {
         </View>
 
         <View className="items-center mb-2">
+          {/* Telecaller Character Avatar with Online Pulse */}
+          <View className="relative mb-2">
+            <Image 
+              source={require('../../../assets/images/avatar-telecaller.png')}
+              style={{ width: 68, height: 68, borderRadius: 34, borderWidth: 2.5, borderColor: '#FFB703' }}
+              resizeMode="cover"
+            />
+            <View className="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 rounded-full border-2 border-[#0B192C] items-center justify-center">
+              <View className="w-1.5 h-1.5 bg-white rounded-full" />
+            </View>
+          </View>
           <Text className="text-[#FFB703] text-xs font-bold mb-1 tracking-wider uppercase">
             {user?.team || 'North Region Sales'} • {user?.employee_id || 'EMP101'}
           </Text>
@@ -433,7 +444,7 @@ export default function TelecallerDashboard() {
             </View>
 
             {/* Upcoming Follow-ups Section */}
-            {data?.todaysFollowups && data.todaysFollowups.length > 0 && (
+            {data?.todaysFollowups && data.todaysFollowups.length > 0 ? (
               <View className="mb-6">
                 <View className="flex-row justify-between items-end mb-3.5 px-1">
                   <Text className="text-lg font-black text-slate-800 tracking-tight">Today's Calling Agenda</Text>
@@ -466,6 +477,20 @@ export default function TelecallerDashboard() {
                     </View>
                   </TouchableOpacity>
                 ))}
+              </View>
+            ) : (
+              <View className="mb-6 bg-white p-5 rounded-3xl border border-emerald-100 shadow-xs flex-row items-center">
+                <Image 
+                  source={require('../../../assets/images/all-caught-up.png')}
+                  style={{ width: 64, height: 64, borderRadius: 16, marginRight: 14 }}
+                  resizeMode="contain"
+                />
+                <View className="flex-1 pr-2">
+                  <Text className="text-sm font-black text-slate-900">All Follow-ups Cleared!</Text>
+                  <Text className="text-xs text-slate-500 mt-0.5 leading-4">
+                    Zero overdue calls right now. Great job keeping your calling pipeline clean!
+                  </Text>
+                </View>
               </View>
             )}
 

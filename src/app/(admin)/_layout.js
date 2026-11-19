@@ -6,10 +6,12 @@ import { Platform, View, Text } from 'react-native';
 
 const TabIcon = ({ name, icon: Icon, focused }) => {
   if (focused) {
+    return (
       <View className="items-center justify-center pt-2">
-        <Icon size={22} color="#F59E0B" strokeWidth={2.5} />
-        <Text className="text-[#F59E0B] font-bold text-[11px] mt-1">{name}</Text>
+        <Icon size={22} color="#E11D48" strokeWidth={2.5} />
+        <Text className="text-[#E11D48] font-bold text-[11px] mt-1">{name}</Text>
       </View>
+    );
   }
   return (
     <View className="items-center justify-center pt-2">

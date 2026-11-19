@@ -64,7 +64,7 @@ export default function Index() {
           transform: [{ scale: pulseAnim }]
         }}>
           <Image 
-            source={require('../../assets/brand-logo.jpg')} 
+            source={require('../../assets/images/logo-glow.png')} 
             style={{ width: 140, height: 140, borderRadius: 70, borderWidth: 4, borderColor: '#E11D48', marginBottom: 24 }}
             resizeMode="cover"
           />

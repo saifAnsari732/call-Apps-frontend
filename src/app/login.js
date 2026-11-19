@@ -174,39 +174,100 @@ export default function LoginScreen() {
               )}
             </TouchableOpacity>
 
-            {/* Demo Credentials */}
-            <View className="mt-6 border border-slate-200 bg-slate-50 p-4 rounded-xl">
-              <Text className="text-xs font-bold text-slate-700 mb-2">Demo Accounts (Tap to fill):</Text>
+            {/* Demo Credentials & Role Characters */}
+            <View className="mt-6 border border-rose-200/60 bg-rose-50/40 p-4 rounded-2xl">
+              <View className="flex-row items-center justify-between mb-3">
+                <Text className="text-xs font-black text-slate-800 uppercase tracking-wider">Fast Role Login (Tap to select)</Text>
+                <View className="bg-rose-100 px-2 py-0.5 rounded-full">
+                  <Text className="text-[10px] font-bold text-rose-700">3-Tier RBAC</Text>
+                </View>
+              </View>
               
+              {/* Admin Card */}
               <TouchableOpacity 
-                className="flex-row justify-between items-center bg-white p-2.5 border border-slate-200 rounded-xl mb-2 active:bg-slate-100"
+                className="flex-row items-center bg-white p-3 border border-slate-200 rounded-xl mb-2 shadow-xs active:bg-slate-50"
                 onPress={() => {
-                  setValue('mobile', '9999999999', { shouldValidate: true });
+                  setValue('mobile', '9876543210', { shouldValidate: true });
                   setValue('password', 'admin123', { shouldValidate: true });
                 }}
               >
-                <View>
-                  <Text className="text-xs font-bold text-slate-800">Admin Account</Text>
-                  <Text className="text-[10px] text-slate-500">ID: 9999999999 | Pass: admin123</Text>
+                <Image 
+                  source={require('../../assets/images/avatar-admin.png')} 
+                  style={{ width: 44, height: 44, borderRadius: 22, marginRight: 12, borderWidth: 1.5, borderColor: '#6366F1' }}
+                  resizeMode="cover"
+                />
+                <View className="flex-1">
+                  <Text className="text-xs font-black text-slate-900">Sanjay Gupta</Text>
+                  <Text className="text-[10px] text-slate-500">Managing Director • ID: 9876543210</Text>
                 </View>
-                <View className="bg-indigo-100 px-2.5 py-1 rounded-md">
-                  <Text className="text-[10px] text-indigo-700 font-bold">Admin</Text>
+                <View className="bg-indigo-100 px-2.5 py-1 rounded-lg">
+                  <Text className="text-[10px] text-indigo-700 font-extrabold">ADMIN</Text>
                 </View>
               </TouchableOpacity>
 
+              {/* Team Leader NCR Card */}
               <TouchableOpacity 
-                className="flex-row justify-between items-center bg-white p-2.5 border border-slate-200 rounded-xl active:bg-slate-100"
+                className="flex-row items-center bg-white p-3 border border-slate-200 rounded-xl mb-2 shadow-xs active:bg-slate-50"
                 onPress={() => {
-                  setValue('mobile', '8888888888', { shouldValidate: true });
-                  setValue('password', 'caller123', { shouldValidate: true });
+                  setValue('mobile', '9876543212', { shouldValidate: true });
+                  setValue('password', 'admin123', { shouldValidate: true });
                 }}
               >
-                <View>
-                  <Text className="text-xs font-bold text-slate-800">Telecaller Account</Text>
-                  <Text className="text-[10px] text-slate-500">ID: 8888888888 | Pass: caller123</Text>
+                <Image 
+                  source={require('../../assets/images/avatar-teamleader.png')} 
+                  style={{ width: 44, height: 44, borderRadius: 22, marginRight: 12, borderWidth: 1.5, borderColor: '#A855F7' }}
+                  resizeMode="cover"
+                />
+                <View className="flex-1">
+                  <Text className="text-xs font-black text-slate-900">Vikram Malhotra</Text>
+                  <Text className="text-[10px] text-slate-500">Team Leader • Delhi NCR (9876543212)</Text>
                 </View>
-                <View className="bg-emerald-100 px-2.5 py-1 rounded-md">
-                  <Text className="text-[10px] text-emerald-700 font-bold">Caller</Text>
+                <View className="bg-purple-100 px-2.5 py-1 rounded-lg">
+                  <Text className="text-[10px] text-purple-700 font-extrabold">TL NCR</Text>
+                </View>
+              </TouchableOpacity>
+
+              {/* Team Leader Mumbai Card */}
+              <TouchableOpacity 
+                className="flex-row items-center bg-white p-3 border border-slate-200 rounded-xl mb-2 shadow-xs active:bg-slate-50"
+                onPress={() => {
+                  setValue('mobile', '9876543215', { shouldValidate: true });
+                  setValue('password', 'admin123', { shouldValidate: true });
+                }}
+              >
+                <Image 
+                  source={require('../../assets/images/avatar-teamleader.png')} 
+                  style={{ width: 44, height: 44, borderRadius: 22, marginRight: 12, borderWidth: 1.5, borderColor: '#A855F7' }}
+                  resizeMode="cover"
+                />
+                <View className="flex-1">
+                  <Text className="text-xs font-black text-slate-900">Neha Kapoor</Text>
+                  <Text className="text-[10px] text-slate-500">Team Leader • Mumbai & West (9876543215)</Text>
+                </View>
+                <View className="bg-purple-100 px-2.5 py-1 rounded-lg">
+                  <Text className="text-[10px] text-purple-700 font-extrabold">TL WEST</Text>
+                </View>
+              </TouchableOpacity>
+
+              {/* Telecaller Card */}
+              <TouchableOpacity 
+                className="flex-row items-center bg-white p-3 border border-slate-200 rounded-xl shadow-xs active:bg-slate-50"
+                onPress={() => {
+                  setValue('mobile', '9876543211', { shouldValidate: true });
+                  setValue('password', 'admin123', { shouldValidate: true });
+                }}
+              >
+                <Image 
+                  source={require('../../assets/images/avatar-telecaller.png')} 
+                  style={{ width: 44, height: 44, borderRadius: 22, marginRight: 12, borderWidth: 1.5, borderColor: '#10B981' }}
+                  resizeMode="cover"
+                />
+                <View className="flex-1">
+                  <Text className="text-xs font-black text-slate-900">Amit Sharma</Text>
+                  <Text className="text-[10px] text-slate-500">Senior Telecaller • NCR Team (9876543211)</Text>
+                </View>
+                <View className="bg-emerald-100 px-2.5 py-1 rounded-lg">
+                  <Text className="text-[10px] text-emerald-700 font-extrabold">CALLER</Text>
                 </View>
               </TouchableOpacity>
             </View>

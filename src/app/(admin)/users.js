@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, TextInput, Modal, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, Modal, Alert, ActivityIndicator, Image } from 'react-native';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../../services/api';
 import { Plus, Filter, Search, Download, Edit2, LogOut, Ban, CheckCircle2, User, Phone, Mail, CreditCard, Key, Settings, ShieldOff, Trash2 } from 'lucide-react-native';
@@ -234,12 +234,20 @@ export default function TelecallerManagement() {
             <View key={caller.id} className="bg-white rounded-2xl p-5 mb-5 border border-slate-200 shadow-sm shadow-slate-200/50">
               <View className="flex-row justify-between items-start mb-4">
                 <View className="flex-row items-center flex-1">
-                  <View className="w-12 h-12 rounded-full bg-[#0B192C] justify-center items-center mr-4">
-                    <Text className="text-white text-lg font-bold">{initials}</Text>
-                  </View>
+                  <Image 
+                    source={
+                      caller.role === 'admin' 
+                        ? require('../../../assets/images/avatar-admin.png')
+                        : caller.role === 'team_leader' || caller.role === 'manager'
+                        ? require('../../../assets/images/avatar-teamleader.png')
+                        : require('../../../assets/images/avatar-telecaller.png')
+                    }
+                    style={{ width: 48, height: 48, borderRadius: 24, marginRight: 12, borderWidth: 1.5, borderColor: '#CBD5E1' }}
+                    resizeMode="cover"
+                  />
                   <View className="flex-1">
                     <Text className="text-base font-bold text-[#0B192C]">{caller.name}</Text>
-                    <Text className="text-xs text-slate-500 mt-0.5">Telecaller ID: {caller.employee_id}</Text>
+                    <Text className="text-xs text-slate-500 mt-0.5">Telecaller ID: {caller.employee_id} {caller.role ? `• ${caller.role.toUpperCase()}` : ''}</Text>
                   </View>
                 </View>
 

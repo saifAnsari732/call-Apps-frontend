@@ -650,8 +650,8 @@ export default function LeadDetails() {
               <ChevronLeft color="#ffffff" size={26} />
             </TouchableOpacity>
             <Image
-              source={require('../../../assets/brand-logo.jpg')}
-              style={{ width: 28, height: 28, borderRadius: 14, marginRight: 8, borderWidth: 1, borderColor: '#ffffff' }}
+              source={require('../../../assets/images/logo-glow.png')}
+              style={{ width: 30, height: 30, borderRadius: 15, marginRight: 8, borderWidth: 1.5, borderColor: '#FFB703' }}
               resizeMode="cover"
             />
             <View className="flex-1">
@@ -696,19 +696,26 @@ export default function LeadDetails() {
         <View className="bg-white rounded-3xl p-4 mb-3.5 shadow-sm border border-slate-100 relative">
           {/* Header Row with Badges */}
           <View className="flex-row items-start justify-between mb-3">
-            <View className="flex-1 pr-3">
-              <Text className="text-[18px] font-black text-slate-900 leading-tight">{lead.name}</Text>
-              <View className="flex-row items-center mt-1 flex-wrap gap-1.5">
-                <View className="flex-row items-center">
-                  <MapPin size={12} color="#64748B" />
-                  <Text className="text-[12px] font-semibold text-slate-500 ml-1">
-                    {lead.city ? `${lead.city}${lead.state ? `, ${lead.state}` : ''}` : 'Location N/A'}
+            <View className="flex-row items-center flex-1 pr-3">
+              <Image 
+                source={require('../../../assets/images/avatar-customer.png')}
+                style={{ width: 44, height: 44, borderRadius: 22, marginRight: 10, borderWidth: 1.5, borderColor: '#CBD5E1' }}
+                resizeMode="cover"
+              />
+              <View className="flex-1">
+                <Text className="text-[18px] font-black text-slate-900 leading-tight">{lead.name}</Text>
+                <View className="flex-row items-center mt-1 flex-wrap gap-1.5">
+                  <View className="flex-row items-center">
+                    <MapPin size={12} color="#64748B" />
+                    <Text className="text-[12px] font-semibold text-slate-500 ml-1">
+                      {lead.city ? `${lead.city}${lead.state ? `, ${lead.state}` : ''}` : 'Location N/A'}
+                    </Text>
+                  </View>
+                  <Text className="text-slate-300">•</Text>
+                  <Text className="text-[12px] font-bold text-slate-700">
+                    {lead.product_interest || lead.course_interest || 'Inquiry'}
                   </Text>
                 </View>
-                <Text className="text-slate-300">•</Text>
-                <Text className="text-[12px] font-bold text-slate-700">
-                  {lead.product_interest || lead.course_interest || 'Inquiry'}
-                </Text>
               </View>
             </View>
 

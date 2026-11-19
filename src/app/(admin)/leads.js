@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, TextInput, Modal, Alert, ActivityIndicator, FlatList, Platform } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, Modal, Alert, ActivityIndicator, FlatList, Platform, Image } from 'react-native';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../../services/api';
 import { Plus, Filter, CheckSquare, Square, UserCheck, RefreshCw, Search, ChevronRight, MapPin, Briefcase, Phone, Mail, User, ShieldCheck, UserX, Download, Calendar, Edit2, PenLine, Navigation, MoreHorizontal, FileText, Share, CornerUpRight, ArrowRightCircle, X } from 'lucide-react-native';
@@ -93,19 +93,26 @@ export default function AdminLeads() {
         
         <View className="p-5 pl-6">
             <View className="flex-row justify-between items-start mb-3">
-              <View className="flex-1">
-                <Text className="text-[15px] font-bold text-[#0B192C]">{item.business_name || item.name || 'Unknown Business'}</Text>
-                <Text className="text-[13px] text-slate-500 mt-0.5 mb-1.5">Lead #{item.mobile || 'N/A'}</Text>
-                
-                {item.tags && item.tags.length > 0 && (
-                  <View className="flex-row flex-wrap gap-2">
-                    {item.tags.map((t, idx) => (
-                      <View key={idx} className="bg-rose-100 px-2 py-0.5 rounded-md border border-rose-200">
-                        <Text className="text-[9px] font-bold text-rose-700 uppercase tracking-wider">{t}</Text>
-                      </View>
-                    ))}
-                  </View>
-                )}
+              <View className="flex-row items-center flex-1 pr-2">
+                <Image 
+                  source={require('../../../assets/images/avatar-customer.png')}
+                  style={{ width: 42, height: 42, borderRadius: 21, marginRight: 10, borderWidth: 1.5, borderColor: '#CBD5E1' }}
+                  resizeMode="cover"
+                />
+                <View className="flex-1">
+                  <Text className="text-[15px] font-bold text-[#0B192C]">{item.business_name || item.name || 'Unknown Business'}</Text>
+                  <Text className="text-[13px] text-slate-500 mt-0.5 mb-1.5">Lead #{item.mobile || 'N/A'}</Text>
+                  
+                  {item.tags && item.tags.length > 0 && (
+                    <View className="flex-row flex-wrap gap-2">
+                      {item.tags.map((t, idx) => (
+                        <View key={idx} className="bg-rose-100 px-2 py-0.5 rounded-md border border-rose-200">
+                          <Text className="text-[9px] font-bold text-rose-700 uppercase tracking-wider">{t}</Text>
+                        </View>
+                      ))}
+                    </View>
+                  )}
+                </View>
               </View>
               <View className={`${badgeBg} px-3 py-1 rounded-full`}>
                 <Text className={`${badgeText} text-[11px] font-bold`}>{statusLabel}</Text>
@@ -255,7 +262,13 @@ export default function AdminLeads() {
         ListEmptyComponent={
           !leadsLoading ? (
             <View className="py-16 items-center justify-center">
-              <Text className="text-slate-500 font-bold text-sm">No leads found for this filter.</Text>
+              <Image 
+                source={require('../../../assets/images/empty-leads.png')}
+                style={{ width: 130, height: 130, marginBottom: 12 }}
+                resizeMode="contain"
+              />
+              <Text className="text-slate-800 font-black text-base">No Leads in Pipeline</Text>
+              <Text className="text-slate-400 text-xs mt-1 text-center">Try switching status filters or checking new imports.</Text>
             </View>
           ) : null
         }

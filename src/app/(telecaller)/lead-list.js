@@ -249,9 +249,13 @@ export default function TelecallerLeadList() {
         </View>
       ) : filteredLeads.length === 0 ? (
         <View className="flex-1 justify-center items-center p-6">
-          <Search size={36} color="#CBD5E1" />
-          <Text className="text-slate-500 font-bold text-sm mt-3">No leads found</Text>
-          <Text className="text-slate-400 text-xs mt-1">Try searching by mobile number or change filters</Text>
+          <Image 
+            source={require('../../../assets/images/empty-leads.png')}
+            style={{ width: 140, height: 140, marginBottom: 12 }}
+            resizeMode="contain"
+          />
+          <Text className="text-slate-800 font-black text-base mt-2">No Matching Leads</Text>
+          <Text className="text-slate-400 text-xs mt-1 text-center">Try searching by 10-digit mobile number, name, or select another filter chip.</Text>
         </View>
       ) : (
         <FlatList
@@ -267,22 +271,29 @@ export default function TelecallerLeadList() {
               <TouchableOpacity
                 onPress={() => router.push(`/lead/${leadId}`)}
                 activeOpacity={0.8}
-                className="bg-white rounded-2xl p-4 mb-3 border border-slate-200 shadow-xs"
+                className="bg-white rounded-2xl p-4 mb-3 border border-slate-200/90 shadow-xs"
               >
-                {/* Top Row: Name + Lead Code + Priority Badge */}
-                <View className="flex-row justify-between items-start mb-2">
-                  <View className="flex-1 pr-2">
-                    <View className="flex-row items-center flex-wrap gap-1.5">
-                      <Text className="text-base font-black text-slate-900">{item.name}</Text>
-                      {item.lead_id && (
-                        <View className="bg-slate-100 px-1.5 py-0.5 rounded">
-                          <Text className="text-[10px] font-mono font-bold text-slate-600">{item.lead_id}</Text>
-                        </View>
-                      )}
+                {/* Top Row: Avatar + Name + Lead Code + Priority Badge */}
+                <View className="flex-row justify-between items-start mb-2.5">
+                  <View className="flex-row items-center flex-1 pr-2">
+                    <Image 
+                      source={require('../../../assets/images/avatar-customer.png')}
+                      style={{ width: 42, height: 42, borderRadius: 21, marginRight: 10, borderWidth: 1.5, borderColor: '#CBD5E1' }}
+                      resizeMode="cover"
+                    />
+                    <View className="flex-1">
+                      <View className="flex-row items-center flex-wrap gap-1.5">
+                        <Text className="text-base font-black text-slate-900">{item.name}</Text>
+                        {item.lead_id && (
+                          <View className="bg-slate-100 px-1.5 py-0.5 rounded">
+                            <Text className="text-[10px] font-mono font-bold text-slate-600">{item.lead_id}</Text>
+                          </View>
+                        )}
+                      </View>
+                      <Text className="text-xs text-slate-600 font-bold mt-0.5">
+                        +91 {item.mobile} {item.alternate_mobile ? `(Alt: ${item.alternate_mobile})` : ''}
+                      </Text>
                     </View>
-                    <Text className="text-xs text-slate-600 font-bold mt-0.5">
-                      +91 {item.mobile} {item.alternate_mobile ? `(Alt: ${item.alternate_mobile})` : ''}
-                    </Text>
                   </View>
 
                   <View className={`px-2.5 py-1 rounded-full border ${badge.bg} ${badge.border}`}>
@@ -293,7 +304,7 @@ export default function TelecallerLeadList() {
                 </View>
 
                 {/* Details Row: Location + Product */}
-                <View className="flex-row items-center justify-between mb-3 text-xs">
+                <View className="flex-row items-center justify-between mb-3 text-xs pl-0.5">
                   <View className="flex-row items-center">
                     <MapPin size={11} color="#64748B" />
                     <Text className="text-xs text-slate-500 font-medium ml-1">
@@ -309,22 +320,25 @@ export default function TelecallerLeadList() {
                 <View className="flex-row items-center gap-2 pt-2 border-t border-slate-100">
                   <TouchableOpacity
                     onPress={() => handleCall(item.mobile)}
-                    className="flex-1 bg-[#E11D48] py-2 rounded-xl flex-row items-center justify-center shadow-xs"
+                    activeOpacity={0.8}
+                    className="flex-1 bg-[#E11D48] active:bg-rose-700 py-2.5 rounded-xl flex-row items-center justify-center shadow-xs"
                   >
                     <Phone size={13} color="#ffffff" fill="#ffffff" />
-                    <Text className="text-white text-xs font-black ml-1.5">Call</Text>
+                    <Text className="text-white text-xs font-black ml-1.5">Direct Call</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
                     onPress={() => handleWhatsApp(item)}
-                    className="w-10 h-9 rounded-xl bg-[#25D366] items-center justify-center shadow-xs"
+                    activeOpacity={0.8}
+                    className="w-11 h-10 rounded-xl bg-[#25D366] active:bg-emerald-600 items-center justify-center shadow-xs"
                   >
-                    <MessageCircle size={16} color="#ffffff" fill="#ffffff" />
+                    <MessageCircle size={17} color="#ffffff" fill="#ffffff" />
                   </TouchableOpacity>
 
                   <TouchableOpacity
                     onPress={() => router.push(`/lead/${leadId}`)}
-                    className="w-10 h-9 rounded-xl bg-slate-100 items-center justify-center"
+                    activeOpacity={0.8}
+                    className="w-10 h-10 rounded-xl bg-slate-100 active:bg-slate-200 items-center justify-center"
                   >
                     <ChevronRight size={16} color="#475569" />
                   </TouchableOpacity>

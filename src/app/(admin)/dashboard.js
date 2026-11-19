@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, RefreshControl, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, RefreshControl, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
 import { useQuery } from '@tanstack/react-query';
 import api from '../../services/api';
 import { useThemeStore } from '../../store/themeStore';
@@ -140,16 +140,21 @@ export default function AdminDashboard() {
         <View className="flex-row justify-between items-center">
           <View className="flex-1">
             <View className="flex-row items-center mb-2">
-              <View className="w-9 h-9 rounded-full bg-white justify-center items-center mr-3 shadow-lg shadow-black/10">
-                <Text className="text-rose-700 text-sm font-black">
-                  {user?.name?.substring(0, 2).toUpperCase() || 'AD'}
+              <Image 
+                source={isTeamLeader ? require('../../../assets/images/avatar-teamleader.png') : require('../../../assets/images/avatar-admin.png')}
+                style={{ width: 42, height: 42, borderRadius: 21, marginRight: 12, borderWidth: 2, borderColor: '#FFFFFF' }}
+                resizeMode="cover"
+              />
+              <View>
+                <Text className="text-[11px] uppercase font-extrabold tracking-widest text-rose-200">
+                  Welcome Back, {isTeamLeader ? 'Team Leader ' + (user?.name?.split(' ')[0] || '') : (user?.name?.split(' ')[0] || 'Admin')}
+                </Text>
+                <Text className="text-[10px] text-rose-100 font-bold tracking-wider">
+                  {user?.team ? `${user.team} • ` : ''}{user?.role ? user.role.toUpperCase() : 'MANAGEMENT'}
                 </Text>
               </View>
-              <Text className="text-[11px] uppercase font-extrabold tracking-widest text-rose-200">
-                Welcome Back, {isTeamLeader ? 'Team Leader ' + (user?.name?.split(' ')[0] || '') : (user?.name?.split(' ')[0] || 'Admin')}
-              </Text>
             </View>
-            <Text className="text-4xl font-black tracking-tight text-white mt-4 mb-2">
+            <Text className="text-4xl font-black tracking-tight text-white mt-3 mb-2">
               {isTeamLeader ? 'Team Matrix' : 'Overview Matrix'}
             </Text>
           </View>
@@ -325,10 +330,15 @@ export default function AdminDashboard() {
               {/* 1st Place */}
               <View className={`flex-row justify-between items-center p-3.5 rounded-2xl border ${isDark ? 'bg-amber-500/5 border-amber-500/10' : 'bg-amber-50 border-amber-100'}`}>
                 <View className="flex-row items-center flex-1">
-                  <View className={`w-8 h-8 rounded-full justify-center items-center ${isDark ? 'bg-amber-500/20' : 'bg-amber-200'}`}>
+                  <View className={`w-8 h-8 rounded-full justify-center items-center ${isDark ? 'bg-amber-500/20' : 'bg-amber-200'} mr-2`}>
                     <Text className="text-amber-600 font-black text-xs">1st</Text>
                   </View>
-                  <View className="ml-3 flex-1 pr-2">
+                  <Image 
+                    source={require('../../../assets/images/avatar-telecaller.png')}
+                    style={{ width: 36, height: 36, borderRadius: 18, marginRight: 10, borderWidth: 1.5, borderColor: '#F59E0B' }}
+                    resizeMode="cover"
+                  />
+                  <View className="flex-1 pr-2">
                     <Text className={`text-xs font-black ${isDark ? 'text-white' : 'text-slate-800'}`} numberOfLines={1}>{rankings.topCloser}</Text>
                     <Text className={`text-[10px] font-bold uppercase tracking-wider mt-0.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Top Closer</Text>
                   </View>
@@ -339,10 +349,15 @@ export default function AdminDashboard() {
               {/* 2nd Place */}
               <View className={`flex-row justify-between items-center p-3.5 rounded-2xl border ${isDark ? 'bg-rose-500/5 border-rose-500/10' : 'bg-rose-50 border-rose-100'}`}>
                 <View className="flex-row items-center flex-1">
-                  <View className={`w-8 h-8 rounded-full justify-center items-center ${isDark ? 'bg-rose-500/20' : 'bg-rose-200'}`}>
+                  <View className={`w-8 h-8 rounded-full justify-center items-center ${isDark ? 'bg-rose-500/20' : 'bg-rose-200'} mr-2`}>
                     <Text className="text-indigo-600 font-black text-xs">2nd</Text>
                   </View>
-                  <View className="ml-3 flex-1 pr-2">
+                  <Image 
+                    source={require('../../../assets/images/avatar-telecaller.png')}
+                    style={{ width: 36, height: 36, borderRadius: 18, marginRight: 10, borderWidth: 1.5, borderColor: '#6366F1' }}
+                    resizeMode="cover"
+                  />
+                  <View className="flex-1 pr-2">
                     <Text className={`text-xs font-black ${isDark ? 'text-white' : 'text-slate-800'}`} numberOfLines={1}>{rankings.topTelecaller}</Text>
                     <Text className={`text-[10px] font-bold uppercase tracking-wider mt-0.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Most Interested</Text>
                   </View>
@@ -353,10 +368,15 @@ export default function AdminDashboard() {
               {/* 3rd Place */}
               <View className={`flex-row justify-between items-center p-3.5 rounded-2xl border ${isDark ? 'bg-emerald-500/5 border-emerald-500/10' : 'bg-emerald-50 border-emerald-100'}`}>
                 <View className="flex-row items-center flex-1">
-                  <View className={`w-8 h-8 rounded-full justify-center items-center ${isDark ? 'bg-emerald-500/20' : 'bg-emerald-200'}`}>
+                  <View className={`w-8 h-8 rounded-full justify-center items-center ${isDark ? 'bg-emerald-500/20' : 'bg-emerald-200'} mr-2`}>
                     <Text className="text-emerald-600 font-black text-xs">3rd</Text>
                   </View>
-                  <View className="ml-3 flex-1 pr-2">
+                  <Image 
+                    source={require('../../../assets/images/avatar-telecaller.png')}
+                    style={{ width: 36, height: 36, borderRadius: 18, marginRight: 10, borderWidth: 1.5, borderColor: '#10B981' }}
+                    resizeMode="cover"
+                  />
+                  <View className="flex-1 pr-2">
                     <Text className={`text-xs font-black ${isDark ? 'text-white' : 'text-slate-800'}`} numberOfLines={1}>{rankings.topPerformer}</Text>
                     <Text className={`text-[10px] font-bold uppercase tracking-wider mt-0.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Most Calls</Text>
                   </View>

@@ -185,23 +185,30 @@ export default function TelecallerFollowups() {
                   onPress={() => leadId && router.push(`/lead/${leadId}`)}
                   className="flex-row justify-between items-start mb-2"
                 >
-                  <View className="flex-1 pr-2">
-                    <View className="flex-row items-center flex-wrap gap-1.5">
-                      <Text className="text-base font-black text-slate-900">{leadName}</Text>
-                      {item.lead_code ? (
-                        <View className="bg-slate-100 px-1.5 py-0.5 rounded">
-                          <Text className="text-[10px] font-mono font-bold text-slate-600">{item.lead_code}</Text>
-                        </View>
-                      ) : null}
-                      {isOverdue && (
-                        <View className="bg-rose-100 px-2 py-0.5 rounded">
-                          <Text className="text-[9px] font-black text-rose-700 uppercase">OVERDUE</Text>
-                        </View>
-                      )}
+                  <View className="flex-row items-center flex-1 pr-2">
+                    <Image 
+                      source={require('../../../assets/images/avatar-customer.png')}
+                      style={{ width: 40, height: 40, borderRadius: 20, marginRight: 10, borderWidth: 1.5, borderColor: '#CBD5E1' }}
+                      resizeMode="cover"
+                    />
+                    <View className="flex-1">
+                      <View className="flex-row items-center flex-wrap gap-1.5">
+                        <Text className="text-base font-black text-slate-900">{leadName}</Text>
+                        {item.lead_code ? (
+                          <View className="bg-slate-100 px-1.5 py-0.5 rounded">
+                            <Text className="text-[10px] font-mono font-bold text-slate-600">{item.lead_code}</Text>
+                          </View>
+                        ) : null}
+                        {isOverdue && (
+                          <View className="bg-rose-100 px-2 py-0.5 rounded">
+                            <Text className="text-[9px] font-black text-rose-700 uppercase">OVERDUE</Text>
+                          </View>
+                        )}
+                      </View>
+                      <Text className="text-xs text-slate-500 font-medium mt-0.5">
+                        +91 {leadPhone} {item.lead_city ? `• ${item.lead_city}` : ''}
+                      </Text>
                     </View>
-                    <Text className="text-xs text-slate-500 font-medium mt-0.5">
-                      +91 {leadPhone} {item.lead_city ? `• ${item.lead_city}` : ''}
-                    </Text>
                   </View>
 
                   <View className="items-end">
@@ -279,12 +286,16 @@ export default function TelecallerFollowups() {
           })}
 
           {list.length === 0 && (
-            <View className="py-20 items-center justify-center">
-              <Clock size={36} color="#CBD5E1" />
-              <Text className="text-slate-500 font-bold text-sm mt-3">
-                No follow-ups in {activeTab.toUpperCase()} queue.
+            <View className="py-16 items-center justify-center">
+              <Image 
+                source={require('../../../assets/images/all-caught-up.png')}
+                style={{ width: 140, height: 140, marginBottom: 14 }}
+                resizeMode="contain"
+              />
+              <Text className="text-slate-800 font-black text-base mt-2">
+                All Caught Up in {activeTab.toUpperCase()}!
               </Text>
-              <Text className="text-slate-400 text-xs mt-1">All callbacks completed on time!</Text>
+              <Text className="text-slate-400 text-xs mt-1 text-center">No pending callbacks or overdue tasks in this queue. Great job!</Text>
             </View>
           )}
         </ScrollView>
