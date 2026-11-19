@@ -67,7 +67,7 @@ export default function AdminReports() {
 
       {/* Header */}
       <View className="pt-14 pb-2 px-6">
-        <Text className="text-[28px] font-black text-[#0B192C] tracking-tight">Performance Reports</Text>
+        <Text className="text-[28px] font-bold text-[#0B192C] tracking-tight">Performance Reports</Text>
         <Text className="text-slate-500 text-sm mt-1 pr-6 leading-5">Download comprehensive analytical reports.</Text>
       </View>
 
@@ -111,12 +111,12 @@ export default function AdminReports() {
           </View>
 
           <TouchableOpacity className="bg-[#FFB703] h-12 rounded-xl justify-center items-center shadow-sm shadow-[#FFB703]/30">
-            <Text className="text-[#0B192C] font-black text-sm">Apply Filters</Text>
+            <Text className="text-[#0B192C] font-bold text-sm">Apply Filters</Text>
           </TouchableOpacity>
         </View>
 
         {/* Available Reports */}
-        <Text className="text-lg font-black text-[#0B192C] mb-4">Available Reports</Text>
+        <Text className="text-lg font-bold text-[#0B192C] mb-4">Available Reports</Text>
         
         {reports.map((report, index) => (
           <View key={index} className="bg-white rounded-2xl p-4 mb-3 flex-row items-center justify-between border border-slate-200 shadow-sm shadow-slate-200/40">

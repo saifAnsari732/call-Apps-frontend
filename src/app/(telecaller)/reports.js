@@ -79,159 +79,159 @@ export default function MyReportsPage() {
   };
 
   return (
-    <View className="flex-1 bg-[#F4EDF8]">
+    <View className="flex-1 bg-[#F8FAFC]">
       {/* HEADER */}
-      <View className="bg-[#E11D48] pt-14 pb-4 px-4 flex-row items-center justify-between shadow-lg shadow-rose-900/30 z-10">
+      <View className="bg-[#0F172A] pt-14 pb-4 px-4 flex-row items-center justify-between shadow-sm z-10">
         <View className="flex-row items-center">
           <TouchableOpacity onPress={() => router.back()} className="mr-3 p-1">
             <ArrowLeft color="#ffffff" size={24} />
           </TouchableOpacity>
           <Image 
-            source={require('../../../assets/images/logo-glow.png')}
-            style={{ width: 28, height: 28, borderRadius: 14, marginRight: 8, borderWidth: 1.5, borderColor: '#FFB703' }}
+            source={require('../../../assets/images/logo-3d.png')}
+            style={{ width: 28, height: 28, borderRadius: 8, marginRight: 8, borderWidth: 1, borderColor: '#334155' }}
             resizeMode="cover"
           />
-          <Text className="text-white text-[20px] font-bold tracking-wide">
+          <Text className="text-white text-[20px] font-bold tracking-tight">
             My Reports
           </Text>
         </View>
         <View className="flex-row">
           <TouchableOpacity className="p-1 mr-4">
-            <Share2 color="#ffffff" size={22} />
+            <Share2 color="#ffffff" size={20} />
           </TouchableOpacity>
           <TouchableOpacity className="p-1">
-            <Download color="#ffffff" size={22} />
+            <Download color="#ffffff" size={20} />
           </TouchableOpacity>
         </View>
       </View>
 
       {isLoading ? (
         <View className="flex-1 justify-center items-center">
-          <ActivityIndicator size="large" color="#4C1D95" />
+          <ActivityIndicator size="large" color="#0F172A" />
         </View>
       ) : error ? (
         <View className="flex-1 justify-center items-center">
-          <Text className="text-red-500 font-bold">Failed to load reports</Text>
+          <Text className="text-red-500 font-semibold">Failed to load reports</Text>
         </View>
       ) : (
         <ScrollView
           contentContainerStyle={{ padding: 16, paddingBottom: 100 }}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#4C1D95']} />}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#0F172A']} />}
         >
           {/* DATE FILTER */}
           <View className="flex-row items-center justify-between mb-6 mt-2">
-            <Text className="text-[18px] font-bold text-[#0B192C] tracking-wide">
+            <Text className="text-[18px] font-bold text-slate-900 tracking-tight">
               Performance
             </Text>
             <TouchableOpacity 
               onPress={() => setFilterModalVisible(true)}
-              className="bg-white border border-slate-200 px-3 py-2 rounded-xl flex-row items-center shadow-sm shadow-slate-200"
+              className="bg-white border border-slate-200 px-3 py-2 rounded-xl flex-row items-center shadow-xs"
             >
-              <CalendarIcon size={16} color="#4C1D95" />
-              <Text className="ml-2 font-bold text-[#E11D48] text-[15px]">{currentFilterLabel}</Text>
+              <CalendarIcon size={16} color="#475569" />
+              <Text className="ml-2 font-semibold text-slate-800 text-[14px]">{currentFilterLabel}</Text>
             </TouchableOpacity>
           </View>
 
           {/* CALL OVERVIEW HEADER */}
-          <Text className="text-[20px] font-black text-[#0B192C] mb-4 tracking-tight">
+          <Text className="text-[18px] font-bold text-slate-900 mb-4 tracking-tight">
             Call Overview
           </Text>
 
           {/* OVERALL STATS GRID */}
           <View className="flex-row flex-wrap justify-between">
-            <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-sm border border-slate-100">
-              <Text className="text-[22px] font-black text-[#0B192C] mb-2">{stats.totalCalls}</Text>
+            <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-xs border border-slate-200/80">
+              <Text className="text-[22px] font-bold text-slate-900 mb-2">{stats.totalCalls}</Text>
               <Text className="text-[13px] font-medium text-slate-600 leading-tight">Total Calls</Text>
             </View>
 
-            <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-sm border border-slate-100">
-              <Text className="text-[22px] font-black text-[#0B192C] mb-2">{stats.connectedCalls}</Text>
+            <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-xs border border-slate-200/80">
+              <Text className="text-[22px] font-bold text-slate-900 mb-2">{stats.connectedCalls}</Text>
               <Text className="text-[13px] font-medium text-slate-600 leading-tight">Total Calls Connected</Text>
             </View>
 
-            <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-sm border border-slate-100">
-              <Text className="text-[20px] font-black text-[#0B192C] mb-2">{formatDuration(stats.totalCallTime)}</Text>
+            <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-xs border border-slate-200/80">
+              <Text className="text-[20px] font-bold text-slate-900 mb-2">{formatDuration(stats.totalCallTime)}</Text>
               <Text className="text-[13px] font-medium text-slate-600 leading-tight">Total Call Time</Text>
             </View>
 
-            <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-sm border border-slate-100">
-              <Text className="text-[22px] font-black text-[#0B192C] mb-2">{stats.unconnectedCalls}</Text>
+            <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-xs border border-slate-200/80">
+              <Text className="text-[22px] font-bold text-slate-900 mb-2">{stats.unconnectedCalls}</Text>
               <Text className="text-[13px] font-medium text-slate-600 leading-tight">Total Unconnected Calls</Text>
             </View>
 
-            <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-sm border border-slate-100">
-              <Text className="text-[20px] font-black text-[#0B192C] mb-2">{formatDuration(stats.avgCallDuration)}</Text>
+            <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-xs border border-slate-200/80">
+              <Text className="text-[20px] font-bold text-slate-900 mb-2">{formatDuration(stats.avgCallDuration)}</Text>
               <Text className="text-[13px] font-medium text-slate-600 leading-tight">Avg. Call Duration</Text>
             </View>
 
-            <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-sm border border-slate-100">
-              <Text className="text-[20px] font-black text-[#0B192C] mb-2">{formatEarliestTime(stats.firstCallTime)}</Text>
+            <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-xs border border-slate-200/80">
+              <Text className="text-[20px] font-bold text-slate-900 mb-2">{formatEarliestTime(stats.firstCallTime)}</Text>
               <Text className="text-[13px] font-medium text-slate-600 leading-tight">Avg. Start Calling Time</Text>
             </View>
           </View>
 
           {/* OUTGOING CALLS HEADER */}
-          <Text className="text-[20px] font-black text-[#0B192C] mt-4 mb-4 tracking-tight">
+          <Text className="text-[18px] font-bold text-slate-900 mt-4 mb-4 tracking-tight">
             Outgoing Calls
           </Text>
 
           {/* OUTGOING STATS GRID */}
           <View className="flex-row flex-wrap justify-between">
-            <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-sm border border-slate-100">
-              <Text className="text-[22px] font-black text-[#0B192C] mb-2">{stats.totalCalls}</Text>
+            <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-xs border border-slate-200/80">
+              <Text className="text-[22px] font-bold text-slate-900 mb-2">{stats.totalCalls}</Text>
               <Text className="text-[13px] font-medium text-slate-600 leading-tight">Total Outgoing Calls</Text>
             </View>
 
-            <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-sm border border-slate-100">
-              <Text className="text-[22px] font-black text-[#0B192C] mb-2">{stats.connectedCalls}</Text>
+            <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-xs border border-slate-200/80">
+              <Text className="text-[22px] font-bold text-slate-900 mb-2">{stats.connectedCalls}</Text>
               <Text className="text-[13px] font-medium text-slate-600 leading-tight">Outgoing Connected Calls</Text>
             </View>
 
-            <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-sm border border-slate-100">
-              <Text className="text-[22px] font-black text-[#0B192C] mb-2">{stats.unconnectedCalls}</Text>
+            <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-xs border border-slate-200/80">
+              <Text className="text-[22px] font-bold text-slate-900 mb-2">{stats.unconnectedCalls}</Text>
               <Text className="text-[13px] font-medium text-slate-600 leading-tight">Outgoing Unanswered Calls</Text>
             </View>
 
-            <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-sm border border-slate-100">
-              <Text className="text-[20px] font-black text-[#0B192C] mb-2">{formatDuration(stats.avgCallDuration)}</Text>
+            <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-xs border border-slate-200/80">
+              <Text className="text-[20px] font-bold text-slate-900 mb-2">{formatDuration(stats.avgCallDuration)}</Text>
               <Text className="text-[13px] font-medium text-slate-600 leading-tight">Avg. Outgoing Call Duration</Text>
             </View>
           </View>
 
           {/* LEAD STATUS OVERVIEW */}
-          <Text className="text-[20px] font-black text-[#0B192C] mt-4 mb-4 tracking-tight">
+          <Text className="text-[18px] font-bold text-slate-900 mt-4 mb-4 tracking-tight">
             Lead Status Overview
           </Text>
 
           {stats.leadStats && (
             <View className="flex-row flex-wrap justify-between">
-              <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-sm border border-slate-100">
-                <Text className="text-[22px] font-black text-amber-500 mb-2">{stats.leadStats.followUps || 0}</Text>
+              <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-xs border border-slate-200/80">
+                <Text className="text-[22px] font-bold text-slate-900 mb-2">{stats.leadStats.followUps || 0}</Text>
                 <Text className="text-[13px] font-medium text-slate-600 leading-tight">Follow Ups</Text>
               </View>
 
-              <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-sm border border-slate-100">
-                <Text className="text-[22px] font-black text-emerald-500 mb-2">{stats.leadStats.interested || 0}</Text>
+              <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-xs border border-slate-200/80">
+                <Text className="text-[22px] font-bold text-slate-900 mb-2">{stats.leadStats.interested || 0}</Text>
                 <Text className="text-[13px] font-medium text-slate-600 leading-tight">Interested Leads</Text>
               </View>
 
-              <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-sm border border-slate-100">
-                <Text className="text-[22px] font-black text-indigo-500 mb-2">{stats.leadStats.callbackLeads || 0}</Text>
+              <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-xs border border-slate-200/80">
+                <Text className="text-[22px] font-bold text-slate-900 mb-2">{stats.leadStats.callbackLeads || 0}</Text>
                 <Text className="text-[13px] font-medium text-slate-600 leading-tight">Callback Requests</Text>
               </View>
 
-              <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-sm border border-slate-100">
-                <Text className="text-[22px] font-black text-rose-500 mb-2">{stats.leadStats.notConnectedLeads || 0}</Text>
+              <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-xs border border-slate-200/80">
+                <Text className="text-[22px] font-bold text-slate-900 mb-2">{stats.leadStats.notConnectedLeads || 0}</Text>
                 <Text className="text-[13px] font-medium text-slate-600 leading-tight">Not Connected (Leads)</Text>
               </View>
 
-              <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-sm border border-slate-100">
-                <Text className="text-[22px] font-black text-teal-500 mb-2">{stats.leadStats.closed || 0}</Text>
+              <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-xs border border-slate-200/80">
+                <Text className="text-[22px] font-bold text-slate-900 mb-2">{stats.leadStats.closed || 0}</Text>
                 <Text className="text-[13px] font-medium text-slate-600 leading-tight">Closed Leads</Text>
               </View>
               
-              <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-sm border border-slate-100">
-                <Text className="text-[22px] font-black text-blue-500 mb-2">{stats.leadStats.distributorInterested || 0}</Text>
+              <View className="w-[48%] bg-white rounded-2xl p-5 mb-4 shadow-xs border border-slate-200/80">
+                <Text className="text-[22px] font-bold text-slate-900 mb-2">{stats.leadStats.distributorInterested || 0}</Text>
                 <Text className="text-[13px] font-medium text-slate-600 leading-tight">Distributor Interested</Text>
               </View>
             </View>
@@ -245,17 +245,17 @@ export default function MyReportsPage() {
         <TouchableWithoutFeedback onPress={() => setFilterModalVisible(false)}>
           <View className="flex-1 bg-black/50 justify-end">
             <View className="bg-white rounded-t-3xl p-6 pb-10">
-              <Text className="text-[20px] font-black text-[#0B192C] mb-6">Select Date Range</Text>
+              <Text className="text-[20px] font-bold text-slate-900 mb-6">Select Date Range</Text>
               {DATE_FILTERS.map(f => (
                 <TouchableOpacity 
                   key={f.value}
                   onPress={() => handleSelectFilter(f.value)}
                   className={`py-4 border-b border-slate-100 flex-row justify-between items-center`}
                 >
-                  <Text className={`text-[16px] font-semibold ${selectedFilter === f.value ? 'text-[#E11D48]' : 'text-slate-600'}`}>
+                  <Text className={`text-[16px] font-semibold ${selectedFilter === f.value ? 'text-slate-900' : 'text-slate-600'}`}>
                     {f.label}
                   </Text>
-                  {selectedFilter === f.value && <Check size={20} color="#4C1D95" />}
+                  {selectedFilter === f.value && <Check size={20} color="#0F172A" />}
                 </TouchableOpacity>
               ))}
             </View>

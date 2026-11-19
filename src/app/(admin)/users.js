@@ -198,7 +198,7 @@ export default function TelecallerManagement() {
       
       {/* Header */}
       <View className="pt-14 pb-2 px-6">
-        <Text className="text-[28px] font-black text-[#0B192C] tracking-tight">Manage Telecallers</Text>
+        <Text className="text-[28px] font-bold text-[#0B192C] tracking-tight">Manage Telecallers</Text>
         <Text className="text-slate-500 text-sm mt-1 pr-6 leading-5">Monitor and assign roles to your sales team.</Text>
       </View>
 

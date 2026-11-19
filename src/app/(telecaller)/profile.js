@@ -37,7 +37,7 @@ export default function TelecallerProfile() {
           
           <View className="flex-row items-center gap-2">
             <View className="bg-[#FFB703] px-3 py-1 rounded-full">
-              <Text className="text-[#0B192C] text-xs font-black uppercase">{user?.role || 'Telecaller'}</Text>
+              <Text className="text-[#0B192C] text-xs font-bold uppercase">{user?.role || 'Telecaller'}</Text>
             </View>
             <View className="bg-[#DCFCE7] px-3 py-1 rounded-full">
               <Text className="text-[#15803D] text-xs font-bold">{user?.shift_status || 'Active'}</Text>

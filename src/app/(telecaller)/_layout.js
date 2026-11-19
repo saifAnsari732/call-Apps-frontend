@@ -9,8 +9,8 @@ const TabIcon = ({ name, icon: Icon, focused }) => {
   if (focused) {
     return (
       <View className="items-center justify-center pt-2">
-        <Icon size={22} color="#F59E0B" strokeWidth={2.5} />
-        <Text className="text-[#F59E0B] font-bold text-[11px] mt-1">{name}</Text>
+        <Icon size={22} color="#0F172A" strokeWidth={2.5} />
+        <Text className="text-slate-900 font-semibold text-[11px] mt-1">{name}</Text>
       </View>
     );
   }

@@ -84,7 +84,7 @@ export default function SettingsScreen() {
           style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
         />
         <View className="mb-2 relative">
-          <Text className={`text-[34px] font-black tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>Settings</Text>
+          <Text className={`text-[34px] font-bold tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>Settings</Text>
           <Text className={`text-[11px] font-extrabold uppercase tracking-[0.2em] mt-1 ${isDark ? 'text-indigo-400' : 'text-slate-500'}`}>Account & Preferences</Text>
         </View>
       </View>
@@ -102,12 +102,12 @@ export default function SettingsScreen() {
                 ? require('../../assets/images/avatar-teamleader.png')
                 : require('../../assets/images/avatar-telecaller.png')
             }
-            style={{ width: 56, height: 56, borderRadius: 28, borderWidth: 2, borderColor: '#FFB703' }}
+            style={{ width: 56, height: 56, borderRadius: 28, borderWidth: 1.5, borderColor: '#E2E8F0' }}
             resizeMode="cover"
           />
           <View className="ml-4 flex-1">
-            <Text className={`text-base font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{user?.name}</Text>
-            <Text className="text-amber-500 text-xxs font-extrabold uppercase tracking-wider mt-0.5">{user?.role} ACCOUNT</Text>
+            <Text className={`text-base font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>{user?.name}</Text>
+            <Text className="text-slate-500 text-xxs font-semibold uppercase tracking-wider mt-0.5">{user?.role} ACCOUNT</Text>
           </View>
         </View>
 
@@ -230,7 +230,7 @@ export default function SettingsScreen() {
         className="border border-red-500/25 bg-red-500/10 py-4 rounded-3xl flex-row justify-center items-center mb-10"
       >
         <LogOut size={16} color="#EF4444" />
-        <Text className="text-red-500 text-xs font-black uppercase tracking-wider ml-2.5">Sign Out Account</Text>
+        <Text className="text-red-500 text-xs font-bold uppercase tracking-wider ml-2.5">Sign Out Account</Text>
       </TouchableOpacity>
       </ScrollView>
     </View>

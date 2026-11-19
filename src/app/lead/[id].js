@@ -643,30 +643,30 @@ export default function LeadDetails() {
       <OfflineBanner />
 
       {/* TOP COMPACT HEADER */}
-      <View className="bg-[#0B192C] pt-14 pb-3 z-10 px-4">
+      <View className="bg-[#0F172A] pt-14 pb-3 z-10 px-4">
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center flex-1 pr-2">
             <TouchableOpacity onPress={() => router.back()} className="mr-3 p-1">
               <ChevronLeft color="#ffffff" size={26} />
             </TouchableOpacity>
             <Image
-              source={require('../../../assets/images/logo-glow.png')}
-              style={{ width: 30, height: 30, borderRadius: 15, marginRight: 8, borderWidth: 1.5, borderColor: '#FFB703' }}
+              source={require('../../../assets/images/logo-3d.png')}
+              style={{ width: 30, height: 30, borderRadius: 8, marginRight: 8, borderWidth: 1, borderColor: '#334155' }}
               resizeMode="cover"
             />
             <View className="flex-1">
               <View className="flex-row items-center">
-                <Text className="text-white text-[17px] font-black tracking-tight" numberOfLines={1}>
+                <Text className="text-white text-[17px] font-bold tracking-tight" numberOfLines={1}>
                   {lead.name || 'Lead Details'}
                 </Text>
                 {lead.lead_id && (
                   <View className="ml-2 bg-white/20 px-2 py-0.5 rounded-md">
-                    <Text className="text-white text-[10px] font-black">{lead.lead_id}</Text>
+                    <Text className="text-white text-[10px] font-bold">{lead.lead_id}</Text>
                   </View>
                 )}
               </View>
               {powerQueue === '1' && (
-                <Text className="text-[#FFB703] text-[10px] font-black uppercase tracking-widest mt-0.5">
+                <Text className="text-[#FFB703] text-[10px] font-bold uppercase tracking-widest mt-0.5">
                   ⚡ Power Dialer Mode Active
                 </Text>
               )}
@@ -678,7 +678,7 @@ export default function LeadDetails() {
               <RefreshCcw color="#ffffff" size={16} />
             </TouchableOpacity>
             <View className="w-8 h-8 rounded-full bg-[#FFB703] justify-center items-center">
-              <Text className="text-[#0B192C] font-black text-[12px]">{getInitials(agentName)}</Text>
+              <Text className="text-[#0B192C] font-bold text-[12px]">{getInitials(agentName)}</Text>
             </View>
           </View>
         </View>
@@ -703,7 +703,7 @@ export default function LeadDetails() {
                 resizeMode="cover"
               />
               <View className="flex-1">
-                <Text className="text-[18px] font-black text-slate-900 leading-tight">{lead.name}</Text>
+                <Text className="text-[18px] font-bold text-slate-900 leading-tight">{lead.name}</Text>
                 <View className="flex-row items-center mt-1 flex-wrap gap-1.5">
                   <View className="flex-row items-center">
                     <MapPin size={12} color="#64748B" />
@@ -723,7 +723,7 @@ export default function LeadDetails() {
             <View className="flex-row items-center gap-1.5">
               <View className="px-2 py-1 rounded-full bg-slate-100 border border-slate-200 flex-row items-center">
                 <Award size={11} color="#0B192C" />
-                <Text className="text-[10px] font-black text-slate-800 ml-1">Score: {lead.quality_score || 50}</Text>
+                <Text className="text-[10px] font-bold text-slate-800 ml-1">Score: {lead.quality_score || 50}</Text>
               </View>
 
               <TouchableOpacity
@@ -735,7 +735,7 @@ export default function LeadDetails() {
                 style={{ backgroundColor: priorityStyle.bg, borderColor: priorityStyle.border }}
               >
                 <PriorityIcon size={12} color={priorityStyle.color} />
-                <Text className="text-[10px] font-black ml-1 uppercase" style={{ color: priorityStyle.color }}>
+                <Text className="text-[10px] font-bold ml-1 uppercase" style={{ color: priorityStyle.color }}>
                   {priorityStyle.label}
                 </Text>
               </TouchableOpacity>
@@ -770,7 +770,7 @@ export default function LeadDetails() {
           <View className="bg-slate-50 rounded-2xl p-2.5 mb-3 border border-slate-100 flex-row justify-between items-center">
             <View className="flex-row items-center flex-1">
               <PhoneCall size={13} color="#0B192C" />
-              <Text className="text-[13px] font-black text-slate-900 ml-1.5">{displayMobile}</Text>
+              <Text className="text-[13px] font-bold text-slate-900 ml-1.5">{displayMobile}</Text>
               <TouchableOpacity onPress={() => copyPhoneNumber(cleanMobile || lead.mobile, false)} className="ml-1.5 p-1">
                 {copiedNumber ? <Check size={14} color="#16A34A" /> : <Copy size={12} color="#64748B" />}
               </TouchableOpacity>
@@ -779,7 +779,7 @@ export default function LeadDetails() {
 
             <View className="flex-row items-center gap-1.5">
               <View className="bg-slate-200/80 px-2 py-0.5 rounded-md">
-                <Text className="text-[10px] font-black text-slate-700">
+                <Text className="text-[10px] font-bold text-slate-700">
                   Attempt #{lead.call_attempts || calls.length || 0}
                 </Text>
               </View>
@@ -813,7 +813,7 @@ export default function LeadDetails() {
             >
               <PhoneCall size={19} color="#FFB703" />
               <View className="ml-2">
-                <Text className="text-white text-[13px] font-black tracking-wider uppercase">CALL NOW</Text>
+                <Text className="text-white text-[13px] font-bold tracking-wider uppercase">CALL NOW</Text>
                 <Text className="text-[#FFB703] text-[10px] font-bold">{displayMobile}</Text>
               </View>
             </TouchableOpacity>
@@ -825,7 +825,7 @@ export default function LeadDetails() {
             >
               <MessageCircle size={19} color="#ffffff" />
               <View className="ml-1.5">
-                <Text className="text-white text-[13px] font-black tracking-wider uppercase">WHATSAPP</Text>
+                <Text className="text-white text-[13px] font-bold tracking-wider uppercase">WHATSAPP</Text>
                 <Text className="text-white/80 text-[10px] font-bold">1-Click Chat</Text>
               </View>
             </TouchableOpacity>
@@ -833,7 +833,7 @@ export default function LeadDetails() {
 
           {/* Quick 1-Tap WhatsApp Templates (Instant Send) */}
           <View className="pt-2 border-t border-slate-100">
-            <Text className="text-[10px] font-black text-slate-500 uppercase tracking-wider mb-1.5">
+            <Text className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
               1-Tap WhatsApp Templates (Instant Send):
             </Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
@@ -844,7 +844,7 @@ export default function LeadDetails() {
                   className="mr-2 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 flex-row items-center active:bg-emerald-100"
                 >
                   <Send size={11} color="#059669" />
-                  <Text className="text-[11px] font-black text-emerald-800 ml-1.5">{tpl.title}</Text>
+                  <Text className="text-[11px] font-bold text-emerald-800 ml-1.5">{tpl.title}</Text>
                 </TouchableOpacity>
               ))}
             </ScrollView>
@@ -858,7 +858,7 @@ export default function LeadDetails() {
             <View className="flex-row items-center">
               <Share2 size={12} color="#64748B" />
               <Text className="text-[11px] font-bold text-slate-600 ml-1.5">
-                Source: <Text className="font-black text-slate-800">{lead.lead_source || 'Meta Lead Ads'}</Text>
+                Source: <Text className="font-bold text-slate-800">{lead.lead_source || 'Meta Lead Ads'}</Text>
                 {customFieldsEntries.length > 0 ? ` • ${customFieldsEntries.length} Meta Answers` : ''}
               </Text>
             </View>
@@ -876,7 +876,7 @@ export default function LeadDetails() {
               {/* Campaign, AdSet, Ad */}
               {(lead.campaign_name || lead.adset_name || lead.ad_name || lead.utm_campaign) && (
                 <View className="mb-2">
-                  <Text className="text-[10px] font-black text-slate-500 uppercase tracking-wider mb-1">
+                  <Text className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
                     Campaign &amp; Ad Attribution:
                   </Text>
                   <View className="flex-row flex-wrap gap-1">
@@ -907,13 +907,13 @@ export default function LeadDetails() {
               {/* Meta Lead Form Q&A */}
               {customFieldsEntries.length > 0 && (
                 <View className="mb-2">
-                  <Text className="text-[10px] font-black text-slate-500 uppercase tracking-wider mb-1">
+                  <Text className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
                     Meta Form Questions &amp; Answers:
                   </Text>
                   <View className="flex-row flex-wrap gap-1.5">
                     {customFieldsEntries.map(([k, v]) => (
                       <View key={k} className="bg-amber-50 px-2 py-1 rounded-lg border border-amber-200">
-                        <Text className="text-[10px] font-black text-amber-900">
+                        <Text className="text-[10px] font-bold text-amber-900">
                           {k}: <Text className="font-bold text-amber-800">{String(v)}</Text>
                         </Text>
                       </View>
@@ -942,13 +942,13 @@ export default function LeadDetails() {
         {/* ========================================================== */}
         <View className="bg-white rounded-3xl p-4 mb-3.5 shadow-sm border border-slate-100">
           <View className="flex-row items-center justify-between pb-3 mb-3 border-b border-slate-100">
-            <Text className="text-[14px] font-black text-[#0B192C] uppercase tracking-wider">
+            <Text className="text-[14px] font-bold text-[#0B192C] uppercase tracking-wider">
               Telecaller Interaction Form
             </Text>
             {/* Duration Display */}
             <View className="flex-row items-center bg-slate-100 px-2.5 py-1 rounded-xl">
               <Clock size={13} color="#64748B" />
-              <Text className="text-[11px] font-black text-slate-800 ml-1">
+              <Text className="text-[11px] font-bold text-slate-800 ml-1">
                 Talk Time: {formatDuration(Number(durationSec))} ({durationSec}s)
               </Text>
             </View>
@@ -964,7 +964,7 @@ export default function LeadDetails() {
 
           {/* Quick Talk-Time Duration Overrides */}
           <View className="flex-row items-center justify-between mb-4 bg-amber-50/60 p-2.5 rounded-2xl border border-amber-200/60">
-            <Text className="text-[11px] font-black text-amber-900">Talk Time Override:</Text>
+            <Text className="text-[11px] font-bold text-amber-900">Talk Time Override:</Text>
             <View className="flex-row items-center gap-1.5">
               {[0, 30, 60, 120, 300].map((sec) => (
                 <TouchableOpacity
@@ -974,7 +974,7 @@ export default function LeadDetails() {
                     Number(durationSec) === sec ? 'bg-[#0B192C] border-[#0B192C]' : 'bg-white border-amber-200'
                   }`}
                 >
-                  <Text className={`text-[10px] font-black ${Number(durationSec) === sec ? 'text-white' : 'text-slate-700'}`}>
+                  <Text className={`text-[10px] font-bold ${Number(durationSec) === sec ? 'text-white' : 'text-slate-700'}`}>
                     {sec === 0 ? '0s' : sec < 60 ? `${sec}s` : `${sec / 60}m`}
                   </Text>
                 </TouchableOpacity>
@@ -985,7 +985,7 @@ export default function LeadDetails() {
           {/* 1. PRIMARY STATUS SELECTOR (14 Required Statuses) */}
           <View className="mb-4">
             <View className="flex-row justify-between items-center mb-2">
-              <Text className="text-[12px] font-black text-slate-800 uppercase tracking-wider">
+              <Text className="text-[12px] font-bold text-slate-800 uppercase tracking-wider">
                 1. Primary Status *
               </Text>
               {selectedStatus ? (
@@ -1020,7 +1020,7 @@ export default function LeadDetails() {
           {/* 2. CALL DISPOSITION SELECTOR (10 Required Dispositions) */}
           <View className="mb-4">
             <View className="flex-row justify-between items-center mb-2">
-              <Text className="text-[12px] font-black text-slate-800 uppercase tracking-wider">
+              <Text className="text-[12px] font-bold text-slate-800 uppercase tracking-wider">
                 2. Call Disposition
               </Text>
               {selectedDisposition ? (
@@ -1052,10 +1052,10 @@ export default function LeadDetails() {
           {/* 3. MANDATORY REMARKS & QUICK TAG CHIPS */}
           <View className="mb-4">
             <View className="flex-row justify-between items-center mb-1.5">
-              <Text className="text-[12px] font-black text-slate-800 uppercase tracking-wider">
+              <Text className="text-[12px] font-bold text-slate-800 uppercase tracking-wider">
                 3. Mandatory Remarks / Summary *
               </Text>
-              <Text className="text-[10px] font-bold text-rose-600">Required</Text>
+              <Text className="text-[10px] font-semibold text-slate-600">Required</Text>
             </View>
 
             <Text className="text-[11px] font-medium text-slate-500 mb-2">
@@ -1096,7 +1096,7 @@ export default function LeadDetails() {
             <View className="flex-row justify-between items-center">
               <View className="flex-row items-center">
                 <Calendar size={16} color="#D97706" />
-                <Text className="text-[12px] font-black text-slate-800 ml-2 uppercase tracking-wider">
+                <Text className="text-[12px] font-bold text-slate-800 ml-2 uppercase tracking-wider">
                   4. Schedule Next Follow-up
                 </Text>
               </View>
@@ -1246,7 +1246,7 @@ export default function LeadDetails() {
           <View className="flex-row items-center justify-between pb-3 mb-3 border-b border-slate-100">
             <View className="flex-row items-center">
               <Paperclip size={16} color="#0B192C" />
-              <Text className="text-[14px] font-black text-[#0B192C] uppercase tracking-wider ml-2">
+              <Text className="text-[14px] font-bold text-[#0B192C] uppercase tracking-wider ml-2">
                 Documents &amp; Screenshots ({lead.documents?.length || 0})
               </Text>
             </View>
@@ -1260,7 +1260,7 @@ export default function LeadDetails() {
               ) : (
                 <>
                   <Upload size={12} color="#FFB703" />
-                  <Text className="text-white text-[11px] font-black ml-1.5">+ Attach File</Text>
+                  <Text className="text-white text-[11px] font-bold ml-1.5">+ Attach File</Text>
                 </>
               )}
             </TouchableOpacity>
@@ -1282,7 +1282,7 @@ export default function LeadDetails() {
                       <FileText size={16} color="#4F46E5" />
                     </View>
                     <View className="flex-1">
-                      <Text className="text-xs font-black text-slate-900" numberOfLines={1}>
+                      <Text className="text-xs font-bold text-slate-900" numberOfLines={1}>
                         {doc.name || `Document #${idx + 1}`}
                       </Text>
                       <Text className="text-[10px] text-slate-400 mt-0.5">
@@ -1307,7 +1307,7 @@ export default function LeadDetails() {
                     className="px-2.5 py-1.5 bg-white rounded-xl border border-slate-200 flex-row items-center shadow-xs"
                   >
                     <ExternalLink size={12} color="#0B192C" />
-                    <Text className="text-[11px] font-black text-[#0B192C] ml-1">Open</Text>
+                    <Text className="text-[11px] font-bold text-[#0B192C] ml-1">Open</Text>
                   </TouchableOpacity>
                 </View>
               ))}
@@ -1335,7 +1335,7 @@ export default function LeadDetails() {
           >
             <View className="flex-row items-center">
               <Clock size={16} color="#0B192C" />
-              <Text className="text-[13px] font-black text-[#0B192C] ml-2 uppercase tracking-wider">
+              <Text className="text-[13px] font-bold text-[#0B192C] ml-2 uppercase tracking-wider">
                 Timeline &amp; Previous Interactions ({calls.length} calls, {followups.length} follow-ups)
               </Text>
             </View>
@@ -1402,7 +1402,7 @@ export default function LeadDetails() {
                               <Tag size={12} color="#475569" />
                             </View>
                           )}
-                          <Text className="text-[12px] font-black text-slate-900">{item.title}</Text>
+                          <Text className="text-[12px] font-bold text-slate-900">{item.title}</Text>
                         </View>
 
                         <Text className="text-[10px] font-bold text-slate-400">
@@ -1458,12 +1458,12 @@ export default function LeadDetails() {
                             {playingAudioUrl === item.recording_url ? (
                               <>
                                 <Square size={11} color="#ffffff" fill="#ffffff" />
-                                <Text className="text-[10px] font-black text-white ml-1">Stop Audio</Text>
+                                <Text className="text-[10px] font-bold text-white ml-1">Stop Audio</Text>
                               </>
                             ) : (
                               <>
                                 <Play size={11} color="#1D4ED8" fill="#1D4ED8" />
-                                <Text className="text-[10px] font-black text-blue-700 ml-1">Play Recording</Text>
+                                <Text className="text-[10px] font-bold text-blue-700 ml-1">Play Recording</Text>
                               </>
                             )}
                           </TouchableOpacity>
@@ -1499,7 +1499,7 @@ export default function LeadDetails() {
           ) : (
             <>
               <CircleCheck size={20} color="#FFB703" />
-              <Text className="text-white text-[14px] font-black tracking-wide ml-2">
+              <Text className="text-white text-[14px] font-bold tracking-wide ml-2">
                 {powerQueue === '1' ? 'SAVE & NEXT LEAD ⚡' : 'SAVE & COMPLETE (1-TAP)'}
               </Text>
             </>
@@ -1519,7 +1519,7 @@ export default function LeadDetails() {
         <View className="flex-1 justify-end bg-black/60">
           <View className="bg-white rounded-t-3xl p-5 max-h-[85%]">
             <View className="flex-row justify-between items-center mb-4">
-              <Text className="text-lg font-black text-slate-900">Edit Lead Profile</Text>
+              <Text className="text-lg font-bold text-slate-900">Edit Lead Profile</Text>
               <TouchableOpacity onPress={() => setEditModalVisible(false)} className="p-2 bg-slate-100 rounded-full">
                 <X size={18} color="#475569" />
               </TouchableOpacity>

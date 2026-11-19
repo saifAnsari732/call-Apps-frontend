@@ -36,39 +36,16 @@ export default function TelecallerLeadList() {
 
   const getStatusBadge = (status) => {
     switch (status) {
-      case 'New':
-      case 'Fresh Lead':
-        return { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-700' };
-      case 'Contacted':
-        return { bg: 'bg-indigo-50', border: 'border-indigo-200', text: 'text-indigo-700' };
-      case 'Interested':
-      case 'Qualified':
-        return { bg: 'bg-emerald-50', border: 'border-emerald-200', text: 'text-emerald-700' };
-      case 'Follow Up':
-      case 'Follow-up Required':
-      case 'Callback':
-        return { bg: 'bg-amber-50', border: 'border-amber-200', text: 'text-amber-700' };
       case 'Converted':
       case 'Closed':
-        return { bg: 'bg-teal-50', border: 'border-teal-200', text: 'text-teal-700' };
-      case 'Demo Scheduled':
-        return { bg: 'bg-violet-50', border: 'border-violet-200', text: 'text-violet-700' };
-      case 'Payment Pending':
-        return { bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-700' };
+        return { bg: 'bg-emerald-50', border: 'border-emerald-200', text: 'text-emerald-700' };
       case 'Wrong Number':
-        return { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-700' };
-      case 'Duplicate':
-        return { bg: 'bg-zinc-100', border: 'border-zinc-300', text: 'text-zinc-700' };
-      case 'Not Connected':
-      case 'Call Not Connected':
-      case 'Busy':
-        return { bg: 'bg-slate-100', border: 'border-slate-300', text: 'text-slate-700' };
       case 'Not Interested':
       case 'Lost':
       case 'Rejected':
-        return { bg: 'bg-rose-50', border: 'border-rose-200', text: 'text-rose-700' };
+        return { bg: 'bg-slate-100', border: 'border-slate-200', text: 'text-slate-600' };
       default:
-        return { bg: 'bg-slate-50', border: 'border-slate-200', text: 'text-slate-600' };
+        return { bg: 'bg-slate-100', border: 'border-slate-200', text: 'text-slate-700' };
     }
   };
 
@@ -160,17 +137,17 @@ export default function TelecallerLeadList() {
       <OfflineBanner />
 
       {/* Header */}
-      <View className="bg-[#0B192C] pt-14 pb-5 px-4 shadow-md z-10">
+      <View className="bg-[#0F172A] pt-14 pb-5 px-4 shadow-sm z-10">
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center flex-1 pr-2">
             <TouchableOpacity onPress={() => router.back()} className="p-2 mr-2 bg-white/10 rounded-full">
               <ChevronLeft size={22} color="#ffffff" />
             </TouchableOpacity>
             <View>
-              <Text className="text-white text-xl font-black tracking-tight" numberOfLines={1}>
+              <Text className="text-white text-xl font-bold tracking-tight" numberOfLines={1}>
                 {category ? `${category} Leads` : tag ? `${tag} Leads` : 'All Leads Directory'}
               </Text>
-              <Text className="text-[#FFB703] text-xs font-semibold">
+              <Text className="text-slate-300 text-xs font-medium">
                 {filteredLeads.length} prospects matching
               </Text>
             </View>
@@ -179,13 +156,13 @@ export default function TelecallerLeadList() {
 
         {/* Global Search Bar (Requirement 10: Phone & Name) */}
         <View className="mt-3.5 flex-row items-center bg-white rounded-xl px-3.5 py-2.5 shadow-sm">
-          <Search size={16} color="#0B192C" />
+          <Search size={16} color="#0F172A" />
           <TextInput
             value={searchQuery}
             onChangeText={setSearchQuery}
             placeholder="Search by 10-digit mobile number, name, or city..."
             placeholderTextColor="#94A3B8"
-            className="flex-1 ml-2.5 text-xs text-slate-800 font-bold"
+            className="flex-1 ml-2.5 text-xs text-slate-900 font-medium"
             keyboardType="default"
           />
           {searchQuery.length > 0 && (
@@ -214,17 +191,17 @@ export default function TelecallerLeadList() {
                   key={chip.key}
                   onPress={() => setActiveFilter(chip.key)}
                   className={`px-3 py-1.5 rounded-full border flex-row items-center ${
-                    isSelected ? 'bg-[#0B192C] border-[#0B192C]' : 'bg-slate-50 border-slate-200'
+                    isSelected ? 'bg-[#0F172A] border-[#0F172A]' : 'bg-slate-50 border-slate-200'
                   }`}
                 >
                   {ChipIcon && (
                     <ChipIcon
                       size={12}
-                      color={isSelected ? '#FFB703' : '#64748B'}
+                      color={isSelected ? '#FFFFFF' : '#64748B'}
                       style={{ marginRight: 5 }}
                     />
                   )}
-                  <Text className={`text-xs font-bold ${isSelected ? 'text-white' : 'text-slate-700'}`}>
+                  <Text className={`text-xs font-semibold ${isSelected ? 'text-white' : 'text-slate-700'}`}>
                     {chip.label}
                   </Text>
                 </TouchableOpacity>
@@ -237,14 +214,14 @@ export default function TelecallerLeadList() {
       {/* Leads List */}
       {isLoading ? (
         <View className="py-24 items-center justify-center">
-          <ActivityIndicator size="large" color="#E11D48" />
-          <Text className="text-xs text-slate-500 font-bold mt-3">Filtering leads database...</Text>
+          <ActivityIndicator size="large" color="#0F172A" />
+          <Text className="text-xs text-slate-500 font-medium mt-3">Filtering leads database...</Text>
         </View>
       ) : error ? (
         <View className="flex-1 justify-center items-center p-6">
-          <Text className="text-rose-600 font-bold text-sm mb-2">Error loading leads</Text>
-          <TouchableOpacity onPress={() => refetch()} className="bg-[#E11D48] px-6 py-2.5 rounded-xl shadow-xs">
-            <Text className="text-white text-xs font-bold">Retry</Text>
+          <Text className="text-red-600 font-semibold text-sm mb-2">Error loading leads</Text>
+          <TouchableOpacity onPress={() => refetch()} className="bg-[#0F172A] px-6 py-2.5 rounded-xl shadow-xs">
+            <Text className="text-white text-xs font-semibold">Retry</Text>
           </TouchableOpacity>
         </View>
       ) : filteredLeads.length === 0 ? (
@@ -254,15 +231,15 @@ export default function TelecallerLeadList() {
             style={{ width: 140, height: 140, marginBottom: 12 }}
             resizeMode="contain"
           />
-          <Text className="text-slate-800 font-black text-base mt-2">No Matching Leads</Text>
-          <Text className="text-slate-400 text-xs mt-1 text-center">Try searching by 10-digit mobile number, name, or select another filter chip.</Text>
+          <Text className="text-slate-900 font-bold text-base mt-2">No Matching Leads</Text>
+          <Text className="text-slate-500 text-xs mt-1 text-center">Try searching by 10-digit mobile number, name, or select another filter chip.</Text>
         </View>
       ) : (
         <FlatList
           data={filteredLeads}
           keyExtractor={(item) => (item.id || item._id).toString()}
           contentContainerStyle={{ padding: 14, paddingBottom: 130 }}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#E11D48" />}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#0F172A" />}
           renderItem={({ item }) => {
             const badge = getStatusBadge(item.status);
             const leadId = item.id || item._id;
@@ -278,26 +255,26 @@ export default function TelecallerLeadList() {
                   <View className="flex-row items-center flex-1 pr-2">
                     <Image 
                       source={require('../../../assets/images/avatar-customer.png')}
-                      style={{ width: 42, height: 42, borderRadius: 21, marginRight: 10, borderWidth: 1.5, borderColor: '#CBD5E1' }}
+                      style={{ width: 42, height: 42, borderRadius: 21, marginRight: 10, borderWidth: 1, borderColor: '#E2E8F0' }}
                       resizeMode="cover"
                     />
                     <View className="flex-1">
                       <View className="flex-row items-center flex-wrap gap-1.5">
-                        <Text className="text-base font-black text-slate-900">{item.name}</Text>
+                        <Text className="text-base font-bold text-slate-900">{item.name}</Text>
                         {item.lead_id && (
-                          <View className="bg-slate-100 px-1.5 py-0.5 rounded">
-                            <Text className="text-[10px] font-mono font-bold text-slate-600">{item.lead_id}</Text>
+                          <View className="bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded">
+                            <Text className="text-[10px] font-mono font-semibold text-slate-600">{item.lead_id}</Text>
                           </View>
                         )}
                       </View>
-                      <Text className="text-xs text-slate-600 font-bold mt-0.5">
+                      <Text className="text-xs text-slate-600 font-medium mt-0.5">
                         +91 {item.mobile} {item.alternate_mobile ? `(Alt: ${item.alternate_mobile})` : ''}
                       </Text>
                     </View>
                   </View>
 
                   <View className={`px-2.5 py-1 rounded-full border ${badge.bg} ${badge.border}`}>
-                    <Text className={`text-[10px] font-black uppercase ${badge.text}`}>
+                    <Text className={`text-[10px] font-semibold uppercase ${badge.text}`}>
                       {item.status || 'New'}
                     </Text>
                   </View>
@@ -311,7 +288,7 @@ export default function TelecallerLeadList() {
                       {item.city ? `${item.city}${item.state ? `, ${item.state}` : ''}` : 'Location N/A'}
                     </Text>
                   </View>
-                  <Text className="text-xs font-bold text-slate-700">
+                  <Text className="text-xs font-semibold text-slate-700">
                     {item.product_interest || item.business_type || 'General'}
                   </Text>
                 </View>
@@ -321,10 +298,10 @@ export default function TelecallerLeadList() {
                   <TouchableOpacity
                     onPress={() => handleCall(item.mobile)}
                     activeOpacity={0.8}
-                    className="flex-1 bg-[#E11D48] active:bg-rose-700 py-2.5 rounded-xl flex-row items-center justify-center shadow-xs"
+                    className="flex-1 bg-[#0F172A] active:bg-slate-800 py-2.5 rounded-xl flex-row items-center justify-center shadow-xs"
                   >
                     <Phone size={13} color="#ffffff" fill="#ffffff" />
-                    <Text className="text-white text-xs font-black ml-1.5">Direct Call</Text>
+                    <Text className="text-white text-xs font-semibold ml-1.5">Direct Call</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity

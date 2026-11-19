@@ -106,8 +106,8 @@ export default function AdminLeads() {
                   {item.tags && item.tags.length > 0 && (
                     <View className="flex-row flex-wrap gap-2">
                       {item.tags.map((t, idx) => (
-                        <View key={idx} className="bg-rose-100 px-2 py-0.5 rounded-md border border-rose-200">
-                          <Text className="text-[9px] font-bold text-rose-700 uppercase tracking-wider">{t}</Text>
+                        <View key={idx} className="bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
+                          <Text className="text-[9px] font-semibold text-slate-700 uppercase tracking-wider">{t}</Text>
                         </View>
                       ))}
                     </View>
@@ -175,7 +175,7 @@ export default function AdminLeads() {
       
       {/* Header */}
       <View className="pt-14 pb-2 px-5">
-        <Text className="text-[28px] font-black text-[#0B192C] tracking-tight">Manage Leads</Text>
+        <Text className="text-[28px] font-bold text-[#0B192C] tracking-tight">Manage Leads</Text>
         <Text className="text-slate-500 text-sm mt-1 pr-6 leading-5">Centralized distribution and tracking for oil manufacturing divisions.</Text>
       </View>
 
@@ -191,7 +191,7 @@ export default function AdminLeads() {
           className="flex-row items-center bg-[#FFB703] px-4 py-2.5 rounded-xl shadow-sm shadow-[#FFB703]/30"
         >
           <UserCheck size={16} color="#0B192C" />
-          <Text className="text-[#0B192C] font-black ml-2 text-sm tracking-wide">Bulk Reassign</Text>
+          <Text className="text-[#0B192C] font-bold ml-2 text-sm tracking-wide">Bulk Reassign</Text>
         </TouchableOpacity>
       </View>
 
@@ -267,7 +267,7 @@ export default function AdminLeads() {
                 style={{ width: 130, height: 130, marginBottom: 12 }}
                 resizeMode="contain"
               />
-              <Text className="text-slate-800 font-black text-base">No Leads in Pipeline</Text>
+              <Text className="text-slate-800 font-bold text-base">No Leads in Pipeline</Text>
               <Text className="text-slate-400 text-xs mt-1 text-center">Try switching status filters or checking new imports.</Text>
             </View>
           ) : null

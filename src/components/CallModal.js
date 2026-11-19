@@ -228,7 +228,7 @@ export default function CallModal({ visible, onClose, lead, onSubmit, isDark, in
           {/* Header */}
           <View className="flex-row justify-between items-center mb-3 pb-3 border-b border-slate-100">
             <View className="flex-1 pr-2">
-              <Text className={`text-lg font-black tracking-tight ${isDark ? 'text-white' : 'text-[#0B192C]'}`}>
+              <Text className={`text-lg font-bold tracking-tight ${isDark ? 'text-white' : 'text-[#0B192C]'}`}>
                 Log Call Outcome & Disposition
               </Text>
               <Text className={`text-xs mt-0.5 font-bold ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
@@ -249,19 +249,19 @@ export default function CallModal({ visible, onClose, lead, onSubmit, isDark, in
             ) : null}
 
             {/* Talk Time Bar */}
-            <View className="bg-amber-50/70 border border-amber-200/70 rounded-2xl p-3.5 mb-4 flex-row items-center justify-between">
+            <View className="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 mb-4 flex-row items-center justify-between">
               <View className="flex-row items-center">
-                <PhoneCall size={16} color="#D97706" />
-                <Text className="text-xs font-black text-amber-900 ml-2">Call Duration (Sec)</Text>
+                <PhoneCall size={16} color="#475569" />
+                <Text className="text-xs font-semibold text-slate-900 ml-2">Call Duration (Sec)</Text>
               </View>
               <View className="flex-row items-center gap-1.5">
                 {[0, 30, 60, 120].map((sec) => (
                   <TouchableOpacity
                     key={sec}
                     onPress={() => setDurationSec(String(sec))}
-                    className={`px-2.5 py-1 rounded-lg border ${Number(durationSec) === sec ? 'bg-[#0B192C] border-[#0B192C]' : 'bg-white border-amber-200'}`}
+                    className={`px-2.5 py-1 rounded-lg border ${Number(durationSec) === sec ? 'bg-[#0F172A] border-[#0F172A]' : 'bg-white border-slate-200'}`}
                   >
-                    <Text className={`text-[11px] font-black ${Number(durationSec) === sec ? 'text-white' : 'text-slate-700'}`}>
+                    <Text className={`text-[11px] font-semibold ${Number(durationSec) === sec ? 'text-white' : 'text-slate-700'}`}>
                       {sec === 0 ? '0s' : sec < 60 ? `${sec}s` : `${sec / 60}m`}
                     </Text>
                   </TouchableOpacity>
@@ -270,7 +270,7 @@ export default function CallModal({ visible, onClose, lead, onSubmit, isDark, in
                   value={durationSec}
                   onChangeText={setDurationSec}
                   keyboardType="numeric"
-                  className="bg-white border border-amber-300 rounded-lg px-2 py-1 text-xs font-black text-slate-900 w-14 text-center"
+                  className="bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-semibold text-slate-900 w-14 text-center"
                 />
               </View>
             </View>
@@ -278,7 +278,7 @@ export default function CallModal({ visible, onClose, lead, onSubmit, isDark, in
             {/* 1. Primary Status Selector */}
             <View className="mb-4">
               <View className="flex-row justify-between items-center mb-2.5">
-                <Text className="text-[12px] font-black text-slate-800 uppercase tracking-wider">
+                <Text className="text-[12px] font-bold text-slate-800 uppercase tracking-wider">
                   1. Primary Lead Status *
                 </Text>
                 {status ? (
@@ -313,7 +313,7 @@ export default function CallModal({ visible, onClose, lead, onSubmit, isDark, in
             {/* 2. Call Disposition Selector */}
             <View className="mb-4">
               <View className="flex-row justify-between items-center mb-2.5">
-                <Text className="text-[12px] font-black text-slate-800 uppercase tracking-wider">
+                <Text className="text-[12px] font-bold text-slate-800 uppercase tracking-wider">
                   2. Call Disposition
                 </Text>
                 {disposition ? (
@@ -346,7 +346,7 @@ export default function CallModal({ visible, onClose, lead, onSubmit, isDark, in
 
             {/* 3. Mandatory Remarks & Quick Tag Chips */}
             <View className="mb-4">
-              <Text className="text-[12px] font-black text-slate-800 uppercase tracking-wider mb-2">
+              <Text className="text-[12px] font-bold text-slate-800 uppercase tracking-wider mb-2">
                 3. Mandatory Remarks / Discussion Summary *
               </Text>
               
@@ -384,7 +384,7 @@ export default function CallModal({ visible, onClose, lead, onSubmit, isDark, in
               <View className="flex-row justify-between items-center mb-3">
                 <View className="flex-row items-center">
                   <Calendar size={16} color="#D97706" />
-                  <Text className="text-[12px] font-black text-slate-800 ml-2 uppercase tracking-wider">
+                  <Text className="text-[12px] font-bold text-slate-800 ml-2 uppercase tracking-wider">
                     Schedule Next Follow-up
                   </Text>
                 </View>
@@ -422,9 +422,9 @@ export default function CallModal({ visible, onClose, lead, onSubmit, isDark, in
                     ))}
                     <TouchableOpacity
                       onPress={() => setCalendarVisible(true)}
-                      className="px-2.5 py-1.5 rounded-lg border border-amber-300 bg-amber-50"
+                      className="px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-100"
                     >
-                      <Text className="text-[11px] font-bold text-amber-800">Calendar 📅</Text>
+                      <Text className="text-[11px] font-semibold text-slate-800">Pick Date</Text>
                     </TouchableOpacity>
                   </View>
 
@@ -514,7 +514,7 @@ export default function CallModal({ visible, onClose, lead, onSubmit, isDark, in
 
             {/* 5. Custom Tags */}
             <View className="mb-6">
-              <Text className="text-[12px] font-black text-slate-800 uppercase tracking-wider mb-2">
+              <Text className="text-[12px] font-bold text-slate-800 uppercase tracking-wider mb-2">
                 Tags (Optional)
               </Text>
               <View className="flex-row flex-wrap gap-1.5 mb-2.5">
@@ -589,7 +589,7 @@ export default function CallModal({ visible, onClose, lead, onSubmit, isDark, in
               ) : (
                 <>
                   <CircleCheck size={18} color="#FFB703" />
-                  <Text className="text-white text-xs font-black tracking-wide ml-2">SAVE CALL OUTCOME</Text>
+                  <Text className="text-white text-xs font-bold tracking-wide ml-2">SAVE CALL OUTCOME</Text>
                 </>
               )}
             </TouchableOpacity>

@@ -205,7 +205,7 @@ export function ConversionDonutChart({ connected, notConnected, conversionRate, 
         </Svg>
         {/* Inner Label */}
         <View className="absolute inset-0 justify-center items-center">
-          <Text className={`text-2xl font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>
+          <Text className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>
             {conversionRate}%
           </Text>
           <Text className={`text-xxs font-bold uppercase tracking-wider ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>

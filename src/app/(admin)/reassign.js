@@ -110,8 +110,8 @@ export default function BulkReassign() {
           <ChevronLeft color="#ffffff" size={26} />
         </TouchableOpacity>
         <Image
-          source={require('../../../assets/images/logo-glow.png')}
-          style={{ width: 28, height: 28, borderRadius: 14, marginRight: 8, borderWidth: 1.5, borderColor: '#FFB703' }}
+          source={require('../../../assets/images/logo-3d.png')}
+          style={{ width: 28, height: 28, borderRadius: 8, marginRight: 8, borderWidth: 1, borderColor: '#334155' }}
           resizeMode="cover"
         />
         <Text className="text-white text-[19px] font-bold tracking-wide">Bulk Reassign</Text>
@@ -286,7 +286,7 @@ export default function BulkReassign() {
               disabled={transferMutation.isPending || !fromCaller || !toCaller}
               className={`py-4 rounded-xl items-center shadow-lg ${(transferMutation.isPending || !fromCaller || !toCaller) ? 'bg-slate-300 shadow-none' : 'bg-[#0B192C] shadow-[#0B192C]/30'}`}
             >
-              {transferMutation.isPending ? <ActivityIndicator color="#fff" /> : <Text className="text-[#FFB703] font-black text-[16px] tracking-wide">TRANSFER ALL LEADS</Text>}
+              {transferMutation.isPending ? <ActivityIndicator color="#fff" /> : <Text className="text-[#FFB703] font-bold text-[16px] tracking-wide">TRANSFER ALL LEADS</Text>}
             </TouchableOpacity>
           </View>
         )}

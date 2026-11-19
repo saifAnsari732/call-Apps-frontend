@@ -10,6 +10,10 @@ module.exports = {
   presets: [require("nativewind/preset")],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'Plus Jakarta Sans', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+        display: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
+      },
       colors: {
         oil: {
           light: '#FFFBEB', // amber-50
@@ -18,8 +22,8 @@ module.exports = {
           deep: '#78350F', // amber-900
         },
         brand: {
-          primary: '#F59E0B',
-          dark: '#1E293B',
+          primary: '#0F172A',
+          dark: '#0F172A',
           accent: '#10B981',
         }
       },
