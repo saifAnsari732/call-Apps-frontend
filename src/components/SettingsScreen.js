@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, TextInput, Switch, ActivityIndicator, Alert, Platform } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, Switch, ActivityIndicator, Alert, Platform, Image } from 'react-native';
 import { useAuthStore } from '../store/authStore';
 import { useThemeStore } from '../store/themeStore';
 import api from '../services/api';
@@ -94,9 +94,17 @@ export default function SettingsScreen() {
       {/* Profile Details Card */}
       <View className={`p-5 rounded-3xl border shadow-sm mb-6 mt-2 ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
         <View className="flex-row items-center mb-4">
-          <View className="w-14 h-14 bg-amber-500 rounded-2xl justify-center items-center">
-            <User size={28} color="#FFFFFF" />
-          </View>
+          <Image
+            source={
+              user?.role === 'admin' 
+                ? require('../../assets/images/avatar-admin.png')
+                : user?.role === 'team_leader' || user?.role === 'manager'
+                ? require('../../assets/images/avatar-teamleader.png')
+                : require('../../assets/images/avatar-telecaller.png')
+            }
+            style={{ width: 56, height: 56, borderRadius: 28, borderWidth: 2, borderColor: '#FFB703' }}
+            resizeMode="cover"
+          />
           <View className="ml-4 flex-1">
             <Text className={`text-base font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{user?.name}</Text>
             <Text className="text-amber-500 text-xxs font-extrabold uppercase tracking-wider mt-0.5">{user?.role} ACCOUNT</Text>

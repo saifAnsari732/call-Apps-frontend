@@ -46,11 +46,11 @@ export default function CallLogsPage() {
               <ChevronLeft color="#ffffff" size={28} />
             </TouchableOpacity>
             <Image 
-              source={require('../../../assets/brand-logo.jpg')}
-              style={{ width: 28, height: 28, borderRadius: 14, marginRight: 8, borderWidth: 1, borderColor: '#ffffff' }}
+              source={require('../../../assets/images/logo-glow.png')}
+              style={{ width: 30, height: 30, borderRadius: 15, marginRight: 8, borderWidth: 1.5, borderColor: '#FFB703' }}
               resizeMode="cover"
             />
-            <Text className="text-white text-2xl font-semibold tracking-wide">
+            <Text className="text-white text-2xl font-black tracking-tight">
               Call Logs
             </Text>
           </View>
@@ -92,7 +92,13 @@ export default function CallLogsPage() {
         >
           {filteredLogs.length === 0 ? (
             <View className="py-20 items-center justify-center">
-              <Text className="text-slate-400 font-bold tracking-wider">NO CALLS FOUND</Text>
+              <Image 
+                source={require('../../../assets/images/all-caught-up.png')}
+                style={{ width: 140, height: 140, marginBottom: 14 }}
+                resizeMode="contain"
+              />
+              <Text className="text-slate-800 font-black text-base">No Call History Found</Text>
+              <Text className="text-slate-400 text-xs mt-1 text-center">New incoming and outgoing call attempts will appear here.</Text>
             </View>
           ) : (
             filteredLogs.map((log) => {
@@ -100,7 +106,12 @@ export default function CallLogsPage() {
               const dateString = new Date(log.start_time).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
               
               return (
-                <View key={log.id} className="bg-white p-5 rounded-[16px] mb-3 shadow-sm shadow-slate-200 border border-slate-100 flex-row justify-between items-start">
+                <View key={log.id} className="bg-white p-4 rounded-2xl mb-3 shadow-xs border border-slate-200/90 flex-row justify-between items-start">
+                  <Image 
+                    source={require('../../../assets/images/avatar-customer.png')}
+                    style={{ width: 40, height: 40, borderRadius: 20, marginRight: 12, borderWidth: 1.5, borderColor: '#CBD5E1' }}
+                    resizeMode="cover"
+                  />
                   <View className="flex-1 space-y-1.5 pr-2">
                     <View className="flex-row justify-between items-start">
                       <Text className="text-[15px] font-black text-[#0B192C]">{log.lead_name}</Text>
@@ -113,26 +124,26 @@ export default function CallLogsPage() {
                       {dateString} at {timeString}
                     </Text>
                     {log.notes ? (
-                      <View className="mt-2 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+                      <View className="mt-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                         <Text className="text-[13px] text-slate-700 font-medium">{log.notes}</Text>
                       </View>
                     ) : null}
                     
                     {log.followup_date && (
-                      <View className="mt-2 bg-amber-50 p-2.5 rounded-lg border border-amber-100 flex-row items-center">
+                      <View className="mt-2 bg-amber-50 p-2.5 rounded-xl border border-amber-100 flex-row items-center">
                         <Text className="text-[12px] font-bold text-amber-700">Follow-up: </Text>
                         <Text className="text-[12px] font-medium text-amber-600">{log.followup_date} at {log.followup_time}</Text>
                       </View>
                     )}
                     {log.recording_url ? (
-                      <TouchableOpacity className="mt-2 bg-indigo-50 p-2 rounded-lg border border-indigo-100 flex-row items-center w-[120px] justify-center">
+                      <TouchableOpacity className="mt-2 bg-indigo-50 p-2 rounded-xl border border-indigo-100 flex-row items-center w-[120px] justify-center">
                         <Text className="text-[12px] font-bold text-indigo-700">Play Recording</Text>
                       </TouchableOpacity>
                     ) : null}
                   </View>
                   <View className="mt-1">
                     {/* Icon indicating call type */}
-                    <PhoneOutgoing size={20} color="#8B5CF6" />
+                    <PhoneOutgoing size={18} color="#E11D48" />
                   </View>
                 </View>
               );

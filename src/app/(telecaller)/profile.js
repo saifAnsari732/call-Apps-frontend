@@ -24,20 +24,23 @@ export default function TelecallerProfile() {
         {/* Profile Header Card */}
         <View className="bg-white rounded-[24px] p-6 items-center mb-6 border border-slate-100 shadow-sm shadow-slate-200/50">
           <View className="relative mb-4">
-            <View className="w-24 h-24 rounded-full border-4 border-[#0B192C] justify-center items-center overflow-hidden bg-slate-100">
-              <Text className="text-3xl font-bold text-[#0B192C]">{user?.name?.substring(0,1) || 'RS'}</Text>
-            </View>
+            <Image 
+              source={require('../../../assets/images/avatar-telecaller.png')}
+              style={{ width: 96, height: 96, borderRadius: 48, borderWidth: 3.5, borderColor: '#FFB703' }}
+              resizeMode="cover"
+            />
             <View className="absolute bottom-1 right-1 w-5 h-5 bg-[#22C55E] rounded-full border-2 border-white" />
           </View>
           
-          <Text className="text-xl font-bold text-[#0B192C] mb-3">{user?.name || 'Rupa Saini'}</Text>
+          <Text className="text-xl font-bold text-[#0B192C] mb-1">{user?.name || 'Telecaller'}</Text>
+          <Text className="text-xs text-slate-500 font-semibold mb-3">{user?.team || 'Sales Team'}</Text>
           
           <View className="flex-row items-center gap-2">
             <View className="bg-[#FFB703] px-3 py-1 rounded-full">
-              <Text className="text-[#0B192C] text-xs font-bold">Telecaller</Text>
+              <Text className="text-[#0B192C] text-xs font-black uppercase">{user?.role || 'Telecaller'}</Text>
             </View>
             <View className="bg-[#DCFCE7] px-3 py-1 rounded-full">
-              <Text className="text-[#15803D] text-xs font-bold">Active</Text>
+              <Text className="text-[#15803D] text-xs font-bold">{user?.shift_status || 'Active'}</Text>
             </View>
           </View>
         </View>

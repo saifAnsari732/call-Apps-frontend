@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, RefreshControl, TouchableOpacity, ActivityIndicator, Modal, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, ScrollView, RefreshControl, TouchableOpacity, ActivityIndicator, Modal, TouchableWithoutFeedback, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 import api from '../../services/api';
@@ -83,10 +83,15 @@ export default function MyReportsPage() {
       {/* HEADER */}
       <View className="bg-[#E11D48] pt-14 pb-4 px-4 flex-row items-center justify-between shadow-lg shadow-rose-900/30 z-10">
         <View className="flex-row items-center">
-          <TouchableOpacity onPress={() => router.back()} className="mr-4 p-1">
+          <TouchableOpacity onPress={() => router.back()} className="mr-3 p-1">
             <ArrowLeft color="#ffffff" size={24} />
           </TouchableOpacity>
-          <Text className="text-white text-[20px] font-semibold tracking-wide">
+          <Image 
+            source={require('../../../assets/images/logo-glow.png')}
+            style={{ width: 28, height: 28, borderRadius: 14, marginRight: 8, borderWidth: 1.5, borderColor: '#FFB703' }}
+            resizeMode="cover"
+          />
+          <Text className="text-white text-[20px] font-bold tracking-wide">
             My Reports
           </Text>
         </View>

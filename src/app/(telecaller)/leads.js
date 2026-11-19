@@ -99,7 +99,7 @@ export default function LeadsCategories() {
               <ChevronLeft size={24} color="#ffffff" />
             </TouchableOpacity>
             <Image 
-              source={require('../../../assets/brand-logo.jpg')}
+              source={require('../../../assets/images/logo-glow.png')}
               style={{ width: 32, height: 32, borderRadius: 16, marginRight: 10, borderWidth: 1.5, borderColor: '#FFB703' }}
               resizeMode="cover"
             />

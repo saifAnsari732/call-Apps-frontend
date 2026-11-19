@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Alert, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../../services/api';
@@ -109,6 +109,11 @@ export default function BulkReassign() {
         <TouchableOpacity onPress={() => router.back()} className="mr-3 p-1">
           <ChevronLeft color="#ffffff" size={26} />
         </TouchableOpacity>
+        <Image
+          source={require('../../../assets/images/logo-glow.png')}
+          style={{ width: 28, height: 28, borderRadius: 14, marginRight: 8, borderWidth: 1.5, borderColor: '#FFB703' }}
+          resizeMode="cover"
+        />
         <Text className="text-white text-[19px] font-bold tracking-wide">Bulk Reassign</Text>
       </View>
 
