@@ -9,6 +9,7 @@ export const PRIMARY_STATUSES = [
   { label: 'Interested', value: 'Interested', color: 'bg-emerald-600', activeBorder: 'border-emerald-600' },
   { label: 'Follow-up Required', value: 'Follow-up Required', color: 'bg-amber-600', activeBorder: 'border-amber-600', triggersFollowup: true },
   { label: 'Qualified', value: 'Qualified', color: 'bg-indigo-600', activeBorder: 'border-indigo-600' },
+  { label: 'Demo Scheduled', value: 'Demo Scheduled', color: 'bg-violet-600', activeBorder: 'border-violet-600', triggersFollowup: true },
   { label: 'Demo/Meeting Scheduled', value: 'Demo/Meeting Scheduled', color: 'bg-violet-600', activeBorder: 'border-violet-600', triggersFollowup: true },
   { label: 'Payment Pending', value: 'Payment Pending', color: 'bg-orange-600', activeBorder: 'border-orange-600' },
   { label: 'Converted', value: 'Converted', color: 'bg-green-600', activeBorder: 'border-green-600' },
@@ -22,17 +23,22 @@ export const PRIMARY_STATUSES = [
 ];
 
 export const CALL_DISPOSITIONS = [
-  'Call connected',
-  'Call back requested',
+  'Connected',
+  'Callback requested',
   'No answer',
   'Switched off',
-  'Number busy',
-  'Interested',
+  'Busy',
   'Price issue',
   'Timing issue',
+  'Family approval',
+  'Already bought',
+  'Not eligible',
   'Needs family approval',
   'Already purchased elsewhere',
-  'Not eligible',
+  'Call connected',
+  'Call back requested',
+  'Number busy',
+  'Interested',
   'Language issue'
 ];
 
